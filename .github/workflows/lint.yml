@@ -68,7 +68,7 @@ jobs:
         - name: Run ESLint
           run: pnpm lint
 
-    type-check:
+    typecheck:
       runs-on: ubuntu-latest
       needs: [setup, lint]
       steps:
