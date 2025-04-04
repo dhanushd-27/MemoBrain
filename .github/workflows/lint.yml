@@ -66,26 +66,28 @@ jobs:
       - name: Run ESLint
         run: pnpm lint
 
-  # type-check:
-  #   runs-on: ubuntu-latest
-  #   needs: [setup, lint]
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v4
+  
+  type-check:
+    runs-on: ubuntu-latest
+    needs: [setup, lint]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-  #     - uses: pnpm/action-setup@v4
-  #       name: Install pnpm
-  #       with:
-  #         run_install: false
-        
-  #     - name: Setup Node.js
-  #       uses: actions/setup-node@v4
-  #       with:
-  #         node-version: '23.9.0'
-  #         cache: 'pnpm'
-      
-  #     - name: Install dependencies & turbo
-  #       run: pnpm install && pnpm install -g turbo
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          version: 9.12.1
+          run_install: false
 
-  #     - name: Run Type Check
-  #       run: turbo run type-check
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '21.7.1'
+          cache: 'pnpm'
+
+      - name: Install dependencies & turbo
+        run: pnpm install && pnpm install -g turbo
+
+      - name: Run Type Check
+        run: turbo run typecheck
