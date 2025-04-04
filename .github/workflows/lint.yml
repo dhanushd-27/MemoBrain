@@ -77,13 +77,12 @@ jobs:
       - uses: pnpm/action-setup@v4
         name: Install pnpm
         with:
-          version: 9.12.1
           run_install: false
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '21.7.1'
+          node-version: '23.9.0'
           cache: 'pnpm'
 
       - name: Install dependencies & turbo
