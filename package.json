@@ -1,5 +1,5 @@
 {
-  "name": "d",
+  "name": "memobrain",
   "private": true,
   "scripts": {
     "build": "turbo run build",

@@ -89,4 +89,4 @@ jobs:
         run: pnpm install && pnpm install -g turbo
 
       - name: Run Type Check
-        run: turbo run check-types
+        run: npx tsc --noEmit
