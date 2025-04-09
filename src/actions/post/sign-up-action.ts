@@ -2,6 +2,7 @@
 
 import { Response } from "@/types/status-code.types";
 import { SignUpSchema, SignUpZodSchema } from "@/types/user.types";
+import { handleResponse } from "@/utils/api-response-handler";
 import { prisma } from "@/utils/prisma";
 import argon2 from 'argon2'
 
@@ -10,10 +11,7 @@ export const SignUpAction = async (payload: SignUpSchema) => {
     const parsedData = SignUpZodSchema.safeParse(payload);
 
     if(!parsedData.data && !parsedData.success) {
-      throw {
-        status: Response.InvalidData,
-        message: "Request's Consist of Invalid Data"
-      };
+      throw handleResponse(Response.InvalidData, "Invalid Data Form Data");
     }
 
     const { username, email, password } = parsedData.data;
@@ -24,10 +22,7 @@ export const SignUpAction = async (payload: SignUpSchema) => {
       }
     });
 
-    if(isFound) throw {
-      status: Response.Conflict,
-      message: "User Already Exists"
-    }
+    if(isFound) throw handleResponse(Response.Conflict, "User Already Exists");
 
     const hashedPassword = await argon2.hash(password);
 
@@ -39,18 +34,12 @@ export const SignUpAction = async (payload: SignUpSchema) => {
       }
     });
 
-    return {
-      status: Response.Created,
-      message: "User Created Successfully"
-    }
+    return handleResponse(Response.Created, "User Created Successfully")
   } catch (error) {
     const e = error as {
       status: number,
       message: string
     }
-    return {
-      status: e.status,
-      message: e.message
-    }
+    return handleResponse(e.status, e.message);
   }
 };
