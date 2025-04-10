@@ -16,6 +16,8 @@ import { Input } from '@/components/ui/input'
 import { Button } from "@/components/ui/button"
 import { SignUpAction } from '@/actions/post/sign-up-action'
 import { toast } from 'sonner'
+import { isErrorResponse } from '@/utils/api-response-handler'
+import { ActionResponse } from '@/types/response-request.types'
 
 export default function SignUpForm() {
 
@@ -29,13 +31,13 @@ export default function SignUpForm() {
   })
 
   async function onSubmit(values: SignUpSchema) {
-    const response = await SignUpAction(values);
-
-    if('error' in response && response.error) {
+    const response: ActionResponse = await SignUpAction(values);
+    
+    if(isErrorResponse(response)) {
       toast.error(response.errorInformation.message);
       return;
-    } else if('message' in response) {
-      toast.success(response.message);
+    } else {
+      toast.success(response.message)
       return;
     }
   }

@@ -1,21 +1,20 @@
 import { ApiError } from "./api-error";
 
-type AsyncHandlerResult<T> =
-  | { data: T }
-  | { error: true; errorInformation: ApiError | unknown };
-
-export function AsyncHandler<TArgs extends any[], TResult>(
+export function AsyncHandler<TArgs extends unknown[], TResult>(
   func: (...args: TArgs) => Promise<TResult>
 ) {
-  return async (...args: TArgs): Promise<AsyncHandlerResult<TResult>> => {
+  return async (...args: TArgs) => {
     try {
-      const data = await func(...args);
-      return { data };
+      return await func(...args);
     } catch (error) {
       const e = error as ApiError;
       return {
         error: true,
-        errorInformation: e,
+        errorInformation: {
+          name: e.name,
+          status: e.status,
+          message: e.message,
+        },
       };
     }
   };

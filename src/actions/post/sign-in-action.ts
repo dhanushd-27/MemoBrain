@@ -25,10 +25,10 @@ export const SignInAction = AsyncHandler(async (payload: SignInSchema) => {
 
   if(!isFound) throw new ApiError(Status.NotFound, "User Doesn't Exist");
 
-  const isValid = argon2.verify(isFound.password, password);
+  const isValid = await argon2.verify(isFound.password, password);
 
   if(!isValid) {
-    return new ApiError(Status.Unauthorized, "Invalid Password");
+    throw new ApiError(Status.Unauthorized, "Invalid Password");
   }
 
   return ApiResponse(Status.Accepted, "User Logged In Successfully");

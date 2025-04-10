@@ -14,6 +14,8 @@ import { useForm } from "react-hook-form"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
 import { SignInAction } from "@/actions/post/sign-in-action"
+import { isErrorResponse } from "@/utils/api-response-handler"
+import { toast } from "sonner"
 
 export default function SignInForm() {
   const form = useForm<SignInSchema>({
@@ -27,7 +29,11 @@ export default function SignInForm() {
   async function onSubmit(values: SignInSchema) {
     const response = await SignInAction(values);
 
-    console.log(response);
+    if(isErrorResponse(response)){
+      toast.error(response.errorInformation.message);
+    } else {
+      toast.success(response.message);
+    }
   }
 
   return (
