@@ -8,8 +8,9 @@ import { SignInSchema, SignInZodSchema } from "@/types/user.types";
 import { prisma } from "@/utils/prisma";
 import { ApiError } from "@/utils/api-error";
 import { ApiResponse } from "@/utils/api-response-handler";
+import { AsyncHandler } from "@/utils/async-handler";
 
-export const SignInAction = async (payload: SignInSchema) => {
+export const SignInAction = AsyncHandler(async (payload: SignInSchema) => {
   const parsedData = SignInZodSchema.safeParse(payload);
 
   if(!parsedData.data && !parsedData.success)  throw new ApiError(Status.InvalidData, "Invalid Data Form Data");
@@ -31,4 +32,4 @@ export const SignInAction = async (payload: SignInSchema) => {
   }
 
   return ApiResponse(Status.Accepted, "User Logged In Successfully");
-};
+});
