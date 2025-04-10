@@ -1,8 +1,10 @@
 "use server"
 
-import { Response } from "@/types/status-code.types";
+import { ErrorMessage } from "@/types/error.types";
+import { Status } from "@/types/status-code.types";
 import { SignUpSchema, SignUpZodSchema } from "@/types/user.types";
-import { handleResponse } from "@/utils/api-response-handler";
+import { ApiError } from "@/utils/api-error";
+import { ApiResponse } from "@/utils/api-response-handler";
 import { prisma } from "@/utils/prisma";
 import argon2 from 'argon2'
 
@@ -11,21 +13,23 @@ export const SignUpAction = async (payload: SignUpSchema) => {
     const parsedData = SignUpZodSchema.safeParse(payload);
 
     if(!parsedData.data && !parsedData.success) {
-      throw handleResponse(Response.InvalidData, "Invalid Data Form Data");
+      throw new ApiError(Status.InvalidData, ErrorMessage.InvalidData)
     }
-
+  
     const { username, email, password } = parsedData.data;
-
+  
     const isFound = await prisma.user.findFirst({
       where: {
         email
       }
     });
-
-    if(isFound) throw handleResponse(Response.Conflict, "User Already Exists");
-
+  
+    if(isFound){ 
+      throw new ApiError(Status.Conflict, ErrorMessage.UserExists)
+    };
+  
     const hashedPassword = await argon2.hash(password);
-
+  
     await prisma.user.create({
       data: {
         username,
@@ -33,13 +37,13 @@ export const SignUpAction = async (payload: SignUpSchema) => {
         password: hashedPassword
       }
     });
-
-    return handleResponse(Response.Created, "User Created Successfully")
+  
+    return ApiResponse(Status.Created, "User Created Successfully");
   } catch (error) {
-    const e = error as {
-      status: number,
-      message: string
-    }
-    return handleResponse(e.status, e.message);
+    const e = error as ApiError;
+    return {
+      error: true,
+      errorInformation: e
+    };
   }
 };

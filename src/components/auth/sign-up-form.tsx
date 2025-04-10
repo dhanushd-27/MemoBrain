@@ -14,8 +14,11 @@ import {
 } from "@/components/ui/form"
 import { Input } from '@/components/ui/input'
 import { Button } from "@/components/ui/button"
+import { SignUpAction } from '@/actions/post/sign-up-action'
+import { toast } from 'sonner'
 
 export default function SignUpForm() {
+
   const form = useForm<SignUpSchema>({
     resolver: zodResolver(SignUpZodSchema),
     defaultValues: {
@@ -25,10 +28,16 @@ export default function SignUpForm() {
     }
   })
 
-  function onSubmit(values: SignUpSchema) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values)
+  async function onSubmit(values: SignUpSchema) {
+    const response = await SignUpAction(values);
+
+    if('error' in response && response.error) {
+      toast.error(response.errorInformation.message);
+      return;
+    } else if('message' in response) {
+      toast.success(response.message);
+      return;
+    }
   }
 
   return (

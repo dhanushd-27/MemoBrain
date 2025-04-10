@@ -1,13 +1,7 @@
-class ApiResponse<T = undefined> {
-  status: number;
-  message: string;
-  data: T | undefined
-
-  constructor (status: number, message: string, data?: T) {
-    this.status = status;
-    this.message = message;
-    this.data = data;
+export const ApiResponse = (status: number, message: string, data?: unknown) => {
+  return {
+    status, 
+    message,
+    data
   }
 }
-
-export { ApiResponse }
