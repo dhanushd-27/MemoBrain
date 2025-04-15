@@ -4,7 +4,7 @@ const ACCESS_TOKEN_SECRET = new TextEncoder().encode(process.env.ACCESS_TOKEN_SE
 
 export const verifyAccessToken = async (accessToken: string) => {
   try {
-    const payload = await jwtVerify(accessToken, ACCESS_TOKEN_SECRET);
+    const { payload } = await jwtVerify(accessToken, ACCESS_TOKEN_SECRET);
     return payload;
   } catch (error) {
     const e = error as Error;

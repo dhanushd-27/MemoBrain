@@ -1,5 +1,3 @@
-// Sign a token and send it response
-// Change api response handler to pass data only when needed status, message, payload in which you send token
 "use server"
 
 import argon2 from "argon2";
@@ -9,7 +7,6 @@ import { prisma } from "@/utils/prisma";
 import { ApiError } from "@/utils/api-error";
 import { ApiResponse } from "@/utils/api-response-handler";
 import { AsyncHandler } from "@/utils/async-handler";
-import { createAccessToken } from "@/utils/token/generateTokens/generate-access-token";
 import { createRefreshToken } from "@/utils/token/generateTokens/generate-refresh-token";
 import { cookies } from "next/headers";
 
@@ -35,20 +32,23 @@ export const SignInAction = AsyncHandler(async (payload: SignInSchema) => {
   }
 
   const newRefreshToken = await createRefreshToken({ id: isFound.id, email: isFound.email });
-  const newAccessToken = await createAccessToken(newRefreshToken, {
-    id: isFound.id,
-    email: isFound.email
+
+  const hashedRefreshToken = await argon2.hash(newRefreshToken);
+
+  console.log(hashedRefreshToken);
+  console.log('\n');
+  console.log(newRefreshToken)
+
+  await prisma.user.update({
+    where: { email },
+    data: { refreshToken: hashedRefreshToken },
   });
 
-  (await cookies()).set("brainly_refresh_token", newRefreshToken, {
-    name: "brainly_refresh_token",
+  (await cookies()).set("brainly_token", newRefreshToken, {
+    name: "brainly_token",
     httpOnly: true,
     sameSite: 'lax',
   });
 
-  if(!newAccessToken) throw new ApiError(Status.Unauthorized, "Invalid Refresh Token");
-
-  return ApiResponse(Status.Accepted, "User Logged In Successfully", {
-    token: `Bearer ${newAccessToken}`
-  });
+  return ApiResponse(Status.Accepted, "User Logged In Successfully");
 });

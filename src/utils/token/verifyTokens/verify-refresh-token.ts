@@ -4,7 +4,7 @@ const REFRESH_TOKEN_SECRET = new TextEncoder().encode(process.env.REFRESH_TOKEN_
 
 export const verifyRefreshToken = async (refreshToken: string) => {
   try {
-    const payload = await jwtVerify(refreshToken, REFRESH_TOKEN_SECRET);
+    const { payload }= await jwtVerify(refreshToken, REFRESH_TOKEN_SECRET);
     return payload;
   } catch (error) {
     const e = error as Error;
