@@ -13,25 +13,26 @@
 
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-import { ApiError } from "./utils/api-error";
-import { Status } from "./types/status-code.types";
 import { verifyAccessToken } from "./utils/token/verifyTokens/verify-access-token";
-import { handleAccessTokenExpiry } from './utils/token/tokenUtils/handle-access-token-expired';
-import { refreshTokenName } from "./utils/env/env";
+import { accessTokenName, refreshTokenName } from "./utils/env/env";
+import { handleAccessTokenExpiry } from './actions/handleSession';
 
 const protectedRoutes = ["/dashboard"]; // Use startsWith instead of wildcard
 
 export async function middleware(req: NextRequest) {
   try {
-    const token = (await cookies()).get("session_token")?.value;
-    
-    if(!token) throw new ApiError(Status.Forbidden, "Access token not found");
+    let token = (await cookies()).get(accessTokenName)?.value as string;
 
+    if(!token) {
+      token = await handleAccessTokenExpiry() as string;
+    };
+    
     let isValid = await verifyAccessToken(token);
 
     if(!isValid) {
       const response = await handleAccessTokenExpiry();
-      if(!response) throw new Error("Refresh Token Expired");
+      console.log(response)
+      if(!response) throw Error("Refresh Token Expired");
 
       isValid = await verifyAccessToken(response);
     }
@@ -44,6 +45,7 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next(); // Proceed if authorized
   } catch (error) {
     console.error("Middleware error:", error);
+    (await cookies()).delete(accessTokenName);
     (await cookies()).delete(refreshTokenName);
     return NextResponse.redirect(new URL("/", req.url)); // Fail-safe redirect
   }

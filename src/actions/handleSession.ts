@@ -1,42 +1,27 @@
 "use server"
 
-import { Status } from "@/types/status-code.types";
-import { ApiError } from "@/utils/api-error";
-import { ApiResponse } from "@/utils/api-response-handler";
-import { AsyncHandler } from "@/utils/async-handler";
-import { refreshTokenName, refreshTokenSecret } from "@/utils/env/env";
-import { prisma } from "@/utils/prisma";
-import { createAccessToken } from "@/utils/token/generateTokens/generate-access-token";
-import argon2 from "argon2";
-import { jwtVerify } from "jose";
-import { cookies } from "next/headers";
+import { cookies } from "next/headers"
+import { accessTokenName, refreshTokenName } from "@/utils/env/env";
+import { verifyRefreshToken } from '../utils/token/verifyTokens/verify-refresh-token';
+import { createAccessToken } from '@/utils/token/generateTokens/generate-access-token';
 
-const REFRESH_TOKEN_SECRET = new TextEncoder().encode(refreshTokenSecret);
+// if access token expire -> take the refresh token veryify if it expired or not if it is logout, if it is not generate new access token and set the access token
+export const handleAccessTokenExpiry = async () => {
+  const refreshToken = (await cookies()).get(refreshTokenName);
 
-export const handleSession = AsyncHandler(async () => {
-  const clientRefreshToken = (await cookies()).get(refreshTokenName);
+  if(!refreshToken) return null;
 
-  if(!clientRefreshToken) throw new ApiError(Status.NotFound, "Cookie Not Found");
-  
-   const tokenVal = clientRefreshToken.value;
-  const { payload }= await jwtVerify(tokenVal, REFRESH_TOKEN_SECRET);
+  const isRefreshTokenValid = await verifyRefreshToken(refreshToken.value);
 
-  // check if token in db and token in client are same
-  const user = await prisma.user.findFirst({
-    where: {
-      email: payload.email as string
-    }
-  })
+  if(!isRefreshTokenValid) return null;
 
-  const hashedServerRefreshToken = user?.refreshToken as string;
+  const newAccessToken = await createAccessToken(refreshToken.value) as string;
 
-  const isValid = await argon2.verify(hashedServerRefreshToken, clientRefreshToken.value);
-
-  if(!isValid) throw new ApiError(Status.Forbidden, "Unauthorized User");
-
-  const newAccessToken = await createAccessToken(clientRefreshToken.value);
-
-  return ApiResponse(Status.Accepted, "User Authentication", {
-    sessionToken: newAccessToken
+  (await cookies()).set(accessTokenName, newAccessToken, {
+    name: accessTokenName,
+    httpOnly: true,
+    sameSite: "lax",
   });
-});
+
+  return newAccessToken;
+}
