@@ -1,7 +1,8 @@
+import { refreshTokenExpiry, refreshTokenSecret } from "@/utils/env/env";
 import { SignJWT } from "jose";
 
-const REFRESH_TOKEN_SECRET = new TextEncoder().encode(process.env.REFRESH_TOKEN_SECRET as string);
-const REFRESH_TOKEN_EXPIRY: string = process.env.REFRESH_TOKEN_EXPIRY as string;
+const REFRESH_TOKEN_SECRET = new TextEncoder().encode(refreshTokenSecret);
+const REFRESH_TOKEN_EXPIRY: string = refreshTokenExpiry as string;
 
 export const createRefreshToken = async (payload: {
   id: string,

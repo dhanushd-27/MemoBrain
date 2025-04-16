@@ -10,6 +10,7 @@ import { AsyncHandler } from "@/utils/async-handler";
 import { createRefreshToken } from "@/utils/token/generateTokens/generate-refresh-token";
 import { cookies } from "next/headers";
 import { createAccessToken } from "@/utils/token/generateTokens/generate-access-token";
+import { accessTokenName, refreshTokenName } from "@/utils/env/env";
 
 export const SignInAction = AsyncHandler(async (payload: SignInSchema) => {
   const parsedData = SignInZodSchema.safeParse(payload);
@@ -42,14 +43,14 @@ export const SignInAction = AsyncHandler(async (payload: SignInSchema) => {
     data: { refreshToken: hashedRefreshToken },
   });
 
-  (await cookies()).set("brainly_token", newRefreshToken, {
-    name: "brainly_token",
+  (await cookies()).set(refreshTokenName, newRefreshToken, {
+    name: refreshTokenName,
     httpOnly: true,
     sameSite: 'lax',
   });
 
-  (await cookies()).set("session_token", newAccessToken, {
-    name: "session_token",
+  (await cookies()).set(accessTokenName, newAccessToken, {
+    name: accessTokenName,
     httpOnly: true,
     sameSite: 'lax'
   })

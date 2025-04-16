@@ -1,6 +1,7 @@
+import { accessTokenSecret } from "@/utils/env/env";
 import { jwtVerify } from "jose"
 
-const ACCESS_TOKEN_SECRET = new TextEncoder().encode(process.env.ACCESS_TOKEN_SECRET as string);
+const ACCESS_TOKEN_SECRET = new TextEncoder().encode(accessTokenSecret);
 
 export const verifyAccessToken = async (accessToken: string) => {
   try {

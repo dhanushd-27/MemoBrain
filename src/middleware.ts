@@ -13,12 +13,28 @@
 
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { ApiError } from "./utils/api-error";
+import { Status } from "./types/status-code.types";
+import { verifyAccessToken } from "./utils/token/verifyTokens/verify-access-token";
+import { handleAccessTokenExpiry } from './utils/token/tokenUtils/handle-access-token-expired';
+import { refreshTokenName } from "./utils/env/env";
 
 const protectedRoutes = ["/dashboard"]; // Use startsWith instead of wildcard
 
 export async function middleware(req: NextRequest) {
   try {
-    const isValid = (await cookies()).get("session_token")?.value;
+    const token = (await cookies()).get("session_token")?.value;
+    
+    if(!token) throw new ApiError(Status.Forbidden, "Access token not found");
+
+    let isValid = await verifyAccessToken(token);
+
+    if(!isValid) {
+      const response = await handleAccessTokenExpiry();
+      if(!response) throw new Error("Refresh Token Expired");
+
+      isValid = await verifyAccessToken(response);
+    }
 
     // Redirect if not authenticated and accessing a protected route
     if (!isValid && protectedRoutes.some(route => req.nextUrl.pathname.startsWith(route))) {
@@ -28,7 +44,8 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next(); // Proceed if authorized
   } catch (error) {
     console.error("Middleware error:", error);
-    return NextResponse.redirect(new URL("/login", req.url)); // Fail-safe redirect
+    (await cookies()).delete(refreshTokenName);
+    return NextResponse.redirect(new URL("/", req.url)); // Fail-safe redirect
   }
 }
 

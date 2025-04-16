@@ -1,8 +1,9 @@
 import * as jose from "jose"
 import { verifyRefreshToken } from "../verifyTokens/verify-refresh-token";
+import { accessTokenExpiry, accessTokenSecret } from "@/utils/env/env";
 
-const ACCESS_TOKEN_SECRET = new TextEncoder().encode(process.env.ACCESS_TOKEN_SECRET as string)
-const ACCESS_TOKEN_EXPIRY: string = process.env.ACCESS_TOKEN_EXPIRY as string;
+const ACCESS_TOKEN_SECRET = new TextEncoder().encode(accessTokenSecret)
+const ACCESS_TOKEN_EXPIRY: string = accessTokenExpiry as string;
 
 export const createAccessToken = async (refreshToken: string) => {
   const payload = await verifyRefreshToken(refreshToken);
