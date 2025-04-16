@@ -9,6 +9,7 @@ import { ApiResponse } from "@/utils/api-response-handler";
 import { AsyncHandler } from "@/utils/async-handler";
 import { createRefreshToken } from "@/utils/token/generateTokens/generate-refresh-token";
 import { cookies } from "next/headers";
+import { createAccessToken } from "@/utils/token/generateTokens/generate-access-token";
 
 export const SignInAction = AsyncHandler(async (payload: SignInSchema) => {
   const parsedData = SignInZodSchema.safeParse(payload);
@@ -32,12 +33,9 @@ export const SignInAction = AsyncHandler(async (payload: SignInSchema) => {
   }
 
   const newRefreshToken = await createRefreshToken({ id: isFound.id, email: isFound.email });
+  const newAccessToken = await createAccessToken(newRefreshToken) as string;
 
   const hashedRefreshToken = await argon2.hash(newRefreshToken);
-
-  console.log(hashedRefreshToken);
-  console.log('\n');
-  console.log(newRefreshToken)
 
   await prisma.user.update({
     where: { email },
@@ -49,6 +47,12 @@ export const SignInAction = AsyncHandler(async (payload: SignInSchema) => {
     httpOnly: true,
     sameSite: 'lax',
   });
+
+  (await cookies()).set("session_token", newAccessToken, {
+    name: "session_token",
+    httpOnly: true,
+    sameSite: 'lax'
+  })
 
   return ApiResponse(Status.Accepted, "User Logged In Successfully");
 });
