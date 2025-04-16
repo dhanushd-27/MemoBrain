@@ -14,7 +14,7 @@ import { useForm } from "react-hook-form"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
 import { SignInAction } from "@/actions/post/sign-in-action"
-import { isErrorResponse } from "@/utils/api-response-handler"
+import { isErrorResponse } from "@/utils/api/api-response-handler"
 import { toast } from "sonner"
 
 export default function SignInForm() {

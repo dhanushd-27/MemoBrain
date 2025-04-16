@@ -2,8 +2,8 @@
 
 import { createBrainSchema } from "@/types/brainType/brain"
 import { Status } from "@/types/status-code.types"
-import { ApiError } from "@/utils/api-error"
-import { ApiResponse } from "@/utils/api-response-handler"
+import { ApiError } from "@/utils/api/api-error"
+import { ApiResponse } from "@/utils/api/api-response-handler"
 import { AsyncHandler } from "@/utils/async-handler"
 import { accessTokenName } from "@/utils/env/env"
 import { prisma } from "@/utils/prisma"

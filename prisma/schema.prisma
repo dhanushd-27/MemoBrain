@@ -31,4 +31,5 @@ model Content {
   title               String
   tags                String[]
   share               Boolean       @default(false)
+  shareUrl            String?
 }

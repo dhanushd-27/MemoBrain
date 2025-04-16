@@ -16,7 +16,7 @@ import { Input } from '@/components/ui/input'
 import { Button } from "@/components/ui/button"
 import { SignUpAction } from '@/actions/post/sign-up-action'
 import { toast } from 'sonner'
-import { isErrorResponse } from '@/utils/api-response-handler'
+import { isErrorResponse } from '@/utils/api/api-response-handler'
 import { ActionResponse } from '@/types/response-request.types'
 
 export default function SignUpForm() {

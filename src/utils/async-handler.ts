@@ -1,4 +1,4 @@
-import { ApiError } from "./api-error";
+import { ApiError } from "./api/api-error";
 
 export function AsyncHandler<TArgs extends unknown[], TResult>(
   func: (...args: TArgs) => Promise<TResult>

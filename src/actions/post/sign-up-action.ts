@@ -3,8 +3,8 @@
 import { ErrorMessage } from "@/types/error.types";
 import { Status } from "@/types/status-code.types";
 import { SignUpSchema, SignUpZodSchema } from "@/types/user.types";
-import { ApiError } from "@/utils/api-error";
-import { ApiResponse } from "@/utils/api-response-handler";
+import { ApiError } from "@/utils/api/api-error";
+import { ApiResponse } from "@/utils/api/api-response-handler";
 import { AsyncHandler } from "@/utils/async-handler";
 import { prisma } from "@/utils/prisma";
 import argon2 from 'argon2'

@@ -1,4 +1,5 @@
 // import { createBrain } from '@/actions/post/create-brain'
+import { shareBrain } from '@/actions/get/share-brain'
 import React from 'react'
 
 export default function Dashboard() {
@@ -10,7 +11,7 @@ export default function Dashboard() {
   //   url: "abcde",
   //   share: true
   // })
-
+  shareBrain();
   return (
        <div>
         Dashboard,
