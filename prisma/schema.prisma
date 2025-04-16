@@ -19,13 +19,16 @@ model User {
   email               String           @unique
   password            String  
   refreshToken        String?
+  brains              Content[]       
 }
 
 model Content {
+  admin               User          @relation(fields: [adminId], references: [id])     
+  adminId             String
   id                  Int           @unique  @default(autoincrement())
   type                String        
   url                 String        @unique
   title               String
   tags                String[]
-  share               Boolean
+  share               Boolean       @default(false)
 }
