@@ -33,7 +33,7 @@ export const SignInAction = AsyncHandler(async (payload: SignInSchema) => {
     throw new ApiError(Status.Unauthorized, "Invalid Password");
   }
 
-  const newRefreshToken = await createRefreshToken({ id: isFound.id, email: isFound.email });
+  const newRefreshToken = await createRefreshToken({ id: isFound.id, email: isFound.email, username: isFound.username });
   const newAccessToken = await createAccessToken(newRefreshToken) as string;
 
   const hashedRefreshToken = await argon2.hash(newRefreshToken);

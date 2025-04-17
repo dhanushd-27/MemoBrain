@@ -6,7 +6,8 @@ const REFRESH_TOKEN_EXPIRY: string = refreshTokenExpiry as string;
 
 export const createRefreshToken = async (payload: {
   id: string,
-  email: string
+  email: string,
+  username: string
 }) => {
   return new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })

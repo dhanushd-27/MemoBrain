@@ -11,7 +11,8 @@ export const createAccessToken = async (refreshToken: string) => {
   
   return await new jose.SignJWT({
     id: payload.id,
-    email: payload.email
+    email: payload.email,
+    username: payload.username
   })
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
