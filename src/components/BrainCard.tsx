@@ -9,8 +9,6 @@ import Link from 'next/link'
 import Image from 'next/image';
 import { createBrainSchema } from '@/types/brainType/brain';
 
-// const tags = ['tag1', 'tag2', 'tag3', 'tag4', 'tag5', 'tag6', 'tag7', 'tag8'];
-
 export default function BrainCard({
   title,
   type,
