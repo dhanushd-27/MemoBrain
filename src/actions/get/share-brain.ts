@@ -10,7 +10,8 @@ import { prisma } from "@/utils/prisma";
 import { verifyAccessToken } from "@/utils/token/verifyTokens/verify-access-token";
 import { cookies } from "next/headers";
 
-export const shareBrain = AsyncHandler(async (brainId: number) => {
+export const shareBrain = AsyncHandler(async () => {
+  // convert share of user to true, , than generate random url for the same, and now fetch all the data under that user
   const accessToken = (await cookies()).get(accessTokenName)?.value as string;
 
   const payload = await verifyAccessToken(accessToken);
@@ -18,17 +19,15 @@ export const shareBrain = AsyncHandler(async (brainId: number) => {
   if(!payload) throw new ApiError(Status.Unauthorized, "Unauthorized User");
 
   const adminId = payload.id as string;
-
   const shareUrl = generateUrl();
 
-  await prisma.content.update({
+  await prisma.user.update({
     where: {
-      adminId,
-      id: brainId
+      id: adminId
     },
     data: {
       share: true,
-      shareUrl
+      shareUrl: shareUrl
     }
   });
 
