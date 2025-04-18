@@ -17,7 +17,7 @@ import { verifyAccessToken } from "./utils/token/verifyTokens/verify-access-toke
 import { accessTokenName, refreshTokenName } from "./utils/env/env";
 import { handleAccessTokenExpiry } from './actions/handleSession';
 
-const protectedRoutes = ["/dashboard"]; // Use startsWith instead of wildcard
+const protectedRoutes = ["/dashboard", "/brain/"]; // Use startsWith instead of wildcard
 
 export async function middleware(req: NextRequest) {
   try {
@@ -52,5 +52,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard"],
+  matcher: ["/dashboard", "/brain/:path*"],
 }
