@@ -11,7 +11,6 @@ import { verifyAccessToken } from "@/utils/token/verifyTokens/verify-access-toke
 import { cookies } from "next/headers";
 
 export const shareBrain = AsyncHandler(async () => {
-  // convert share of user to true, , than generate random url for the same, and now fetch all the data under that user
   const accessToken = (await cookies()).get(accessTokenName)?.value as string;
 
   const payload = await verifyAccessToken(accessToken);
@@ -32,8 +31,6 @@ export const shareBrain = AsyncHandler(async () => {
   });
 
   return ApiResponse(Status.Success, "Share Brain Successfull", {
-    data: {
-      brainUrl: shareUrl
-    }
+    brainUrl: shareUrl
   });
 });
