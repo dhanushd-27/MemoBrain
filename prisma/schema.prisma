@@ -21,7 +21,7 @@ model User {
   refreshToken        String?
   brains              Content[]       
   share               Boolean       @default(false)
-  shareUrl            String?
+  shareUrl            String?       @unique
 }
 
 model Content {
