@@ -20,6 +20,8 @@ model User {
   password            String  
   refreshToken        String?
   brains              Content[]       
+  share               Boolean       @default(false)
+  shareUrl            String?
 }
 
 model Content {
@@ -30,6 +32,4 @@ model Content {
   url                 String        @unique
   title               String
   tags                String[]
-  share               Boolean       @default(false)
-  shareUrl            String?
 }
