@@ -25,7 +25,6 @@ export default function UserBrains() {
       };
   
       setBrains(brains);
-      console.log(brains);
       setLoading(false);
     }
 

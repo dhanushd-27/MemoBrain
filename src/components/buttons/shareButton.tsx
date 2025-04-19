@@ -19,10 +19,11 @@ import { useState } from "react"
 import { shareBrain } from "@/actions/put/share-brain"
 import { isErrorResponse } from "@/utils/api/api-response-handler"
 import { toast } from "sonner"
+import { shareUrl } from "@/utils/env/env"
 
 export function Share() {
-  const [url, setUrl] = useState<string>("")
-
+  const [url, setUrl] = useState<string>("");
+  
   async function handleShare() {
     try {
       const response = await shareBrain()
@@ -33,7 +34,8 @@ export function Share() {
       }
 
       const { brainUrl } = response.data as { brainUrl: string }
-      setUrl(brainUrl)
+      const appUrl = shareUrl + brainUrl;
+      setUrl(appUrl);
     } catch (err) {
       toast.error("Something went wrong")
       console.error(err)
