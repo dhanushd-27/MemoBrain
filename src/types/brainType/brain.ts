@@ -17,10 +17,10 @@ export type responseBrainType = {
 }
 
 export const createBrainZodSchema = z.object({
-  title: z.string({ message: "Title is a required field" }),
-  type: z.string({ message: "Type is a required field" }),
-  url: z.string({ message: "Link is a required field" }),
-  tags: z.array(z.string(), {message: "Tags is a required field"})
+  title: z.string({ message: "Title is a required field" }).min(1, { message: "Length of Title should be more than 1" }),
+  type: z.string({ message: "Type is a required field" }).min(1, { message: "Length of Title should be more than 1" }),
+  url: z.string({ message: "Link is a required field" }).min(1, { message: "Length of Title should be more than 1" }),
+  tags: z.string({message: "Tags is a required field"})
 });
 
 export type createBrainType = z.infer<typeof createBrainZodSchema>;

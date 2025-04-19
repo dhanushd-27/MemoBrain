@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -25,20 +26,44 @@ import { createBrain } from "@/actions/post/create-brain"
 import { isErrorResponse } from "@/utils/api/api-response-handler"
 import { toast } from "sonner"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
+import Tag from "../Tag";
+import { tagColorPalette } from "@/utils/other/colorStore";
 
 export function CreateBrain() {
+  const [tagsArray, setTagsArray] = useState<string[]>([]);
+
   const form = useForm<createBrainType>({
     resolver: zodResolver(createBrainZodSchema),
     defaultValues: {
-      tags: ["something"],
+      tags: "",
       type: "",
       title: "",
       url: ""
     }
   });
 
+  const handleTags = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if(e.key != "Enter") return;
+    e.preventDefault();
+
+    const target = e.target as HTMLInputElement;
+    const value = target.value;
+
+    if(value == "") return;
+
+    setTagsArray(t => [...t, value]);
+
+    target.value = ""
+    target.focus();
+  }
+
   async function onSubmit(values: createBrainType) {
-    const response = await createBrain(values);
+    const response = await createBrain({
+      type: values.type,
+      title: values.title,
+      url: values.url,
+      tags: tagsArray
+    });
 
     if(isErrorResponse(response)){
       toast.error(response.errorInformation.message);
@@ -98,6 +123,7 @@ export function CreateBrain() {
                       </SelectContent>
                     </Select>
                   </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -119,13 +145,18 @@ export function CreateBrain() {
             <FormField 
               control={ form.control }
               name="tags"
-              render={({ field }) => (
+              render={() => (
                 <FormItem>
                   <FormLabel>Tags</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter brain tag" {...field}/>
+                    <Input placeholder="Enter brain tag" onKeyDown={ (e) => { handleTags(e) } }/>
                   </FormControl>
                   <FormMessage />
+                  <div className="flex gap-2 flex-wrap">
+                    { tagsArray.map((tag, index) => (
+                      <Tag key={ index } tagTitle={ tag } color={ tagColorPalette[index%4] } />
+                    )) }
+                  </div>
                 </FormItem>
               )}
             />
