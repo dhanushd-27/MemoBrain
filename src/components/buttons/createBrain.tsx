@@ -60,7 +60,7 @@ export function CreateBrain() {
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={ form.handleSubmit(onSubmit) }>
+          <form onSubmit={ form.handleSubmit(onSubmit) } className="flex flex-col gap-4">
             <FormField 
               control={ form.control }
               name="title"
@@ -88,7 +88,7 @@ export function CreateBrain() {
                       defaultValue={field.value}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="Enter you brain type"/>
+                        <SelectValue placeholder="Select you brain type"/>
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="link">Link</SelectItem>
