@@ -1,36 +1,33 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Memobrain
+Memobrain is a smart knowledge management app designed to help you store, organize, and easily access your important resources like links, tweets, document links, and YouTube videos. Using custom tags for organization, you can quickly find what you need and share your saved items via unique links. Memobrain helps you keep everything in one place—store, tag, and share, effortlessly.
 
-## Getting Started
+Features
+Store Links: Save links, tweets, document links, and YouTube videos in one place.
 
-First, run the development server:
+Tagging System: Organize your resources using custom tags for easy categorization. (Soon)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Easy Access: Quickly access your saved resources based on tags. (Soon)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Sharing: Share your saved resources via a unique link with anyone.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+How It Works
+Create an Account: Sign up to store your resources.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Save Resources: Add links, tweets, document links, or YouTube videos to your collection.
 
-## Learn More
+Tag Your Resources: Use tags to organize and make your resources easily searchable.
 
-To learn more about Next.js, take a look at the following resources:
+Share with Others: Generate a unique link to share your resources with friends or colleagues.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Tech Stack
+Frontend: React, Next.js
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Backend: Node.js, Express (if applicable)
 
-## Deploy on Vercel
+Database: PostgreSQL
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+ORM: Prisma
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Styling: TailwindCSS / styled-components
+
+Authentication: JWT authentication using refresh token and access token
