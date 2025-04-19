@@ -1,3 +1,5 @@
+"use client"
+
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -16,9 +18,35 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { useForm } from "react-hook-form"
+import { createBrainType, createBrainZodSchema } from "@/types/brainType/brain"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { createBrain } from "@/actions/post/create-brain"
+import { isErrorResponse } from "@/utils/api/api-response-handler"
+import { toast } from "sonner"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 
 export function CreateBrain() {
+  const form = useForm<createBrainType>({
+    resolver: zodResolver(createBrainZodSchema),
+    defaultValues: {
+      tags: ["something"],
+      type: "",
+      title: "",
+      url: ""
+    }
+  });
+
+  async function onSubmit(values: createBrainType) {
+    const response = await createBrain(values);
+
+    if(isErrorResponse(response)){
+      toast.error(response.errorInformation.message);
+    } else {
+      toast.success(response.message);
+    }
+  }
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -31,45 +59,84 @@ export function CreateBrain() {
             Create brain and store important information.
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4 text-right">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Title
-            </Label>
-            <Input id="name" placeholder="Enter your brain title" className="col-span-3" />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-                Type
-            </Label>
-            <Select>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Brain Type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="links">Links</SelectItem>
-                <SelectItem value="tweet">Tweet</SelectItem>
-                <SelectItem value="docs">Document</SelectItem>
-                <SelectItem value="video">Video</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Link
-            </Label>
-            <Input id="name" placeholder="Enter Link" className="col-span-3" />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Tag
-            </Label>
-            <Input id="name" placeholder="Enter Tag Value" className="col-span-3" />
-          </div>
-        </div>
-        <DialogFooter>
-          <Button type="submit">Save Brain</Button>
-        </DialogFooter>
+        <Form {...form}>
+          <form onSubmit={ form.handleSubmit(onSubmit) }>
+            <FormField 
+              control={ form.control }
+              name="title"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Title</FormLabel>
+                  <FormControl>
+                    <Input type="text" placeholder="Enter Brain Title" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField 
+              control={ form.control }
+              name="type"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Type</FormLabel>
+                  <FormControl>
+                    <Select 
+                      {...field} 
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Enter you brain type"/>
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="link">Link</SelectItem>
+                        <SelectItem value="tweet">Tweet</SelectItem>
+                        <SelectItem value="docs">Document</SelectItem>
+                        <SelectItem value="video">Video</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
+            <FormField 
+              control={ form.control }
+              name="url"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Link</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter Brain Url" {...field}/>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField 
+              control={ form.control }
+              name="tags"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Tags</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter brain tag" {...field}/>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <DialogFooter>
+              <Button type="submit">
+                Add Brain
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   )

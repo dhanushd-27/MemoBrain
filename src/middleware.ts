@@ -31,7 +31,6 @@ export async function middleware(req: NextRequest) {
 
     if(!isValid) {
       const response = await handleAccessTokenExpiry();
-      console.log(response)
       if(!response) throw Error("Refresh Token Expired");
 
       isValid = await verifyAccessToken(response);
