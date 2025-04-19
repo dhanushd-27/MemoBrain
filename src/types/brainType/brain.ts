@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export type createBrainSchema = {
+  id: number,
   type: string,
   url: string,
   title: string,

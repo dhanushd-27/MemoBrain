@@ -10,13 +10,28 @@ import Image from 'next/image';
 import { createBrainSchema } from '@/types/brainType/brain';
 import Tag from './Tag';
 import { tagColorPalette } from '@/utils/other/colorStore';
+import { deleteBrain } from '@/actions/delete/delete-brain';
+import { isErrorResponse } from '@/utils/api/api-response-handler';
+import { toast } from 'sonner';
 
 export default function BrainCard({
+  id,
   title,
   type,
   tags,
   url
 }: createBrainSchema) {
+  async function handleDelete() {
+    const response = await deleteBrain(id);
+
+    if(isErrorResponse(response)){
+      toast.error("Invalid Delete Request");
+      return;
+    }
+
+    toast.success(response.message);
+  }
+
   return (
      <Card className='w-2xs p-0 pb-4'>
       <Image src={ twitterbg } alt='twitterbg' className='rounded-t-xl'/>
@@ -27,7 +42,7 @@ export default function BrainCard({
             <h5>{ type }</h5>
             <div className='flex gap-2'>
               <Link href={ url } target='_blank'><ExternalLink className='w-4'></ExternalLink></Link>
-              <button><MdDelete className='w-4' /></button>
+              <button onClick={ handleDelete } className='hover:cursor-pointer'><MdDelete className='w-4' /></button>
             </div>
           </div>
           <hr/>

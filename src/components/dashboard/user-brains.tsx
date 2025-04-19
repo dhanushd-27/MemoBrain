@@ -43,7 +43,7 @@ export default function UserBrains() {
     <div className='flex flex-wrap w-full gap-7 items-start justify-start px-14 py-4'>
       {
         brains.map(tag => (
-          <BrainCard key={ tag.id } type={ tag.type } url={ tag.url } title={ tag.title } tags={ tag.tags }/>
+          <BrainCard key={ tag.id } type={ tag.type } url={ tag.url } title={ tag.title } tags={ tag.tags } id={ tag.id }/>
         ))
       }
     </div>
