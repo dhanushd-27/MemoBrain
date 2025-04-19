@@ -8,6 +8,8 @@ import { Card, CardContent, CardTitle } from './ui/card'
 import Link from 'next/link'
 import Image from 'next/image';
 import { createBrainSchema } from '@/types/brainType/brain';
+import Tag from './Tag';
+import { tagColorPalette } from '@/utils/other/colorStore';
 
 export default function BrainCard({
   title,
@@ -29,12 +31,10 @@ export default function BrainCard({
             </div>
           </div>
           <hr/>
-          <div className='flex gap-2 items-center justify-start px-2 flex-wrap'>
-            {
-              tags.map(tag => (
-                <p className='text-xs' key={ tag }>{ tag }</p>
-              ))
-            }
+          <div className="flex gap-2 flex-wrap">
+            { tags.map((tag, index) => (
+              <Tag key={ index } tagTitle={ tag } color={ tagColorPalette[index%4] } />
+            )) }
           </div>
           </CardContent>
       </div>
