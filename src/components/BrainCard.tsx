@@ -41,8 +41,13 @@ export default function BrainCard({
           <div className='flex justify-between'>
             <h5>{ type }</h5>
             <div className='flex gap-2'>
-              <Link href={ url } target='_blank'><ExternalLink className='w-4'></ExternalLink></Link>
-              <button onClick={ handleDelete } className='hover:cursor-pointer'><MdDelete className='w-4' /></button>
+              <Link href={url} target="_blank">
+                <ExternalLink className="w-4 text-gray-500 hover:text-gray-300" />
+              </Link>
+
+              <button onClick={handleDelete} className="hover:cursor-pointer">
+                <MdDelete className="w-6 text-gray-500 hover:text-gray-300" />
+              </button>
             </div>
           </div>
           <hr/>
