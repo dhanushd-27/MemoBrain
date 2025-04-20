@@ -70,6 +70,8 @@ export function CreateBrain() {
     } else {
       toast.success(response.message);
     }
+
+    setTagsArray([]);
   }
 
   return (
@@ -116,10 +118,10 @@ export function CreateBrain() {
                         <SelectValue placeholder="Select you brain type"/>
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="link">Link</SelectItem>
-                        <SelectItem value="tweet">Tweet</SelectItem>
+                        <SelectItem value="links">Link</SelectItem>
+                        <SelectItem value="tweets">Tweet</SelectItem>
                         <SelectItem value="docs">Document</SelectItem>
-                        <SelectItem value="video">Video</SelectItem>
+                        <SelectItem value="videos">Video</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>

@@ -2,14 +2,13 @@
 
 import * as React from "react"
 import {
-  BookOpen,
-  Bot,
   Command,
   GithubIcon,
   Twitter,
   CircleUser,
-  Settings2,
-  SquareTerminal,
+  Link,
+  NotepadText,
+  Video,
 } from "lucide-react"
 
 import { NavMain } from "@/components/dashboard/nav-main"
@@ -24,6 +23,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import { tagTypeEnum } from "@/hooks/useTagState"
 
 const data = {
   user: {
@@ -33,89 +33,24 @@ const data = {
   },
   navMain: [
     {
-      title: "Playground",
-      url: "#",
-      icon: SquareTerminal,
-      isActive: true,
-      items: [
-        {
-          title: "History",
-          url: "#",
-        },
-        {
-          title: "Starred",
-          url: "#",
-        },
-        {
-          title: "Settings",
-          url: "#",
-        },
-      ],
+      title: "Links",
+      tagType: tagTypeEnum.links,
+      icon: Link
     },
     {
-      title: "Models",
-      url: "#",
-      icon: Bot,
-      items: [
-        {
-          title: "Genesis",
-          url: "#",
-        },
-        {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
-        },
-      ],
+      title: "Documents",
+      tagType: tagTypeEnum.docs,
+      icon: NotepadText
     },
     {
-      title: "Documentation",
-      url: "#",
-      icon: BookOpen,
-      items: [
-        {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
-      ],
+      title: "Tweet",
+      tagType: tagTypeEnum.tweet,
+      icon: Twitter
     },
     {
-      title: "Settings",
-      url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
-        },
-      ],
+      title: "Video",
+      tagType: tagTypeEnum.videos,
+      icon: Video,
     },
   ],
   navSecondary: [

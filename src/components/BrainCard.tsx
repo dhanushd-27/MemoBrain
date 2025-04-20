@@ -7,7 +7,7 @@ import React from 'react'
 import { Card, CardContent, CardTitle } from './ui/card'
 import Link from 'next/link'
 import Image from 'next/image';
-import { createBrainSchema } from '@/types/brainType/brain';
+import { BrainCardType } from '@/types/brainType/brain';
 import Tag from './Tag';
 import { tagColorPalette } from '@/utils/other/colorStore';
 import { deleteBrain } from '@/actions/delete/delete-brain';
@@ -20,7 +20,7 @@ export default function BrainCard({
   type,
   tags,
   url
-}: createBrainSchema) {
+}: BrainCardType) {
   async function handleDelete() {
     const response = await deleteBrain(id);
 

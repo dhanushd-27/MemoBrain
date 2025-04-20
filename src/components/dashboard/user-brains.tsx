@@ -6,30 +6,30 @@ import { isErrorResponse } from '@/utils/api/api-response-handler';
 import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner';
 import BrainCard from '../BrainCard';
+import { useTagStore } from '@/hooks/useTagState';
 
 export default function UserBrains() {
   const [brains, setBrains] = useState<responseBrainType[]>();
   const [isLoading, setLoading] = useState(true);
+  const { tagState } = useTagStore();
 
   useEffect(() => {
     const handleFetchingBrain = async () => {
-      const response = await getUserBrains();
-  
+      const response = await getUserBrains({ type: tagState });
+
       if(isErrorResponse(response)){
         toast.error(response.errorInformation.message);
         return;
       }
       
-      const { brains } = response.data as {
-        brains: responseBrainType[]
-      };
-  
+      const brains  = response.data as responseBrainType[]
+
       setBrains(brains);
       setLoading(false);
     }
 
     handleFetchingBrain();
-  }, [])
+  }, [tagState])
 
   if(isLoading || !brains) {
     return (

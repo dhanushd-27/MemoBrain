@@ -9,7 +9,7 @@ import { prisma } from "@/utils/prisma";
 import { verifyAccessToken } from "@/utils/token/verifyTokens/verify-access-token";
 import { cookies } from "next/headers"
 
-export const getUserBrains = AsyncHandler(async () => {
+export const getUserBrains = AsyncHandler(async ({ type }: { type: string }) => {
   const cookieStore = (await cookies());
   const accessToken = cookieStore.get(accessTokenName)?.value;
 
@@ -21,12 +21,20 @@ export const getUserBrains = AsyncHandler(async () => {
 
   const userId = payload.id as string;
 
-  const brains = await prisma.user.findFirst({
+  if(type === "all") {
+    const brains = await prisma.content.findMany({
+      where: {
+        adminId: userId,
+      }
+    });
+
+    return ApiResponse(Status.Success, "Brains Found", brains)
+  }
+
+  const brains = await prisma.content.findMany({
     where: {
-      id: userId
-    },
-    select: {
-      brains: true
+      adminId: userId,
+      type: type
     }
   });
 
