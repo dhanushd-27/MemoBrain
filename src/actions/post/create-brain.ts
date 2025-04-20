@@ -1,6 +1,6 @@
 "use server"
 
-import { createBrainSchema } from "@/types/brainType/brain"
+import { createBrainSchema, createBrainZodSchema } from "@/types/brainType/brain"
 import { Status } from "@/types/status-code.types"
 import { ApiError } from "@/utils/api/api-error"
 import { ApiResponse } from "@/utils/api/api-response-handler"
@@ -23,6 +23,12 @@ export const createBrain = AsyncHandler(async ({
   if(!payload) throw new ApiError(Status.Forbidden, "Unauthorized User");
 
   const adminId = payload.id as string;
+
+  const parsedData = createBrainZodSchema.safeParse({ type, tags, title, url });
+
+  if(!parsedData.success) {
+    throw new ApiError(Status.InvalidData, "Invalid Data")
+  }
 
   await prisma.content.create({
     data: {
