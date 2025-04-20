@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
 import { useForm } from "react-hook-form"
-import { createBrainType, createBrainZodSchema } from "@/types/brainType/brain"
+import { FormBrainType, FormBrainZodSchema } from "@/types/brainType/brain"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { createBrain } from "@/actions/post/create-brain"
 import { isErrorResponse } from "@/utils/api/api-response-handler"
@@ -32,8 +32,8 @@ import { tagColorPalette } from "@/utils/other/colorStore";
 export function CreateBrain() {
   const [tagsArray, setTagsArray] = useState<string[]>([]);
 
-  const form = useForm<createBrainType>({
-    resolver: zodResolver(createBrainZodSchema),
+  const form = useForm<FormBrainType>({
+    resolver: zodResolver(FormBrainZodSchema),
     defaultValues: {
       tags: "",
       type: "",
@@ -57,7 +57,7 @@ export function CreateBrain() {
     target.focus();
   }
 
-  async function onSubmit(values: createBrainType) {
+  async function onSubmit(values: FormBrainType) {
     const response = await createBrain({
       type: values.type,
       title: values.title,
