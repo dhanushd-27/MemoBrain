@@ -49,10 +49,10 @@ const LandingPage = () => {
       <main className="flex-1 flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-3xl sm:text-4xl md:text-4xl lg:text-5xl font-extrabold tracking-tight text-black">
-            Organize and Share Your Knowledge with Memobrain
+            Store and share your most important links as Brain Cards
           </h1>
           <p className="mt-3 text-lg sm:text-lg md:text-lg text-gray-600 max-w-2xl mx-auto">
-            Create and share &quot;brain cards&quot; - collections of important links and resources.
+            MemoBrain helps you save tweets, docs, videos, and links in one organized space you can easily share.
           </p>
           <div className="mt-6">
             <Button
