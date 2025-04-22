@@ -6,7 +6,7 @@ import { isErrorResponse } from '@/utils/api/api-response-handler';
 import { redirect } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner';
-import BrainCard from './BrainCard';
+import ShareBrainCard from './ShareBrainCard';
 
 export default function DisplayBrains({ shareUrl }: { shareUrl: string }) {
   const [brains, setBrains] = useState<responseBrainType[]>();
@@ -42,7 +42,7 @@ export default function DisplayBrains({ shareUrl }: { shareUrl: string }) {
     <div className='flex flex-wrap w-full gap-7 items-start justify-start px-14 py-4'>
       {
         brains.map(tag => (
-          <BrainCard key={ tag.id } type={ tag.type } url={ tag.url } title={ tag.title } tags={ tag.tags }/>
+          <ShareBrainCard key={ tag.id } type={ tag.type } url={ tag.url } title={ tag.title } tags={ tag.tags }/>
         ))
       }
     </div>
