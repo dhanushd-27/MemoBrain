@@ -2,42 +2,61 @@ import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { verifyAccessToken } from "./utils/token/verifyTokens/verify-access-token";
 import { accessTokenName, refreshTokenName } from "./utils/env/env";
-import { handleAccessTokenExpiry } from './actions/handleSession';
+import { handleAccessTokenExpiry } from "./actions/handleSession";
 
+const unprotectedRoutes = ["/", "/login", "/signup"];
 const protectedRoutes = ["/dashboard"];
-const redirectIfAuthenticatedRoutes = ["/", "/login"]; // Pages to redirect *away from* if already logged in
 
 export async function middleware(req: NextRequest) {
+  const pathname = req.nextUrl.pathname;
+
+  // 🍃 For unprotected routes, just check if user is already logged in
+  if (unprotectedRoutes.includes(pathname)) {
+    const cookieStore = await cookies();
+    const token = cookieStore.get(accessTokenName)?.value;
+
+    if (token) {
+      const isValid = await verifyAccessToken(token);
+      if (isValid) {
+        return NextResponse.redirect(new URL("/dashboard", req.url));
+      }
+    }
+
+    return NextResponse.next(); // Stay on same page if not authenticated
+  }
+
+  // 🔐 Proceed to protected logic
+  const cookieStore = await cookies();
+  // In the general auth logic
+  let token = cookieStore.get(accessTokenName)?.value ?? undefined;
+
+
+
   try {
-    let token = (await cookies()).get(accessTokenName)?.value as string;
-
     if (!token) {
-      token = await handleAccessTokenExpiry() as string;
+      const refreshed = await handleAccessTokenExpiry() as string | undefined;
+      if (!refreshed && protectedRoutes.includes(pathname)) {
+        return NextResponse.redirect(new URL("/", req.url));
+      }
+      token = refreshed;
     }
 
-    let isValid = await verifyAccessToken(token);
+    const isValid = await verifyAccessToken(token as string);
 
-    if (!isValid) {
-      const refreshed = await handleAccessTokenExpiry();
-      if (!refreshed) throw new Error("Refresh token expired");
-      isValid = await verifyAccessToken(refreshed);
-    }
-
-    // 🔒 Redirect unauthenticated users *away from* protected routes
-    if (!isValid && protectedRoutes.some(route => req.nextUrl.pathname.startsWith(route))) {
+    if (!isValid && protectedRoutes.includes(pathname)) {
       return NextResponse.redirect(new URL("/", req.url));
-    }
-
-    // 🚀 Redirect authenticated users *away from* public routes like login or home
-    if (isValid && redirectIfAuthenticatedRoutes.includes(req.nextUrl.pathname)) {
-      return NextResponse.redirect(new URL("/dashboard", req.url));
     }
 
     return NextResponse.next();
   } catch (error) {
     console.error("Middleware error:", error);
-    (await cookies()).delete(accessTokenName);
-    (await cookies()).delete(refreshTokenName);
-    return NextResponse.redirect(new URL("/", req.url));
+    cookieStore.delete(accessTokenName);
+    cookieStore.delete(refreshTokenName);
+
+    if (protectedRoutes.includes(pathname)) {
+      return NextResponse.redirect(new URL("/", req.url));
+    }
+
+    return NextResponse.next();
   }
 }

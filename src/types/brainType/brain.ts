@@ -22,6 +22,8 @@ export type BrainCardType = createBrainSchema & {
   id: number
 }
 
+export type ShareBrainType = createBrainSchema;
+
 export const FormBrainZodSchema = z.object({
   title: z.string({ message: "Title is a required field" }).min(1, { message: "Length of Title should be more than 1" }),
   type: z.string({ message: "Type is a required field" }).min(1, { message: "Length of Title should be more than 1" }),
