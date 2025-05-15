@@ -1,14 +1,12 @@
 import React from 'react';
 import DisplayBrains from '@/components/DisplayBrains';
 
-type Props = {
-  params: {
-    url: string;
-  };
-};
+type PageProps = Promise<{
+  url: string;
+}>;
 
-export default async function DisplayBrain({ params }: Props) {
-  const { url: shareUrl } = await params;
+export default async function DisplayBrain({ params }: { params: PageProps }) {
+  const { url } = await params;
 
   return (
     <>
@@ -21,7 +19,7 @@ export default async function DisplayBrain({ params }: Props) {
         </h5>
       </div>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <DisplayBrains shareUrl={shareUrl} />
+        <DisplayBrains shareUrl={url} />
       </div>
     </>
   );
