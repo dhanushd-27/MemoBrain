@@ -1,0 +1,38 @@
+name: lint and type check
+
+on:
+  pull_request:
+    branches:
+      - "feat/*"
+      - "fix/*"
+      - "test/*"
+      - "main"
+      - "dev"
+  push:
+    branches:
+      - "main"
+      - dev
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: 1.1.42
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Run linting
+        run: bun run lint
+
+      - name: Run type checking
+        run: bun run check-types
