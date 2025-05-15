@@ -6,7 +6,7 @@ import { SignUpSchema, SignUpZodSchema } from "@/types/user.types";
 import { ApiError } from "@/utils/api/api-error";
 import { ApiResponse } from "@/utils/api/api-response-handler";
 import { AsyncHandler } from "@/utils/async-handler";
-import { prisma } from "@/utils/prisma";
+import prisma from "@/utils/prisma";
 import argon2 from 'argon2'
 
 export const SignUpAction = AsyncHandler(async (payload: SignUpSchema) => {

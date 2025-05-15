@@ -3,7 +3,7 @@
 import argon2 from "argon2";
 import { Status } from "@/types/status-code.types";
 import { SignInSchema, SignInZodSchema } from "@/types/user.types";
-import { prisma } from "@/utils/prisma";
+import prisma from "@/utils/prisma";
 import { ApiError } from "@/utils/api/api-error";
 import { ApiResponse } from "@/utils/api/api-response-handler";
 import { AsyncHandler } from "@/utils/async-handler";

@@ -6,7 +6,7 @@ import { ApiResponse } from "@/utils/api/api-response-handler";
 import { AsyncHandler } from "@/utils/async-handler"
 import { accessTokenName } from "@/utils/env/env";
 import { generateUrl } from "@/utils/other/randomUrlGenerator";
-import { prisma } from "@/utils/prisma";
+import prisma, { txType } from "@/utils/prisma";
 import { verifyAccessToken } from "@/utils/token/verifyTokens/verify-access-token";
 import { cookies } from "next/headers";
 
@@ -22,7 +22,7 @@ export const shareBrain = AsyncHandler(async () => {
   const shareUrl = generateUrl();
 
   // await prisma.user.
-  const response = await prisma.$transaction(async (tx) => {
+  const response = await prisma.$transaction(async (tx: txType) => {
     const isShareUrlPresent = await tx.user.findFirst({
       where: {
         id: adminId

@@ -1,0 +1,45 @@
+FROM node:20-alpine AS build
+
+ARG DATABASE_URL
+ENV DATABASE_URL=${DATABASE_URL}
+
+RUN npm i -g pnpm
+
+RUN set -ex; \
+    apk update; \
+    apk add --no-cache \
+    openssl
+
+WORKDIR /usr/src/app
+
+COPY package.json pnpm-lock.yaml ./
+
+RUN pnpm install
+
+COPY . .
+
+RUN DATABASE_URL=${DATABASE_URL} pnpm dlx prisma@5.18.0 generate
+RUN pnpm run build
+
+FROM node:20-alpine AS run
+
+RUN set -ex; \
+    apk update; \
+    apk add --no-cache \
+    openssl
+
+RUN mkdir /.npm && chown -R 1001:1001 /.npm
+
+USER 1001:1001
+
+WORKDIR /usr/src/app
+
+COPY --from=build --chown=1001:1001 /usr/src/app/.next/standalone ./
+COPY --from=build --chown=1001:1001 /usr/src/app/.next/static ./.next/static
+COPY --from=build --chown=1001:1001 /usr/src/app/public ./public
+
+ENV NODE_ENV=production
+
+EXPOSE 3000
+
+CMD ["node", "server.js"]
