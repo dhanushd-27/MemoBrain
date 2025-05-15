@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "dev:docker": "npx prisma migrate dev && pnpm run build && pnpm run start"
+    "dev:docker": "npx prisma migrate dev && pnpm run build && pnpm run start",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
