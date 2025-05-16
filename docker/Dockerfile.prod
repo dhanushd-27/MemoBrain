@@ -1,5 +1,15 @@
 FROM node:20-alpine AS build
 
+# Add all required environment variables
+ARG DATABASE_URL
+ARG ACCESS_TOKEN_SECRET
+ARG REFRESH_TOKEN_SECRET
+ARG ACCESS_TOKEN_EXPIRY
+ARG REFRESH_TOKEN_EXPIRY
+ARG REFRESH_TOKEN_NAME
+ARG ACCESS_TOKEN_NAME
+ARG NEXT_PUBLIC_SHARE_URL
+
 RUN npm i -g pnpm
 
 RUN set -ex; \
@@ -15,7 +25,9 @@ RUN pnpm install
 
 COPY . .
 
-RUN pnpm dlx prisma@5.18.0 generate
+RUN pnpm dlx prisma@5.18.0 migrate deploy
+
+RUN DATABASE_URL=${DATABASE_URL} pnpm dlx prisma@5.18.0 generate
 
 RUN pnpm run build
 
@@ -38,7 +50,16 @@ COPY --from=build --chown=1001:1001 /usr/src/app/.next/standalone ./
 COPY --from=build --chown=1001:1001 /usr/src/app/.next/static ./.next/static
 COPY --from=build --chown=1001:1001 /usr/src/app/public ./public
 
+# Set environment variables in the run stage
 ENV NODE_ENV=production
+ENV DATABASE_URL=${DATABASE_URL}
+ENV ACCESS_TOKEN_SECRET=${ACCESS_TOKEN_SECRET}
+ENV REFRESH_TOKEN_SECRET=${REFRESH_TOKEN_SECRET}
+ENV ACCESS_TOKEN_EXPIRY=${ACCESS_TOKEN_EXPIRY}
+ENV REFRESH_TOKEN_EXPIRY=${REFRESH_TOKEN_EXPIRY}
+ENV REFRESH_TOKEN_NAME=${REFRESH_TOKEN_NAME}
+ENV ACCESS_TOKEN_NAME=${ACCESS_TOKEN_NAME}
+ENV NEXT_PUBLIC_SHARE_URL=${NEXT_PUBLIC_SHARE_URL}
 
 EXPOSE 3000
 
