@@ -51,3 +51,4 @@ jobs:
               -e ACCESS_TOKEN_NAME=${{ secrets.ACCESS_TOKEN_NAME }} \
               -e NEXT_PUBLIC_SHARE_URL=${{ secrets.NEXT_PUBLIC_SHARE_URL }} \
               -e DATABASE_URL=${{ secrets.DATABASE_URL }} --name memobrain -d dhanushd27/memobrain:${{ github.sha }}
+            docker exec memobrain pnpm dlx prisma@5.18.0 migrate deploy

@@ -15,8 +15,6 @@ RUN pnpm install
 
 COPY . .
 
-RUN pnpm dlx prisma@5.18.0 migrate deploy
-
 RUN pnpm dlx prisma@5.18.0 generate
 
 RUN pnpm run build
