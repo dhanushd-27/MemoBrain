@@ -28,12 +28,11 @@ export const shareBrain = AsyncHandler(async () => {
         id: adminId
       },
       select: {
-        share: true,
         shareUrl: true
       }
     });
 
-    if(isShareUrlPresent) return isShareUrlPresent.shareUrl
+    if(isShareUrlPresent?.shareUrl) return isShareUrlPresent.shareUrl
 
     await prisma.user.update({
       where: {
