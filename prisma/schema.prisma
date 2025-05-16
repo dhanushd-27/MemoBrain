@@ -29,7 +29,7 @@ model Content {
   adminId             String
   id                  Int           @unique  @default(autoincrement())
   type                String        
-  url                 String        @unique
+  url                 String
   title               String
   tags                String[]
 }

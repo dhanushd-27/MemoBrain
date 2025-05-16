@@ -30,7 +30,7 @@ export default function DisplayBrains({ shareUrl }: { shareUrl: string }) {
     }
 
     handleFetchingBrains(shareUrl);
-  })
+  }, [shareUrl]);
 
   if(isLoading || !brains) return (
     <div>
