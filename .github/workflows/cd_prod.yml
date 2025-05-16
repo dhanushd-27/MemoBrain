@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - production
 
 jobs:
   build:
@@ -31,22 +32,17 @@ jobs:
           push: true
           tags: dhanushd27/memobrain:${{ github.sha }}
       
-  start:
-      name: SSH into VM
-      runs-on: ubuntu-latest
-
-      steps:
-        - name: SSH into VM
-          uses: appleboy/ssh-action@master
-          with:
-            host: ${{ secrets.VM_HOST }}
-            username: ${{ secrets.VM_USER }}
-            key: ${{ secrets.VM_KEY }}
-            port: 22
-            script: |
-              docker rmi $(docker images -q)
-              docker pull dhanushd27/memobrain:${{ github.sha }}
-              docker images
+      - name: SSH into VM
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.VM_USER }}
+          key: ${{ secrets.VM_KEY }}
+          port: 22
+          script: |
+            docker rmi $(docker images -q)
+            docker pull dhanushd27/memobrain:${{ github.sha }}
+            docker images
               
 # build image
 # login on docker
