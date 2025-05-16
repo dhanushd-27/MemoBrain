@@ -44,11 +44,11 @@ jobs:
             docker pull dhanushd27/memobrain:${{ github.sha }}
             docker stop memobrain
             docker rm memobrain
-            docker run -p 3001:3000 -e ACCESS_TOKEN_SECRET=${{ secrets.ACCESS_TOKEN_SECRET }} -e REFRESH_TOKEN_SECRET=${{ secrets.REFRESH_TOKEN_SECRET }} -e ACCESS_TOKEN_EXPIRY=${{ secrets.ACCESS_TOKEN_EXPIRY }} -e REFRESH_TOKEN_EXPIRY=${{ secrets.REFRESH_TOKEN_EXPIRY }} -e REFRESH_TOKEN_NAME=${{ secrets.REFRESH_TOKEN_NAME }} -e ACCESS_TOKEN_NAME=${{ secrets.ACCESS_TOKEN_NAME }} -e NEXT_PUBLIC_SHARE_URL=${{ secrets.NEXT_PUBLIC_SHARE_URL }} -e DATABASE_URL=${{ secrets.DATABASE_URL }} --name memobrain -d dhanushd27/memobrain:${{ github.sha }}
-              
-# build image
-# login on docker
-# push image to dockerhub
-# login to vm
-# pull image
-# run image
+            docker run -p 3001:3000 -e ACCESS_TOKEN_SECRET=${{ secrets.ACCESS_TOKEN_SECRET }} \
+              -e REFRESH_TOKEN_SECRET=${{ secrets.REFRESH_TOKEN_SECRET }} \
+              -e ACCESS_TOKEN_EXPIRY=${{ secrets.ACCESS_TOKEN_EXPIRY }} \
+              -e REFRESH_TOKEN_EXPIRY=${{ secrets.REFRESH_TOKEN_EXPIRY }} \
+              -e REFRESH_TOKEN_NAME=${{ secrets.REFRESH_TOKEN_NAME }} \
+              -e ACCESS_TOKEN_NAME=${{ secrets.ACCESS_TOKEN_NAME }} \
+              -e NEXT_PUBLIC_SHARE_URL=${{ secrets.NEXT_PUBLIC_SHARE_URL }} \
+              -e DATABASE_URL=${{ secrets.DATABASE_URL }} --name memobrain -d dhanushd27/memobrain:${{ github.sha }}
