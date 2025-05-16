@@ -47,11 +47,7 @@ jobs:
               docker rmi $(docker images -q)
               docker pull dhanushd27/memobrain:${{ github.sha }}
               docker images
-          
-        
-
-      
-
+              
 # build image
 # login on docker
 # push image to dockerhub
