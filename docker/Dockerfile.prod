@@ -24,6 +24,8 @@ RUN DATABASE_URL=${DATABASE_URL} pnpm dlx prisma@5.18.0 generate
 
 RUN pnpm run build
 
+RUN ls -la
+
 FROM node:20-alpine AS run
 
 RUN set -ex; \
@@ -40,7 +42,6 @@ WORKDIR /usr/src/app
 COPY --from=build --chown=1001:1001 /usr/src/app/.next/standalone ./
 COPY --from=build --chown=1001:1001 /usr/src/app/.next/static ./.next/static
 COPY --from=build --chown=1001:1001 /usr/src/app/public ./public
-COPY --from=build --chown=1001:1001 /usr/src/app/.env.production ./.env
 
 ENV NODE_ENV=production
 
