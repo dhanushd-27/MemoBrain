@@ -3,15 +3,14 @@ name: lint and type check
 on:
   pull_request:
     branches:
-      - "feat/*"
-      - "fix/*"
-      - "test/*"
-      - "main"
-      - "dev"
+      - feat/*
+      - fix/*
+      - test/*
+      - main
   push:
     branches:
-      - "main"
-      - dev
+      - main
+      - production
 
 jobs:
   lint:

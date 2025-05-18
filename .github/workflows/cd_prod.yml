@@ -3,7 +3,6 @@ name: CD Prod
 on:
   push:
     branches:
-      - main
       - production
 
 jobs:
