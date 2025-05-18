@@ -26,8 +26,9 @@ export default function UserBrains() {
   }
 
   const brainsQuery = useQuery({
-    queryKey: ["brains"],
-    queryFn: handleFetchingBrain
+    queryKey: ["brains", tagState],
+    queryFn: handleFetchingBrain,
+    enabled: !!tagState
   })
 
 
