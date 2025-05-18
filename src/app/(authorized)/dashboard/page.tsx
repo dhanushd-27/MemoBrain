@@ -2,6 +2,7 @@ import { CreateBrain } from "@/components/buttons/createBrain"
 import { Share } from "@/components/buttons/shareButton"
 import { AppSidebar } from "@/components/dashboard/app-sidebar"
 import UserBrains from "@/components/dashboard/user-brains"
+
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -18,10 +19,11 @@ import {
 } from "@/components/ui/sidebar"
 
 export default function Page() {
+
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset>
+      <SidebarProvider>
+        <AppSidebar />
+        <SidebarInset>
         <header className="flex h-16 shrink-0 items-center justify-between gap-2 pr-4">
           <div className="flex items-center gap-2 px-4">
               <SidebarTrigger className="-ml-1" />
@@ -46,17 +48,9 @@ export default function Page() {
           </div>
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-          {/* <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-            <div className="aspect-video rounded-xl bg-muted/50" />
-            <div className="aspect-video rounded-xl bg-muted/50" />
-            <div className="aspect-video rounded-xl bg-muted/50" />
-            <div className="aspect-video rounded-xl bg-muted/50" />
-            <div className="aspect-video rounded-xl bg-muted/50" />
-            <div className="aspect-video rounded-xl bg-muted/50" />
-          </div> */}
           <UserBrains />
         </div>
-      </SidebarInset>
-    </SidebarProvider>
+        </SidebarInset>
+      </SidebarProvider>
   )
 }

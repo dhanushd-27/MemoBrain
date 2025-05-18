@@ -28,8 +28,10 @@ import { toast } from "sonner"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import Tag from "../Tag";
 import { tagColorPalette } from "@/utils/other/colorStore";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export function CreateBrain() {
+  const queryClient = useQueryClient();
   const [tagsArray, setTagsArray] = useState<string[]>([]);
 
   const form = useForm<FormBrainType>({
@@ -74,6 +76,13 @@ export function CreateBrain() {
     setTagsArray([]);
   }
 
+  const brainMutation = useMutation({
+    mutationFn: onSubmit,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["brains"] });
+    }
+  })
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -87,7 +96,7 @@ export function CreateBrain() {
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={ form.handleSubmit(onSubmit) } className="flex flex-col gap-4">
+          <form onSubmit={form.handleSubmit((values) => brainMutation.mutate(values))} className="flex flex-col gap-4">
             <FormField 
               control={ form.control }
               name="title"
