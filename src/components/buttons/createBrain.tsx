@@ -33,6 +33,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 export function CreateBrain() {
   const queryClient = useQueryClient();
   const [tagsArray, setTagsArray] = useState<string[]>([]);
+  const [open, setOpen] = useState(false);
 
   const form = useForm<FormBrainType>({
     resolver: zodResolver(FormBrainZodSchema),
@@ -71,9 +72,11 @@ export function CreateBrain() {
       toast.error(response.errorInformation.message);
     } else {
       toast.success(response.message);
+      setOpen(false);
     }
 
     setTagsArray([]);
+    form.reset();
   }
 
   const brainMutation = useMutation({
@@ -84,7 +87,7 @@ export function CreateBrain() {
   })
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>Create Brain</Button>
       </DialogTrigger>
