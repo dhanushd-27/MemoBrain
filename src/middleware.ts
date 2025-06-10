@@ -30,8 +30,6 @@ export async function middleware(req: NextRequest) {
   // In the general auth logic
   let token = cookieStore.get(accessTokenName)?.value ?? undefined;
 
-
-
   try {
     if (!token) {
       const refreshed = await handleAccessTokenExpiry() as string | undefined;
