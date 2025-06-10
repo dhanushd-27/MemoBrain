@@ -46,7 +46,9 @@ jobs:
           key: ${{ secrets.VM_KEY }}
           port: 22
           script: |
-            docker image prune -q
+            sudo usermod -aG docker $USER
+            newgrp docker
+            docker image prune -f
             docker pull dhanushd27/memobrain:${{ github.sha }}
             docker stop memobrain
             docker rm memobrain
