@@ -1,1 +1,0 @@
-export const tagColorPalette = ["bg-[#B7B1F2]", "bg-[#FDB7EA]", "bg-[#FFDCCC]", "bg-[#FBF3B9]"]
