@@ -1,0 +1,44 @@
+name: Dev Compose
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev
+    container_name: app
+    restart: always
+    ports:
+      - 3000:3000
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/postgres
+      - ACCESS_TOKEN_SECRET=your_access_token_secret
+      - REFRESH_TOKEN_SECRET=your_refresh_token_secret
+      - ACCESS_TOKEN_EXPIRY=15m
+      - REFRESH_TOKEN_EXPIRY=7d
+      - REFRESH_TOKEN_NAME=refresh_token
+      - ACCESS_TOKEN_NAME=access_token
+      - NEXT_PUBLIC_SHARE_URL=http://localhost:3000/brain/
+    depends_on:
+      postgres:
+        condition: service_healthy
+      
+  postgres:
+    image: postgres:alpine
+    container_name: db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ 'CMD-SHELL', 'pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}' ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
