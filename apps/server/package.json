@@ -1,5 +1,5 @@
 {
-  "name": ".",
+  "name": "server",
   "module": "src/index.ts",
   "type": "module",
   "devDependencies": {
@@ -7,5 +7,14 @@
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
+  },
+  "scripts": {
+    "build": "tsc -d",
+    "start": "bun run src/index.ts",
+    "dev": "npm run build && npm run start"
+  },
+  "dependencies": {
+    "@types/express": "^5.0.3",
+    "express": "^5.1.0"
   }
 }
