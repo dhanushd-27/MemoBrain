@@ -1,0 +1,12 @@
+{
+  "name": "@repo/tailwind-config",
+  "exports": {
+    "./tailwind.config": "./tailwind.config.ts",
+    "./theme.css": "./theme.css"
+  },
+  "files": [
+    "tailwind.config.ts",
+    "theme.css"
+  ],
+  "sideEffects": ["**/*.css"]
+}
