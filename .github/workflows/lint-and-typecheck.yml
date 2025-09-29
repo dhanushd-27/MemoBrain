@@ -6,6 +6,7 @@ on:
       - opened
     branches:
       - prod
+      - staging
 
 jobs:
   lint-and-typecheck:
