@@ -1,5 +1,8 @@
+"use client"
+
 import React from 'react'
 import DesignStripe from './DesignStripe'
+import { motion } from 'motion/react'
 
 type HeaderDesignProps = {
   side: 'left' | 'right'
@@ -49,7 +52,13 @@ export default function HeaderDesign({ side, className = '' }: HeaderDesignProps
 
   return (
     <section className={`relative flex h-52 w-72 ${className}`}>
-      <div className="bg-secondary absolute inset-0 -z-10 opacity-30 -top-10 blur-2xl h-36" />
+      <motion.div className="bg-secondary absolute inset-0 -z-10 opacity-30 -top-10 blur-2xl h-36"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.3 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+      </motion.div>
 
       {stripes.map((stripe, index) => (
         <DesignStripe
