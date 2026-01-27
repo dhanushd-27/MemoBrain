@@ -1,33 +1,31 @@
 import {
   pgTable,
   uuid,
-  text,
+  varchar,
   timestamp,
-  primaryKey,
 } from "drizzle-orm/pg-core";
 import { relations, sql } from "drizzle-orm";
 import { users } from "./user";
-import { memos } from "./memo";
 
-export const slices = pgTable("slices", {
+export const refreshTokens = pgTable("refresh_tokens", {
   id: uuid("id")
     .primaryKey()
     .default(sql`gen_random_uuid()`)
     .notNull(),
-  name: text("name").notNull(),
-  description: text("description").notNull(),
-  ownerId: uuid("owner_id")
+  userId: uuid("user_id")
     .references(() => users.id)
     .notNull(),
+  tokenHash: varchar("token_hash", { length: 256 }).notNull(),
+  expiresAt: timestamp("expires_at").notNull(),
   createdAt: timestamp("created_at")
     .default(sql`now()`)
     .notNull(),
+  revokedAt: timestamp("revoked_at"),
 });
 
-export const sliceRelations = relations(slices, ({ one, many }) => ({
-  owner: one(users, {
-    fields: [slices.ownerId],
+export const refreshTokenRelations = relations(refreshTokens, ({ one }) => ({
+  user: one(users, {
+    fields: [refreshTokens.userId],
     references: [users.id],
   }),
-  memos: many(memos),
 }));

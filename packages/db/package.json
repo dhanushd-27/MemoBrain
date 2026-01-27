@@ -1,12 +1,16 @@
 {
-  "name": "db",
-  "module": ".src/index.ts",
+  "name": "@repo/db",
+  "module": "./src/index.ts",
   "scripts": {
     "drizzle:generate": "drizzle-kit generate",
     "drizzle:push": "drizzle-kit push",
     "drizzle:studio": "drizzle-kit studio",
     "drizzle:migrate": "drizzle-kit migrate"
   },
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "types": "./src/index.ts",
   "type": "module",
   "devDependencies": {
     "@types/bun": "latest",
