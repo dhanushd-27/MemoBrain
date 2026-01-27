@@ -1,3 +1,5 @@
+import type { StringValue } from 'ms';
+
 interface Config {
   // Google OAuth
   google: {
@@ -16,19 +18,13 @@ interface Config {
   cookies: {
     accessTokenName: string;
     refreshTokenName: string;
-    accessTokenExpire: string;
-    refreshTokenExpire: string;
+    accessTokenExpire: StringValue;
+    refreshTokenExpire: StringValue;
   };
 
   // Client
   client: {
     appUrl: string;
-  };
-
-  // Hashing
-  hash: {
-    algorithm: string;
-    saltRounds: number;
   };
 
   // Server
@@ -75,17 +71,12 @@ export const config: Config = {
   cookies: {
     accessTokenName: getEnvVar("ACCESS_TOKEN_COOKIE_NAME", "access_token"),
     refreshTokenName: getEnvVar("REFRESH_TOKEN_COOKIE_NAME", "refresh_token"),
-    accessTokenExpire: getEnvVar("ACCESS_TOKEN_EXPIRE", "15m"),
-    refreshTokenExpire: getEnvVar("REFRESH_TOKEN_EXPIRE", "7d"),
+    accessTokenExpire: getEnvVar("ACCESS_TOKEN_EXPIRE", "15m") as StringValue,
+    refreshTokenExpire: getEnvVar("REFRESH_TOKEN_EXPIRE", "7d") as StringValue,
   },
 
   client: {
     appUrl: getEnvVar("CLIENT_APP_URL", "http://localhost:5173"),
-  },
-
-  hash: {
-    algorithm: getEnvVar("HASH_ALGORITHM", "argon2"),
-    saltRounds: getEnvVarAsNumber("HASH_SALT_ROUNDS", 10),
   },
 
   server: {
