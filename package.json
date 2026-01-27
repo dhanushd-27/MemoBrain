@@ -1,5 +1,5 @@
 {
-  "name": "MemoBrain",
+  "name": "cobrain",
   "private": true,
   "scripts": {
     "build": "turbo run build",
