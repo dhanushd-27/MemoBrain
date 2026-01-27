@@ -1,8 +1,10 @@
 import React from 'react'
-import "./page.module.css";
+import Nav from '../components/Header/Header'
 
 export default function App() {
   return (
-    <div>Coming Soon!</div>
+    <section className='flex flex-col'>
+      <Nav />
+    </section>
   )
 }
