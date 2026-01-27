@@ -7,7 +7,7 @@ authRouter.post("/signup", handleSignUp);
 authRouter.post("/signin", handleSignIn);
 authRouter.post("/signout", handleSignOut);
 
-authRouter.post("/google", handleGoogleSignIn);
-authRouter.post("/google/callback", handleGoogleCallback);
+authRouter.get("/google", handleGoogleSignIn);
+authRouter.get("/google/callback", handleGoogleCallback);
 
 authRouter.post("/refresh", handleRefresh);
