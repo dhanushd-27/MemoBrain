@@ -3,6 +3,7 @@ import type { Request, Response } from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import "dotenv/config";
+import passport from "./utils/passport";
 
 import { authRouter } from "./routes/auth.routes";
 import { userRouter } from "./routes/user.routes";
@@ -18,6 +19,7 @@ app.use(
     origin: config.client.appUrl,
   }),
 );
+app.use(passport.initialize());
 
 app.use("/auth", authRouter);
 app.use("/user", userRouter);

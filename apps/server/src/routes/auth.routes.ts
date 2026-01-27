@@ -1,5 +1,13 @@
 import { Router } from "express";
-import { handleRefresh, handleGoogleCallback, handleGoogleSignIn, handleSignIn, handleSignOut, handleSignUp } from "../services/auth.services";
+import {
+  handleRefresh,
+  handleGoogleCallback,
+  handleGoogleSignIn,
+  handleSignIn,
+  handleSignOut,
+  handleSignUp,
+} from "../services/auth.services";
+import { authMiddleware } from "../middlewares/auth.middleware";
 
 export const authRouter = Router();
 

@@ -5,32 +5,189 @@ import type {
   SignOutRequest,
   RefreshTokenRequest,
   AuthResponse,
-  GoogleCallbackQuery,
 } from "../types/auth.types";
 import passport from "../utils/passport";
-import { createToken } from "../utils/auth.helper";
+import { createToken, hashString, verifyString, verifyToken } from "../utils/auth.helper";
 import config from "../config";
 import type { User } from "@repo/types";
+import { db, users, refreshTokens } from "@repo/db";
+import { eq, and } from "drizzle-orm";
+import crypto from "crypto";
 
 export const handleSignUp = async (
   req: Request<{}, AuthResponse, SignUpRequest>,
   res: Response<AuthResponse>
 ) => {
-  // TODO: Implement sign up logic
+  try {
+    const { name, email, password } = req.body;
+
+    // Check if user exists
+    const existingUser = await db.query.users.findFirst({
+      where: eq(users.email, email),
+    });
+
+    if (existingUser) {
+      return res.status(400).json({
+        error: "User already exists",
+      } as any);
+    }
+
+    // Hash password
+    const passwordHash = await hashString(password);
+
+    // Create user
+    const [newUser] = await db
+      .insert(users)
+      .values({
+        name,
+        email,
+        passwordHash,
+        googleId: null,
+      })
+      .returning();
+
+    if (!newUser) {
+      return res.status(500).json({
+        error: "Failed to create user",
+      } as any);
+    }
+
+    // Generate tokens
+    const accessToken = createToken(newUser, config.jwt.accessSecret);
+    const refreshToken = createToken(newUser, config.jwt.refreshSecret);
+
+    // Store refresh token
+    const tokenHash = crypto.createHash("sha256").update(refreshToken).digest("hex");
+    await db.insert(refreshTokens).values({
+      userId: newUser.id,
+      tokenHash,
+      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+    });
+
+    // Set cookies
+    res.cookie(config.cookies.accessTokenName, accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 15 * 60 * 1000,
+    });
+
+    res.cookie(config.cookies.refreshTokenName, refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    res.status(201).json({
+      user: {
+        id: newUser.id,
+        name: newUser.name,
+        email: newUser.email,
+      },
+      accessToken,
+      refreshToken,
+    });
+  } catch (error) {
+    console.error("Sign up error:", error);
+    res.status(500).json({ error: "Sign up failed" } as any);
+  }
 };
 
 export const handleSignIn = async (
   req: Request<{}, AuthResponse, SignInRequest>,
   res: Response<AuthResponse>
 ) => {
-  // TODO: Implement sign in logic
+  try {
+    const { email, password } = req.body;
+
+    // Find user
+    const user = await db.query.users.findFirst({
+      where: eq(users.email, email),
+    });
+
+    if (!user || !user.passwordHash) {
+      return res.status(401).json({
+        error: "Invalid credentials",
+      } as any);
+    }
+
+    // Verify password
+    const isValid = await verifyString(password, user.passwordHash);
+    if (!isValid) {
+      return res.status(401).json({
+        error: "Invalid credentials",
+      } as any);
+    }
+
+    // Generate tokens
+    const accessToken = createToken(user, config.jwt.accessSecret);
+    const refreshToken = createToken(user, config.jwt.refreshSecret);
+
+    // Store refresh token
+    const tokenHash = crypto.createHash("sha256").update(refreshToken).digest("hex");
+    await db.insert(refreshTokens).values({
+      userId: user.id,
+      tokenHash,
+      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    });
+
+    // Set cookies
+    res.cookie(config.cookies.accessTokenName, accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 15 * 60 * 1000,
+    });
+
+    res.cookie(config.cookies.refreshTokenName, refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    res.json({
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+      },
+      accessToken,
+      refreshToken,
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Sign in failed" } as any);
+  }
 };
 
 export const handleSignOut = async (
   req: Request<{}, {}, SignOutRequest>,
   res: Response<{ message: string }>
 ) => {
-  // TODO: Implement sign out logic
+  try {
+    // Get refresh token from cookie (preferred) or body
+    const refreshToken = req.cookies[config.cookies.refreshTokenName] || req.body?.refreshToken;
+
+    if (refreshToken) {
+      const tokenHash = crypto.createHash("sha256").update(refreshToken).digest("hex");
+      
+      // Revoke token
+      await db
+        .update(refreshTokens)
+        .set({ revokedAt: new Date() })
+        .where(eq(refreshTokens.tokenHash, tokenHash));
+    }
+
+    // Clear cookies
+    res.clearCookie(config.cookies.accessTokenName);
+    res.clearCookie(config.cookies.refreshTokenName);
+
+    res.json({ message: "Signed out successfully" });
+  } catch (error) {
+    console.error("Sign out error:", error);
+    res.status(500).json({ error: "Sign out failed" } as any);
+  }
 };
 
 export const handleGoogleSignIn = (
@@ -38,7 +195,6 @@ export const handleGoogleSignIn = (
   res: Response,
   next: NextFunction
 ) => {
-  // Redirect to Google OAuth
   passport.authenticate("google", {
     scope: ["profile", "email"],
     session: false,
@@ -73,24 +229,30 @@ export const handleGoogleCallback = (
         const accessToken = createToken(user, config.jwt.accessSecret);
         const refreshToken = createToken(user, config.jwt.refreshSecret);
 
-        // TODO: Store refresh token in database
+        // Store refresh token
+        const tokenHash = crypto.createHash("sha256").update(refreshToken).digest("hex");
+        await db.insert(refreshTokens).values({
+          userId: user.id,
+          tokenHash,
+          expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+        });
 
-        // Set tokens as HTTP-only cookies
+        // Set cookies
         res.cookie(config.cookies.accessTokenName, accessToken, {
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
           sameSite: "lax",
-          maxAge: 15 * 60 * 1000, // 15 minutes in milliseconds
+          maxAge: 15 * 60 * 1000,
         });
 
         res.cookie(config.cookies.refreshTokenName, refreshToken, {
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
           sameSite: "lax",
-          maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
+          maxAge: 7 * 24 * 60 * 60 * 1000,
         });
 
-        const response: AuthResponse = {
+        res.json({
           user: {
             id: user.id,
             name: user.name,
@@ -98,10 +260,7 @@ export const handleGoogleCallback = (
           },
           accessToken,
           refreshToken,
-        };
-
-        // Return user data and tokens
-        res.json(response);
+        });
       } catch (error) {
         next(error);
       }
@@ -113,5 +272,89 @@ export const handleRefresh = async (
   req: Request<{}, AuthResponse, RefreshTokenRequest>,
   res: Response<AuthResponse>
 ) => {
-  // TODO: Implement token refresh logic
+  try {
+    // Get refresh token from cookie (preferred) or body
+    const refreshToken = req.cookies[config.cookies.refreshTokenName] || req.body?.refreshToken;
+
+    if (!refreshToken) {
+      return res.status(401).json({
+        error: "Refresh token required",
+      } as any);
+    }
+
+    // Verify token
+    const decoded = verifyToken(refreshToken, config.jwt.refreshSecret) as any;
+    const tokenHash = crypto.createHash("sha256").update(refreshToken).digest("hex");
+
+    // Check if token exists and is valid
+    const storedToken = await db.query.refreshTokens.findFirst({
+      where: and(
+        eq(refreshTokens.tokenHash, tokenHash),
+        eq(refreshTokens.userId, decoded.id)
+      ),
+    });
+
+    if (!storedToken || storedToken.revokedAt || storedToken.expiresAt < new Date()) {
+      return res.status(401).json({
+        error: "Invalid refresh token",
+      } as any);
+    }
+
+    // Get user
+    const user = await db.query.users.findFirst({
+      where: eq(users.id, decoded.id),
+    });
+
+    if (!user) {
+      return res.status(401).json({
+        error: "User not found",
+      } as any);
+    }
+
+    // Revoke old token
+    await db
+      .update(refreshTokens)
+      .set({ revokedAt: new Date() })
+      .where(eq(refreshTokens.id, storedToken.id));
+
+    // Generate new tokens
+    const newAccessToken = createToken(user, config.jwt.accessSecret);
+    const newRefreshToken = createToken(user, config.jwt.refreshSecret);
+
+    // Store new refresh token
+    const newTokenHash = crypto.createHash("sha256").update(newRefreshToken).digest("hex");
+    await db.insert(refreshTokens).values({
+      userId: user.id,
+      tokenHash: newTokenHash,
+      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    });
+
+    // Set cookies
+    res.cookie(config.cookies.accessTokenName, newAccessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 15 * 60 * 1000,
+    });
+
+    res.cookie(config.cookies.refreshTokenName, newRefreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    res.json({
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+      },
+      accessToken: newAccessToken,
+      refreshToken: newRefreshToken,
+    });
+  } catch (error) {
+    console.error("Token refresh error:", error);
+    res.status(401).json({ error: "Token refresh failed" } as any);
+  }
 };
