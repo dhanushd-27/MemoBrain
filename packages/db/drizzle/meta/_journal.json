@@ -15,6 +15,13 @@
       "when": 1769503693113,
       "tag": "0001_milky_gorilla_man",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1769596259256,
+      "tag": "0002_slow_mattie_franklin",
+      "breakpoints": true
     }
   ]
 }

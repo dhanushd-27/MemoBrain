@@ -10,5 +10,5 @@ export * from "./schema";
 export { users, userRelations } from "./schema/user";
 export { slices, sliceRelations } from "./schema/slice";
 export { sliceAccess, sliceAccessRelations } from "./schema/sliceAccess";
-export { memos, memoRelations } from "./schema/memo";
+export { memos, memoRelations, memoTypeEnum } from "./schema/memo";
 export { refreshTokens, refreshTokenRelations } from "./schema/refreshToken";
