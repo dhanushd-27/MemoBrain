@@ -33,3 +33,55 @@ export const sliceSearchQuerySchema = z.object({
 });
 
 export type SliceSearchQuery = z.infer<typeof sliceSearchQuerySchema>;
+
+// Slice Access Status
+export const sliceAccessStatusSchema = z.enum([
+  "private",
+  "public",
+  "specific",
+]);
+
+export type SliceAccessStatus = z.infer<typeof sliceAccessStatusSchema>;
+
+// Update Slice Access Status
+export const updateSliceAccessStatusSchema = z.object({
+  accessStatus: sliceAccessStatusSchema,
+});
+
+export type UpdateSliceAccessStatusInput = z.infer<
+  typeof updateSliceAccessStatusSchema
+>;
+
+// Slice Access Role
+export const sliceAccessRoleSchema = z.enum(["viewer", "editor"]);
+
+export type SliceAccessRoleType = z.infer<typeof sliceAccessRoleSchema>;
+
+// Grant Slice Access
+export const grantSliceAccessSchema = z
+  .object({
+    email: z.string().email("Invalid email address").optional(),
+    userId: z.string().uuid("Invalid user ID").optional(),
+    role: sliceAccessRoleSchema,
+  })
+  .refine((data) => data.email !== undefined || data.userId !== undefined, {
+    message: "Either email or userId must be provided",
+  });
+
+export type GrantSliceAccessInput = z.infer<typeof grantSliceAccessSchema>;
+
+// Update Slice Access Role
+export const updateSliceAccessRoleSchema = z.object({
+  role: sliceAccessRoleSchema,
+});
+
+export type UpdateSliceAccessRoleInput = z.infer<
+  typeof updateSliceAccessRoleSchema
+>;
+
+// User ID Param
+export const userIdParamSchema = z.object({
+  userId: z.string().uuid("Invalid user ID"),
+});
+
+export type UserIdParam = z.infer<typeof userIdParamSchema>;
