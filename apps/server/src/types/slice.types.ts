@@ -22,7 +22,7 @@ export interface SlicesResponse {
 
 export interface SliceBrainsResponse {
   sliceId: string;
-  brains: any[]; // Will be typed properly when brain/memo types are finalized
+  brains: import("@repo/types").Memo[];
 }
 
 export interface DeleteSliceResponse {

@@ -62,6 +62,7 @@ export const handleGetSlices = async (
 ) => {
   try {
     const userId = (req as any).user?.id;
+    const { title } = req.query;
 
     if (!userId) {
       return res.status(401).json({
@@ -69,10 +70,22 @@ export const handleGetSlices = async (
       } as any);
     }
 
-    const userSlices = await db.query.slices.findMany({
-      where: eq(slices.ownerId, userId),
-      orderBy: (slices, { desc }) => [desc(slices.createdAt)],
-    });
+    let userSlices;
+
+    if (title && typeof title === "string") {
+      // Search slices by title (case-insensitive)
+      const { like } = await import("drizzle-orm");
+      userSlices = await db.query.slices.findMany({
+        where: and(eq(slices.ownerId, userId), like(slices.name, `%${title}%`)),
+        orderBy: (slices, { desc }) => [desc(slices.createdAt)],
+      });
+    } else {
+      // Get all slices
+      userSlices = await db.query.slices.findMany({
+        where: eq(slices.ownerId, userId),
+        orderBy: (slices, { desc }) => [desc(slices.createdAt)],
+      });
+    }
 
     res.json({
       slices: userSlices,
@@ -241,15 +254,15 @@ export const handleGetSliceBrains = async (
       } as any);
     }
 
-    // Get all memos/brains for this slice
-    const sliceBrains = await db.query.memos.findMany({
+    // Get all memos for this slice
+    const sliceMemos = await db.query.memos.findMany({
       where: eq(memos.sliceId, sliceId),
       orderBy: (memos, { desc }) => [desc(memos.createdAt)],
     });
 
     res.json({
       sliceId,
-      brains: sliceBrains,
+      brains: sliceMemos,
     });
   } catch (error) {
     console.error("Get slice brains error:", error);
