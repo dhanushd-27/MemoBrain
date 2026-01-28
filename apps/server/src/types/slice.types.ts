@@ -28,3 +28,35 @@ export interface SliceBrainsResponse {
 export interface DeleteSliceResponse {
   message: string;
 }
+
+// Slice Access types
+export interface UpdateSliceAccessStatusRequest {
+  accessStatus: "private" | "public" | "specific";
+}
+
+export interface GrantSliceAccessRequest {
+  email?: string;
+  userId?: string;
+  role: "viewer" | "editor";
+}
+
+export interface UpdateSliceAccessRoleRequest {
+  role: "viewer" | "editor";
+}
+
+export interface SliceAccessUser {
+  userId: string;
+  email: string;
+  name: string | null;
+  role: "viewer" | "editor";
+}
+
+export interface SliceAccessListResponse {
+  sliceId: string;
+  accessStatus: "private" | "public" | "specific";
+  users: SliceAccessUser[];
+}
+
+export interface SliceAccessResponse {
+  message: string;
+}

@@ -146,8 +146,16 @@ export const handleGetSlice = async (
 
     const { sliceId } = paramValidation.data;
 
+    // Check if user can access this slice
+    const { canAccessSlice } = await import("../helpers/slice.helpers");
+    if (!(await canAccessSlice(userId, sliceId))) {
+      return res.status(HttpStatus.FORBIDDEN).json({
+        error: "You don't have permission to access this slice",
+      } as any);
+    }
+
     const slice = await db.query.slices.findFirst({
-      where: and(eq(slices.id, sliceId), eq(slices.ownerId, userId)),
+      where: eq(slices.id, sliceId),
     });
 
     if (!slice) {
@@ -192,6 +200,14 @@ export const handleUpdateSlice = async (
 
     const { sliceId } = paramValidation.data;
 
+    // Check if user can manage this slice (owner only)
+    const { canManageSlice } = await import("../helpers/slice.helpers");
+    if (!(await canManageSlice(userId, sliceId))) {
+      return res.status(HttpStatus.FORBIDDEN).json({
+        error: "You don't have permission to update this slice",
+      } as any);
+    }
+
     // Validate body with Zod
     const bodyValidation = updateSliceSchema.safeParse(req.body);
     if (!bodyValidation.success) {
@@ -202,17 +218,6 @@ export const handleUpdateSlice = async (
     }
 
     const { name, description } = bodyValidation.data;
-
-    // Check if slice exists and belongs to user
-    const existingSlice = await db.query.slices.findFirst({
-      where: and(eq(slices.id, sliceId), eq(slices.ownerId, userId)),
-    });
-
-    if (!existingSlice) {
-      return res.status(HttpStatus.NOT_FOUND).json({
-        error: "Slice not found",
-      } as any);
-    }
 
     // Build update object with only provided fields
     const updateData: Partial<UpdateSliceRequest> = {};
@@ -228,7 +233,7 @@ export const handleUpdateSlice = async (
     const [updatedSlice] = await db
       .update(slices)
       .set(updateData)
-      .where(and(eq(slices.id, sliceId), eq(slices.ownerId, userId)))
+      .where(eq(slices.id, sliceId))
       .returning();
 
     if (!updatedSlice) {
@@ -273,20 +278,15 @@ export const handleDeleteSlice = async (
 
     const { sliceId } = paramValidation.data;
 
-    // Check if slice exists and belongs to user
-    const existingSlice = await db.query.slices.findFirst({
-      where: and(eq(slices.id, sliceId), eq(slices.ownerId, userId)),
-    });
-
-    if (!existingSlice) {
-      return res.status(HttpStatus.NOT_FOUND).json({
-        error: "Slice not found",
+    // Check if user can manage this slice (owner only)
+    const { canManageSlice } = await import("../helpers/slice.helpers");
+    if (!(await canManageSlice(userId, sliceId))) {
+      return res.status(HttpStatus.FORBIDDEN).json({
+        error: "You don't have permission to delete this slice",
       } as any);
     }
 
-    await db
-      .delete(slices)
-      .where(and(eq(slices.id, sliceId), eq(slices.ownerId, userId)));
+    await db.delete(slices).where(eq(slices.id, sliceId));
 
     res.json({
       message: "Slice deleted successfully",
@@ -324,14 +324,11 @@ export const handleGetSliceBrains = async (
 
     const { sliceId } = paramValidation.data;
 
-    // Check if slice exists and belongs to user
-    const slice = await db.query.slices.findFirst({
-      where: and(eq(slices.id, sliceId), eq(slices.ownerId, userId)),
-    });
-
-    if (!slice) {
-      return res.status(HttpStatus.NOT_FOUND).json({
-        error: "Slice not found",
+    // Check if user can access this slice
+    const { canAccessSlice } = await import("../helpers/slice.helpers");
+    if (!(await canAccessSlice(userId, sliceId))) {
+      return res.status(HttpStatus.FORBIDDEN).json({
+        error: "You don't have permission to access this slice",
       } as any);
     }
 
@@ -346,9 +343,349 @@ export const handleGetSliceBrains = async (
       brains: sliceMemos,
     });
   } catch (error) {
-    console.error("Get slice brains error:", error);
     res
       .status(HttpStatus.INTERNAL_SERVER_ERROR)
       .json({ error: "Failed to get slice brains" } as any);
+  }
+};
+
+// PATCH /slices/:sliceId/access/status - Update slice access status
+export const handleUpdateSliceAccessStatus = async (
+  req: Request<
+    { sliceId: string },
+    any,
+    import("../types/slice.types").UpdateSliceAccessStatusRequest
+  >,
+  res: Response<import("../types/slice.types").SliceAccessResponse>,
+) => {
+  try {
+    const userId = (req as any).user?.id;
+
+    if (!userId) {
+      return res.status(HttpStatus.UNAUTHORIZED).json({
+        error: "Unauthorized",
+      } as any);
+    }
+
+    const { sliceId } = req.params;
+    const { canManageSlice } = await import("../helpers/slice.helpers");
+
+    // Check if user can manage this slice (owner only)
+    if (!(await canManageSlice(userId, sliceId))) {
+      return res.status(HttpStatus.FORBIDDEN).json({
+        error: "You don't have permission to manage this slice",
+      } as any);
+    }
+
+    // Validate request body
+    const { updateSliceAccessStatusSchema } = await import("@repo/types");
+    const validation = updateSliceAccessStatusSchema.safeParse(req.body);
+    if (!validation.success) {
+      return res.status(HttpStatus.INVALID_BODY).json({
+        error: "Invalid request body",
+        details: validation.error.issues,
+      } as any);
+    }
+
+    const { accessStatus } = validation.data;
+
+    // Update slice access status
+    await db.update(slices).set({ accessStatus }).where(eq(slices.id, sliceId));
+
+    res.json({
+      message: `Slice access status updated to ${accessStatus}`,
+    });
+  } catch (error) {
+    console.error("Update slice access status error:", error);
+    res
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .json({ error: "Failed to update slice access status" } as any);
+  }
+};
+
+// POST /slices/:sliceId/access/users - Grant access to a user
+export const handleGrantSliceAccess = async (
+  req: Request<
+    { sliceId: string },
+    any,
+    import("../types/slice.types").GrantSliceAccessRequest
+  >,
+  res: Response<import("../types/slice.types").SliceAccessResponse>,
+) => {
+  try {
+    const userId = (req as any).user?.id;
+
+    if (!userId) {
+      return res.status(HttpStatus.UNAUTHORIZED).json({
+        error: "Unauthorized",
+      } as any);
+    }
+
+    const { sliceId } = req.params;
+    const { canManageSlice } = await import("../helpers/slice.helpers");
+
+    // Check if user can manage this slice (owner only)
+    if (!(await canManageSlice(userId, sliceId))) {
+      return res.status(HttpStatus.FORBIDDEN).json({
+        error: "You don't have permission to manage this slice",
+      } as any);
+    }
+
+    // Validate request body
+    const { grantSliceAccessSchema } = await import("@repo/types");
+    const validation = grantSliceAccessSchema.safeParse(req.body);
+    if (!validation.success) {
+      return res.status(HttpStatus.INVALID_BODY).json({
+        error: "Invalid request body",
+        details: validation.error.issues,
+      } as any);
+    }
+
+    const { email, userId: targetUserId, role } = validation.data;
+
+    // Find user by email or userId
+    const { users } = await import("@repo/db");
+    let targetUser;
+
+    if (targetUserId) {
+      targetUser = await db.query.users.findFirst({
+        where: eq(users.id, targetUserId),
+      });
+    } else if (email) {
+      targetUser = await db.query.users.findFirst({
+        where: eq(users.email, email),
+      });
+    }
+
+    if (!targetUser) {
+      return res.status(HttpStatus.NOT_FOUND).json({
+        error: "User not found",
+      } as any);
+    }
+
+    // Check if access already exists
+    const { sliceAccess } = await import("@repo/db");
+    const existingAccess = await db.query.sliceAccess.findFirst({
+      where: and(
+        eq(sliceAccess.sliceId, sliceId),
+        eq(sliceAccess.userId, targetUser.id),
+      ),
+    });
+
+    if (existingAccess) {
+      // Update existing access
+      await db
+        .update(sliceAccess)
+        .set({ role })
+        .where(
+          and(
+            eq(sliceAccess.sliceId, sliceId),
+            eq(sliceAccess.userId, targetUser.id),
+          ),
+        );
+
+      return res.json({
+        message: `Access updated for ${targetUser.email}`,
+      });
+    }
+
+    // Create new access grant
+    await db.insert(sliceAccess).values({
+      sliceId,
+      userId: targetUser.id,
+      role,
+    });
+
+    res.json({
+      message: `Access granted to ${targetUser.email}`,
+    });
+  } catch (error) {
+    console.error("Grant slice access error:", error);
+    res
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .json({ error: "Failed to grant slice access" } as any);
+  }
+};
+
+// DELETE /slices/:sliceId/access/users/:userId - Revoke access from a user
+export const handleRevokeSliceAccess = async (
+  req: Request<{ sliceId: string; userId: string }>,
+  res: Response<import("../types/slice.types").SliceAccessResponse>,
+) => {
+  try {
+    const userId = (req as any).user?.id;
+
+    if (!userId) {
+      return res.status(HttpStatus.UNAUTHORIZED).json({
+        error: "Unauthorized",
+      } as any);
+    }
+
+    const { sliceId, userId: targetUserId } = req.params;
+    const { canManageSlice } = await import("../helpers/slice.helpers");
+
+    // Check if user can manage this slice (owner only)
+    if (!(await canManageSlice(userId, sliceId))) {
+      return res.status(HttpStatus.FORBIDDEN).json({
+        error: "You don't have permission to manage this slice",
+      } as any);
+    }
+
+    // Validate params
+    const { userIdParamSchema } = await import("@repo/types");
+    const validation = userIdParamSchema.safeParse({ userId: targetUserId });
+    if (!validation.success) {
+      return res.status(HttpStatus.INVALID_BODY).json({
+        error: "Invalid user ID",
+        details: validation.error.issues,
+      } as any);
+    }
+
+    // Delete access grant
+    const { sliceAccess } = await import("@repo/db");
+    await db
+      .delete(sliceAccess)
+      .where(
+        and(
+          eq(sliceAccess.sliceId, sliceId),
+          eq(sliceAccess.userId, targetUserId),
+        ),
+      );
+
+    res.json({
+      message: "Access revoked successfully",
+    });
+  } catch (error) {
+    console.error("Revoke slice access error:", error);
+    res
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .json({ error: "Failed to revoke slice access" } as any);
+  }
+};
+
+// GET /slices/:sliceId/access/users - List all users with access
+export const handleGetSliceAccessList = async (
+  req: Request<{ sliceId: string }>,
+  res: Response<import("../types/slice.types").SliceAccessListResponse>,
+) => {
+  try {
+    const userId = (req as any).user?.id;
+
+    if (!userId) {
+      return res.status(HttpStatus.UNAUTHORIZED).json({
+        error: "Unauthorized",
+      } as any);
+    }
+
+    const { sliceId } = req.params;
+    const { canManageSlice } = await import("../helpers/slice.helpers");
+
+    // Check if user can manage this slice (owner only)
+    if (!(await canManageSlice(userId, sliceId))) {
+      return res.status(HttpStatus.FORBIDDEN).json({
+        error: "You don't have permission to view access list",
+      } as any);
+    }
+
+    // Get slice
+    const slice = await db.query.slices.findFirst({
+      where: eq(slices.id, sliceId),
+    });
+
+    if (!slice) {
+      return res.status(HttpStatus.NOT_FOUND).json({
+        error: "Slice not found",
+      } as any);
+    }
+
+    // Get all access grants with user details
+    const { sliceAccess } = await import("@repo/db");
+    const accessGrants = await db.query.sliceAccess.findMany({
+      where: eq(sliceAccess.sliceId, sliceId),
+      with: {
+        user: true,
+      },
+    });
+
+    const users = accessGrants.map((grant) => ({
+      userId: grant.user.id,
+      email: grant.user.email,
+      name: grant.user.name,
+      role: grant.role as "viewer" | "editor",
+    }));
+
+    res.json({
+      sliceId,
+      accessStatus: slice.accessStatus as "private" | "public" | "specific",
+      users,
+    });
+  } catch (error) {
+    console.error("Get slice access list error:", error);
+    res
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .json({ error: "Failed to get slice access list" } as any);
+  }
+};
+
+// PATCH /slices/:sliceId/access/users/:userId - Update user's role
+export const handleUpdateSliceAccessRole = async (
+  req: Request<
+    { sliceId: string; userId: string },
+    any,
+    import("../types/slice.types").UpdateSliceAccessRoleRequest
+  >,
+  res: Response<import("../types/slice.types").SliceAccessResponse>,
+) => {
+  try {
+    const userId = (req as any).user?.id;
+
+    if (!userId) {
+      return res.status(HttpStatus.UNAUTHORIZED).json({
+        error: "Unauthorized",
+      } as any);
+    }
+
+    const { sliceId, userId: targetUserId } = req.params;
+    const { canManageSlice } = await import("../helpers/slice.helpers");
+
+    // Check if user can manage this slice (owner only)
+    if (!(await canManageSlice(userId, sliceId))) {
+      return res.status(HttpStatus.FORBIDDEN).json({
+        error: "You don't have permission to manage this slice",
+      } as any);
+    }
+
+    // Validate request body
+    const { updateSliceAccessRoleSchema } = await import("@repo/types");
+    const validation = updateSliceAccessRoleSchema.safeParse(req.body);
+    if (!validation.success) {
+      return res.status(HttpStatus.INVALID_BODY).json({
+        error: "Invalid request body",
+        details: validation.error.issues,
+      } as any);
+    }
+
+    const { role } = validation.data;
+
+    // Update role
+    const { sliceAccess } = await import("@repo/db");
+    await db
+      .update(sliceAccess)
+      .set({ role })
+      .where(
+        and(
+          eq(sliceAccess.sliceId, sliceId),
+          eq(sliceAccess.userId, targetUserId),
+        ),
+      );
+
+    res.json({
+      message: `Role updated to ${role}`,
+    });
+  } catch (error) {
+    console.error("Update slice access role error:", error);
+    res
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .json({ error: "Failed to update role" } as any);
   }
 };

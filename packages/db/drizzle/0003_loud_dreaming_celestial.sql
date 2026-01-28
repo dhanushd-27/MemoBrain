@@ -1,0 +1,1 @@
+ALTER TABLE "slices" ADD COLUMN "access_status" text DEFAULT 'private' NOT NULL;

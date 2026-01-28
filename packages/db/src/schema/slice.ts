@@ -8,6 +8,7 @@ import {
 import { relations, sql } from "drizzle-orm";
 import { users } from "./user";
 import { memos } from "./memo";
+import { sliceAccess } from "./sliceAccess";
 
 export const slices = pgTable("slices", {
   id: uuid("id")
@@ -19,6 +20,7 @@ export const slices = pgTable("slices", {
   ownerId: uuid("owner_id")
     .references(() => users.id)
     .notNull(),
+  accessStatus: text("access_status").notNull().default("private"), // "private" | "public" | "specific"
   createdAt: timestamp("created_at")
     .default(sql`now()`)
     .notNull(),
@@ -30,4 +32,5 @@ export const sliceRelations = relations(slices, ({ one, many }) => ({
     references: [users.id],
   }),
   memos: many(memos),
+  accessGrants: many(sliceAccess),
 }));
