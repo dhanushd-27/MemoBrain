@@ -2,17 +2,18 @@ import type { Request, Response } from "express";
 import type { UserProfileResponse } from "../types/user.types";
 import { db, users } from "@repo/db";
 import { eq } from "drizzle-orm";
+import { HttpStatus } from "@repo/types";
 
 export const handleGetMe = async (
   req: Request,
-  res: Response<UserProfileResponse>
+  res: Response<UserProfileResponse>,
 ) => {
   try {
     // User ID should be set by auth middleware
     const userId = (req as any).user?.id;
 
     if (!userId) {
-      return res.status(401).json({
+      return res.status(HttpStatus.UNAUTHORIZED).json({
         error: "Unauthorized",
       } as any);
     }
@@ -22,7 +23,7 @@ export const handleGetMe = async (
     });
 
     if (!user) {
-      return res.status(404).json({
+      return res.status(HttpStatus.NOT_FOUND).json({
         error: "User not found",
       } as any);
     }
@@ -34,7 +35,7 @@ export const handleGetMe = async (
       createdAt: user.createdAt,
     });
   } catch (error) {
-    res.status(500).json({
+    res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
       error: "Failed to get user",
     } as any);
   }

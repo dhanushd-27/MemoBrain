@@ -7,6 +7,12 @@ import type {
 } from "../types/memo.types";
 import { db, memos, slices } from "@repo/db";
 import { eq, and } from "drizzle-orm";
+import {
+  HttpStatus,
+  createMemoSchema,
+  memoIdParamSchema,
+  updateMemoSchema,
+} from "@repo/types";
 
 // POST /memo - Create a new memo
 export const handleCreateMemo = async (
@@ -14,20 +20,24 @@ export const handleCreateMemo = async (
   res: Response<MemoResponse>,
 ) => {
   try {
-    const { type, title, content, sliceId, pinned } = req.body;
     const userId = (req as any).user?.id;
 
     if (!userId) {
-      return res.status(401).json({
+      return res.status(HttpStatus.UNAUTHORIZED).json({
         error: "Unauthorized",
       } as any);
     }
 
-    if (!type || !content || !sliceId) {
-      return res.status(400).json({
-        error: "Type, content, and sliceId are required",
+    // Validate request body with Zod
+    const validation = createMemoSchema.safeParse(req.body);
+    if (!validation.success) {
+      return res.status(HttpStatus.INVALID_BODY).json({
+        error: "Invalid request body",
+        details: validation.error.issues,
       } as any);
     }
+
+    const { type, title, content, sliceId, pinned } = validation.data;
 
     // Verify that the slice exists and belongs to the user
     const slice = await db.query.slices.findFirst({
@@ -35,7 +45,7 @@ export const handleCreateMemo = async (
     });
 
     if (!slice) {
-      return res.status(404).json({
+      return res.status(HttpStatus.NOT_FOUND).json({
         error: "Slice not found or you don't have access",
       } as any);
     }
@@ -53,17 +63,19 @@ export const handleCreateMemo = async (
       .returning();
 
     if (!newMemo) {
-      return res.status(500).json({
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
         error: "Failed to create memo",
       } as any);
     }
 
-    res.status(201).json({
+    res.status(HttpStatus.CREATED).json({
       memo: newMemo,
     });
   } catch (error) {
     console.error("Create memo error:", error);
-    res.status(500).json({ error: "Failed to create memo" } as any);
+    res
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .json({ error: "Failed to create memo" } as any);
   }
 };
 
@@ -73,21 +85,31 @@ export const handleGetMemo = async (
   res: Response<MemoResponse>,
 ) => {
   try {
-    const { id } = req.params;
     const userId = (req as any).user?.id;
 
     if (!userId) {
-      return res.status(401).json({
+      return res.status(HttpStatus.UNAUTHORIZED).json({
         error: "Unauthorized",
       } as any);
     }
+
+    // Validate params with Zod
+    const paramValidation = memoIdParamSchema.safeParse(req.params);
+    if (!paramValidation.success) {
+      return res.status(HttpStatus.INVALID_BODY).json({
+        error: "Invalid memo ID",
+        details: paramValidation.error.issues,
+      } as any);
+    }
+
+    const { id } = paramValidation.data;
 
     const memo = await db.query.memos.findFirst({
       where: eq(memos.id, id),
     });
 
     if (!memo) {
-      return res.status(404).json({
+      return res.status(HttpStatus.NOT_FOUND).json({
         error: "Memo not found",
       } as any);
     }
@@ -98,7 +120,7 @@ export const handleGetMemo = async (
     });
 
     if (!slice) {
-      return res.status(403).json({
+      return res.status(HttpStatus.FORBIDDEN).json({
         error: "You don't have access to this memo",
       } as any);
     }
@@ -108,25 +130,47 @@ export const handleGetMemo = async (
     });
   } catch (error) {
     console.error("Get memo error:", error);
-    res.status(500).json({ error: "Failed to get memo" } as any);
+    res
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .json({ error: "Failed to get memo" } as any);
   }
 };
 
-// PUT /memo/:id - Update a memo
+// PATCH /memo/:id - Update a memo
 export const handleUpdateMemo = async (
   req: Request<{ id: string }, MemoResponse, UpdateMemoRequest>,
   res: Response<MemoResponse>,
 ) => {
   try {
-    const { id } = req.params;
-    const { type, title, content, pinned } = req.body;
     const userId = (req as any).user?.id;
 
     if (!userId) {
-      return res.status(401).json({
+      return res.status(HttpStatus.UNAUTHORIZED).json({
         error: "Unauthorized",
       } as any);
     }
+
+    // Validate params with Zod
+    const paramValidation = memoIdParamSchema.safeParse(req.params);
+    if (!paramValidation.success) {
+      return res.status(HttpStatus.INVALID_BODY).json({
+        error: "Invalid memo ID",
+        details: paramValidation.error.issues,
+      } as any);
+    }
+
+    const { id } = paramValidation.data;
+
+    // Validate body with Zod
+    const bodyValidation = updateMemoSchema.safeParse(req.body);
+    if (!bodyValidation.success) {
+      return res.status(HttpStatus.INVALID_BODY).json({
+        error: "Invalid request body",
+        details: bodyValidation.error.issues,
+      } as any);
+    }
+
+    const { type, title, content, pinned } = bodyValidation.data;
 
     // Check if memo exists
     const existingMemo = await db.query.memos.findFirst({
@@ -134,7 +178,7 @@ export const handleUpdateMemo = async (
     });
 
     if (!existingMemo) {
-      return res.status(404).json({
+      return res.status(HttpStatus.NOT_FOUND).json({
         error: "Memo not found",
       } as any);
     }
@@ -148,7 +192,7 @@ export const handleUpdateMemo = async (
     });
 
     if (!slice) {
-      return res.status(403).json({
+      return res.status(HttpStatus.FORBIDDEN).json({
         error: "You don't have access to this memo",
       } as any);
     }
@@ -160,12 +204,6 @@ export const handleUpdateMemo = async (
     if (content !== undefined) updateData.content = content;
     if (pinned !== undefined) updateData.pinned = pinned;
 
-    if (Object.keys(updateData).length === 0) {
-      return res.status(400).json({
-        error: "No fields to update",
-      } as any);
-    }
-
     const [updatedMemo] = await db
       .update(memos)
       .set({
@@ -176,7 +214,7 @@ export const handleUpdateMemo = async (
       .returning();
 
     if (!updatedMemo) {
-      return res.status(500).json({
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
         error: "Failed to update memo",
       } as any);
     }
@@ -186,7 +224,9 @@ export const handleUpdateMemo = async (
     });
   } catch (error) {
     console.error("Update memo error:", error);
-    res.status(500).json({ error: "Failed to update memo" } as any);
+    res
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .json({ error: "Failed to update memo" } as any);
   }
 };
 
@@ -196,14 +236,24 @@ export const handleDeleteMemo = async (
   res: Response<DeleteMemoResponse>,
 ) => {
   try {
-    const { id } = req.params;
     const userId = (req as any).user?.id;
 
     if (!userId) {
-      return res.status(401).json({
+      return res.status(HttpStatus.UNAUTHORIZED).json({
         error: "Unauthorized",
       } as any);
     }
+
+    // Validate params with Zod
+    const paramValidation = memoIdParamSchema.safeParse(req.params);
+    if (!paramValidation.success) {
+      return res.status(HttpStatus.INVALID_BODY).json({
+        error: "Invalid memo ID",
+        details: paramValidation.error.issues,
+      } as any);
+    }
+
+    const { id } = paramValidation.data;
 
     // Check if memo exists
     const existingMemo = await db.query.memos.findFirst({
@@ -211,7 +261,7 @@ export const handleDeleteMemo = async (
     });
 
     if (!existingMemo) {
-      return res.status(404).json({
+      return res.status(HttpStatus.NOT_FOUND).json({
         error: "Memo not found",
       } as any);
     }
@@ -225,7 +275,7 @@ export const handleDeleteMemo = async (
     });
 
     if (!slice) {
-      return res.status(403).json({
+      return res.status(HttpStatus.FORBIDDEN).json({
         error: "You don't have access to this memo",
       } as any);
     }
@@ -237,6 +287,8 @@ export const handleDeleteMemo = async (
     });
   } catch (error) {
     console.error("Delete memo error:", error);
-    res.status(500).json({ error: "Failed to delete memo" } as any);
+    res
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .json({ error: "Failed to delete memo" } as any);
   }
 };

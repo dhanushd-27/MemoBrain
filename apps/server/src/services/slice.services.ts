@@ -8,7 +8,14 @@ import type {
   DeleteSliceResponse,
 } from "../types/slice.types";
 import { db, slices, memos } from "@repo/db";
-import { eq, and } from "drizzle-orm";
+import { eq, and, like } from "drizzle-orm";
+import {
+  HttpStatus,
+  createSliceSchema,
+  updateSliceSchema,
+  sliceIdParamSchema,
+  sliceSearchQuerySchema,
+} from "@repo/types";
 
 // POST /slices - Create a new slice
 export const handleCreateSlice = async (
@@ -16,20 +23,24 @@ export const handleCreateSlice = async (
   res: Response<SliceResponse>,
 ) => {
   try {
-    const { name, description } = req.body;
     const userId = (req as any).user?.id;
 
     if (!userId) {
-      return res.status(401).json({
+      return res.status(HttpStatus.UNAUTHORIZED).json({
         error: "Unauthorized",
       } as any);
     }
 
-    if (!name || !description) {
-      return res.status(400).json({
-        error: "Name and description are required",
+    // Validate request body with Zod
+    const validation = createSliceSchema.safeParse(req.body);
+    if (!validation.success) {
+      return res.status(HttpStatus.INVALID_BODY).json({
+        error: "Invalid request body",
+        details: validation.error.issues,
       } as any);
     }
+
+    const { name, description } = validation.data;
 
     const [newSlice] = await db
       .insert(slices)
@@ -41,17 +52,19 @@ export const handleCreateSlice = async (
       .returning();
 
     if (!newSlice) {
-      return res.status(500).json({
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
         error: "Failed to create slice",
       } as any);
     }
 
-    res.status(201).json({
+    res.status(HttpStatus.CREATED).json({
       slice: newSlice,
     });
   } catch (error) {
     console.error("Create slice error:", error);
-    res.status(500).json({ error: "Failed to create slice" } as any);
+    res
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .json({ error: "Failed to create slice" } as any);
   }
 };
 
@@ -62,13 +75,23 @@ export const handleGetSlices = async (
 ) => {
   try {
     const userId = (req as any).user?.id;
-    const { title } = req.query;
 
     if (!userId) {
-      return res.status(401).json({
+      return res.status(HttpStatus.UNAUTHORIZED).json({
         error: "Unauthorized",
       } as any);
     }
+
+    // Validate query parameters with Zod
+    const queryValidation = sliceSearchQuerySchema.safeParse(req.query);
+    if (!queryValidation.success) {
+      return res.status(HttpStatus.INVALID_BODY).json({
+        error: "Invalid query parameters",
+        details: queryValidation.error.issues,
+      } as any);
+    }
+
+    const { title } = queryValidation.data;
 
     let userSlices;
 
@@ -92,7 +115,9 @@ export const handleGetSlices = async (
     });
   } catch (error) {
     console.error("Get slices error:", error);
-    res.status(500).json({ error: "Failed to get slices" } as any);
+    res
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .json({ error: "Failed to get slices" } as any);
   }
 };
 
@@ -102,21 +127,31 @@ export const handleGetSlice = async (
   res: Response<SliceResponse>,
 ) => {
   try {
-    const { sliceId } = req.params;
     const userId = (req as any).user?.id;
 
     if (!userId) {
-      return res.status(401).json({
+      return res.status(HttpStatus.UNAUTHORIZED).json({
         error: "Unauthorized",
       } as any);
     }
+
+    // Validate params with Zod
+    const paramValidation = sliceIdParamSchema.safeParse(req.params);
+    if (!paramValidation.success) {
+      return res.status(HttpStatus.INVALID_BODY).json({
+        error: "Invalid slice ID",
+        details: paramValidation.error.issues,
+      } as any);
+    }
+
+    const { sliceId } = paramValidation.data;
 
     const slice = await db.query.slices.findFirst({
       where: and(eq(slices.id, sliceId), eq(slices.ownerId, userId)),
     });
 
     if (!slice) {
-      return res.status(404).json({
+      return res.status(HttpStatus.NOT_FOUND).json({
         error: "Slice not found",
       } as any);
     }
@@ -126,7 +161,9 @@ export const handleGetSlice = async (
     });
   } catch (error) {
     console.error("Get slice error:", error);
-    res.status(500).json({ error: "Failed to get slice" } as any);
+    res
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .json({ error: "Failed to get slice" } as any);
   }
 };
 
@@ -136,15 +173,35 @@ export const handleUpdateSlice = async (
   res: Response<SliceResponse>,
 ) => {
   try {
-    const { sliceId } = req.params;
-    const { name, description } = req.body;
     const userId = (req as any).user?.id;
 
     if (!userId) {
-      return res.status(401).json({
+      return res.status(HttpStatus.UNAUTHORIZED).json({
         error: "Unauthorized",
       } as any);
     }
+
+    // Validate params with Zod
+    const paramValidation = sliceIdParamSchema.safeParse(req.params);
+    if (!paramValidation.success) {
+      return res.status(HttpStatus.INVALID_BODY).json({
+        error: "Invalid slice ID",
+        details: paramValidation.error.issues,
+      } as any);
+    }
+
+    const { sliceId } = paramValidation.data;
+
+    // Validate body with Zod
+    const bodyValidation = updateSliceSchema.safeParse(req.body);
+    if (!bodyValidation.success) {
+      return res.status(HttpStatus.INVALID_BODY).json({
+        error: "Invalid request body",
+        details: bodyValidation.error.issues,
+      } as any);
+    }
+
+    const { name, description } = bodyValidation.data;
 
     // Check if slice exists and belongs to user
     const existingSlice = await db.query.slices.findFirst({
@@ -152,7 +209,7 @@ export const handleUpdateSlice = async (
     });
 
     if (!existingSlice) {
-      return res.status(404).json({
+      return res.status(HttpStatus.NOT_FOUND).json({
         error: "Slice not found",
       } as any);
     }
@@ -163,7 +220,7 @@ export const handleUpdateSlice = async (
     if (description !== undefined) updateData.description = description;
 
     if (Object.keys(updateData).length === 0) {
-      return res.status(400).json({
+      return res.status(HttpStatus.INVALID_BODY).json({
         error: "No fields to update",
       } as any);
     }
@@ -175,7 +232,7 @@ export const handleUpdateSlice = async (
       .returning();
 
     if (!updatedSlice) {
-      return res.status(500).json({
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
         error: "Failed to update slice",
       } as any);
     }
@@ -185,7 +242,9 @@ export const handleUpdateSlice = async (
     });
   } catch (error) {
     console.error("Update slice error:", error);
-    res.status(500).json({ error: "Failed to update slice" } as any);
+    res
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .json({ error: "Failed to update slice" } as any);
   }
 };
 
@@ -195,14 +254,24 @@ export const handleDeleteSlice = async (
   res: Response<DeleteSliceResponse>,
 ) => {
   try {
-    const { sliceId } = req.params;
     const userId = (req as any).user?.id;
 
     if (!userId) {
-      return res.status(401).json({
+      return res.status(HttpStatus.UNAUTHORIZED).json({
         error: "Unauthorized",
       } as any);
     }
+
+    // Validate params with Zod
+    const paramValidation = sliceIdParamSchema.safeParse(req.params);
+    if (!paramValidation.success) {
+      return res.status(HttpStatus.INVALID_BODY).json({
+        error: "Invalid slice ID",
+        details: paramValidation.error.issues,
+      } as any);
+    }
+
+    const { sliceId } = paramValidation.data;
 
     // Check if slice exists and belongs to user
     const existingSlice = await db.query.slices.findFirst({
@@ -210,7 +279,7 @@ export const handleDeleteSlice = async (
     });
 
     if (!existingSlice) {
-      return res.status(404).json({
+      return res.status(HttpStatus.NOT_FOUND).json({
         error: "Slice not found",
       } as any);
     }
@@ -224,7 +293,9 @@ export const handleDeleteSlice = async (
     });
   } catch (error) {
     console.error("Delete slice error:", error);
-    res.status(500).json({ error: "Failed to delete slice" } as any);
+    res
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .json({ error: "Failed to delete slice" } as any);
   }
 };
 
@@ -234,14 +305,24 @@ export const handleGetSliceBrains = async (
   res: Response<SliceBrainsResponse>,
 ) => {
   try {
-    const { sliceId } = req.params;
     const userId = (req as any).user?.id;
 
     if (!userId) {
-      return res.status(401).json({
+      return res.status(HttpStatus.UNAUTHORIZED).json({
         error: "Unauthorized",
       } as any);
     }
+
+    // Validate params with Zod
+    const paramValidation = sliceIdParamSchema.safeParse(req.params);
+    if (!paramValidation.success) {
+      return res.status(HttpStatus.INVALID_BODY).json({
+        error: "Invalid slice ID",
+        details: paramValidation.error.issues,
+      } as any);
+    }
+
+    const { sliceId } = paramValidation.data;
 
     // Check if slice exists and belongs to user
     const slice = await db.query.slices.findFirst({
@@ -249,7 +330,7 @@ export const handleGetSliceBrains = async (
     });
 
     if (!slice) {
-      return res.status(404).json({
+      return res.status(HttpStatus.NOT_FOUND).json({
         error: "Slice not found",
       } as any);
     }
@@ -266,6 +347,8 @@ export const handleGetSliceBrains = async (
     });
   } catch (error) {
     console.error("Get slice brains error:", error);
-    res.status(500).json({ error: "Failed to get slice brains" } as any);
+    res
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .json({ error: "Failed to get slice brains" } as any);
   }
 };

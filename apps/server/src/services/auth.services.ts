@@ -7,19 +7,39 @@ import type {
   AuthResponse,
 } from "../types/auth.types";
 import passport from "../utils/passport";
-import { createToken, hashString, verifyString, verifyToken } from "../utils/auth.helper";
+import {
+  createToken,
+  hashString,
+  verifyString,
+  verifyToken,
+} from "../utils/auth.helper";
 import config from "../config";
 import type { User } from "@repo/types";
 import { db, users, refreshTokens } from "@repo/db";
 import { eq, and } from "drizzle-orm";
 import crypto from "crypto";
+import {
+  HttpStatus,
+  signUpSchema,
+  signInSchema,
+  refreshTokenSchema,
+} from "@repo/types";
 
 export const handleSignUp = async (
   req: Request<{}, AuthResponse, SignUpRequest>,
-  res: Response<AuthResponse>
+  res: Response<AuthResponse>,
 ) => {
   try {
-    const { name, email, password } = req.body;
+    // Validate request body with Zod
+    const validation = signUpSchema.safeParse(req.body);
+    if (!validation.success) {
+      return res.status(HttpStatus.INVALID_BODY).json({
+        error: "Invalid request body",
+        details: validation.error.issues,
+      } as any);
+    }
+
+    const { name, email, password } = validation.data;
 
     // Check if user exists
     const existingUser = await db.query.users.findFirst({
@@ -27,7 +47,7 @@ export const handleSignUp = async (
     });
 
     if (existingUser) {
-      return res.status(400).json({
+      return res.status(HttpStatus.CONFLICT).json({
         error: "User already exists",
       } as any);
     }
@@ -47,7 +67,7 @@ export const handleSignUp = async (
       .returning();
 
     if (!newUser) {
-      return res.status(500).json({
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
         error: "Failed to create user",
       } as any);
     }
@@ -57,7 +77,10 @@ export const handleSignUp = async (
     const refreshToken = createToken(newUser, config.jwt.refreshSecret);
 
     // Store refresh token
-    const tokenHash = crypto.createHash("sha256").update(refreshToken).digest("hex");
+    const tokenHash = crypto
+      .createHash("sha256")
+      .update(refreshToken)
+      .digest("hex");
     await db.insert(refreshTokens).values({
       userId: newUser.id,
       tokenHash,
@@ -79,7 +102,7 @@ export const handleSignUp = async (
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    res.status(201).json({
+    res.status(HttpStatus.CREATED).json({
       user: {
         id: newUser.id,
         name: newUser.name,
@@ -90,16 +113,27 @@ export const handleSignUp = async (
     });
   } catch (error) {
     console.error("Sign up error:", error);
-    res.status(500).json({ error: "Sign up failed" } as any);
+    res
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .json({ error: "Sign up failed" } as any);
   }
 };
 
 export const handleSignIn = async (
   req: Request<{}, AuthResponse, SignInRequest>,
-  res: Response<AuthResponse>
+  res: Response<AuthResponse>,
 ) => {
   try {
-    const { email, password } = req.body;
+    // Validate request body with Zod
+    const validation = signInSchema.safeParse(req.body);
+    if (!validation.success) {
+      return res.status(HttpStatus.INVALID_BODY).json({
+        error: "Invalid request body",
+        details: validation.error.issues,
+      } as any);
+    }
+
+    const { email, password } = validation.data;
 
     // Find user
     const user = await db.query.users.findFirst({
@@ -107,7 +141,7 @@ export const handleSignIn = async (
     });
 
     if (!user || !user.passwordHash) {
-      return res.status(401).json({
+      return res.status(HttpStatus.UNAUTHORIZED).json({
         error: "Invalid credentials",
       } as any);
     }
@@ -115,7 +149,7 @@ export const handleSignIn = async (
     // Verify password
     const isValid = await verifyString(password, user.passwordHash);
     if (!isValid) {
-      return res.status(401).json({
+      return res.status(HttpStatus.UNAUTHORIZED).json({
         error: "Invalid credentials",
       } as any);
     }
@@ -125,7 +159,10 @@ export const handleSignIn = async (
     const refreshToken = createToken(user, config.jwt.refreshSecret);
 
     // Store refresh token
-    const tokenHash = crypto.createHash("sha256").update(refreshToken).digest("hex");
+    const tokenHash = crypto
+      .createHash("sha256")
+      .update(refreshToken)
+      .digest("hex");
     await db.insert(refreshTokens).values({
       userId: user.id,
       tokenHash,
@@ -157,21 +194,27 @@ export const handleSignIn = async (
       refreshToken,
     });
   } catch (error) {
-    res.status(500).json({ error: "Sign in failed" } as any);
+    res
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .json({ error: "Sign in failed" } as any);
   }
 };
 
 export const handleSignOut = async (
   req: Request<{}, {}, SignOutRequest>,
-  res: Response<{ message: string }>
+  res: Response<{ message: string }>,
 ) => {
   try {
     // Get refresh token from cookie (preferred) or body
-    const refreshToken = req.cookies[config.cookies.refreshTokenName] || req.body?.refreshToken;
+    const refreshToken =
+      req.cookies[config.cookies.refreshTokenName] || req.body?.refreshToken;
 
     if (refreshToken) {
-      const tokenHash = crypto.createHash("sha256").update(refreshToken).digest("hex");
-      
+      const tokenHash = crypto
+        .createHash("sha256")
+        .update(refreshToken)
+        .digest("hex");
+
       // Revoke token
       await db
         .update(refreshTokens)
@@ -186,14 +229,16 @@ export const handleSignOut = async (
     res.json({ message: "Signed out successfully" });
   } catch (error) {
     console.error("Sign out error:", error);
-    res.status(500).json({ error: "Sign out failed" } as any);
+    res
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .json({ error: "Sign out failed" } as any);
   }
 };
 
 export const handleGoogleSignIn = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   passport.authenticate("google", {
     scope: ["profile", "email"],
@@ -204,7 +249,7 @@ export const handleGoogleSignIn = (
 export const handleGoogleCallback = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   passport.authenticate(
     "google",
@@ -212,14 +257,14 @@ export const handleGoogleCallback = (
     async (err: Error | null, user: User | false, info: any) => {
       try {
         if (err) {
-          return res.status(500).json({
+          return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
             error: "Authentication failed",
             message: err.message,
           } as any);
         }
 
         if (!user) {
-          return res.status(401).json({
+          return res.status(HttpStatus.UNAUTHORIZED).json({
             error: "Authentication failed",
             message: "No user found",
           } as any);
@@ -230,7 +275,10 @@ export const handleGoogleCallback = (
         const refreshToken = createToken(user, config.jwt.refreshSecret);
 
         // Store refresh token
-        const tokenHash = crypto.createHash("sha256").update(refreshToken).digest("hex");
+        const tokenHash = crypto
+          .createHash("sha256")
+          .update(refreshToken)
+          .digest("hex");
         await db.insert(refreshTokens).values({
           userId: user.id,
           tokenHash,
@@ -264,38 +312,56 @@ export const handleGoogleCallback = (
       } catch (error) {
         next(error);
       }
-    }
+    },
   )(req, res, next);
 };
 
 export const handleRefresh = async (
   req: Request<{}, AuthResponse, RefreshTokenRequest>,
-  res: Response<AuthResponse>
+  res: Response<AuthResponse>,
 ) => {
   try {
+    // Validate request body with Zod (optional refresh token)
+    const validation = refreshTokenSchema.safeParse(req.body);
+    if (!validation.success) {
+      return res.status(HttpStatus.INVALID_BODY).json({
+        error: "Invalid request body",
+        details: validation.error.issues,
+      } as any);
+    }
+
     // Get refresh token from cookie (preferred) or body
-    const refreshToken = req.cookies[config.cookies.refreshTokenName] || req.body?.refreshToken;
+    const refreshToken =
+      req.cookies[config.cookies.refreshTokenName] ||
+      validation.data.refreshToken;
 
     if (!refreshToken) {
-      return res.status(401).json({
+      return res.status(HttpStatus.UNAUTHORIZED).json({
         error: "Refresh token required",
       } as any);
     }
 
     // Verify token
     const decoded = verifyToken(refreshToken, config.jwt.refreshSecret) as any;
-    const tokenHash = crypto.createHash("sha256").update(refreshToken).digest("hex");
+    const tokenHash = crypto
+      .createHash("sha256")
+      .update(refreshToken)
+      .digest("hex");
 
     // Check if token exists and is valid
     const storedToken = await db.query.refreshTokens.findFirst({
       where: and(
         eq(refreshTokens.tokenHash, tokenHash),
-        eq(refreshTokens.userId, decoded.id)
+        eq(refreshTokens.userId, decoded.id),
       ),
     });
 
-    if (!storedToken || storedToken.revokedAt || storedToken.expiresAt < new Date()) {
-      return res.status(401).json({
+    if (
+      !storedToken ||
+      storedToken.revokedAt ||
+      storedToken.expiresAt < new Date()
+    ) {
+      return res.status(HttpStatus.UNAUTHORIZED).json({
         error: "Invalid refresh token",
       } as any);
     }
@@ -306,7 +372,7 @@ export const handleRefresh = async (
     });
 
     if (!user) {
-      return res.status(401).json({
+      return res.status(HttpStatus.UNAUTHORIZED).json({
         error: "User not found",
       } as any);
     }
@@ -322,7 +388,10 @@ export const handleRefresh = async (
     const newRefreshToken = createToken(user, config.jwt.refreshSecret);
 
     // Store new refresh token
-    const newTokenHash = crypto.createHash("sha256").update(newRefreshToken).digest("hex");
+    const newTokenHash = crypto
+      .createHash("sha256")
+      .update(newRefreshToken)
+      .digest("hex");
     await db.insert(refreshTokens).values({
       userId: user.id,
       tokenHash: newTokenHash,
@@ -355,6 +424,8 @@ export const handleRefresh = async (
     });
   } catch (error) {
     console.error("Token refresh error:", error);
-    res.status(401).json({ error: "Token refresh failed" } as any);
+    res
+      .status(HttpStatus.UNAUTHORIZED)
+      .json({ error: "Token refresh failed" } as any);
   }
 };
