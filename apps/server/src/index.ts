@@ -7,6 +7,7 @@ import passport from "./utils/passport";
 
 import { authRouter } from "./routes/auth.routes";
 import { userRouter } from "./routes/user.routes";
+import { sliceRouter } from "./routes/slice.routes";
 import config from "./config";
 import { loggerMiddleware } from "./middlewares/logger.middleware";
 
@@ -25,6 +26,7 @@ app.use(passport.initialize());
 
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
+app.use("/slice", sliceRouter);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello World");
