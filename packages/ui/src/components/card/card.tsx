@@ -1,4 +1,5 @@
-import { type JSX } from "react";
+import { ReactNode } from "react";
+import { cn } from "../../lib/utils";
 
 export function Card({
   className,
@@ -10,7 +11,7 @@ export function Card({
   title: string;
   children: React.ReactNode;
   href: string;
-}): JSX.Element {
+}): ReactNode {
   return (
     <a
       className={className}

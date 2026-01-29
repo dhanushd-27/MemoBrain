@@ -1,4 +1,5 @@
-import { type JSX } from "react";
+import { ReactNode } from "react";
+import { cn } from "../../lib/utils";
 
 export function Code({
   children,
@@ -6,6 +7,6 @@ export function Code({
 }: {
   children: React.ReactNode;
   className?: string;
-}): JSX.Element {
+}): ReactNode {
   return <code className={className}>{children}</code>;
 }
