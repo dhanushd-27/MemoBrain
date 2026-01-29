@@ -365,16 +365,16 @@
     --color-secondary-foreground: var(--color-oceanic-noir);
 
     /* Background & Foreground */
-    --color-background: var(--color-nocturnal-expedition);
+    --color-background: var(--color-oceanic-noir);
     --color-foreground: var(--color-arctic-powder);
     --color-foreground-muted: var(--color-mystic-mint);
-    --color-foreground-subtle: var(--color-oceanic-noir);
+    --color-foreground-subtle: var(--color-nocturnal-expedition);
 
     /* Surface (cards, panels, elevated elements) */
     /* Surface (cards, panels, elevated elements) */
-    --color-surface: var(--color-oceanic-noir);
-    --color-surface-elevated: hsl(201 40% 18%);
-    --color-surface-hover: hsl(201 40% 21%);
+    --color-surface: hsl(201 40% 25% / 0.7);
+    --color-surface-elevated: hsl(201 40% 30% / 0.7);
+    --color-surface-hover: hsl(201 40% 35% / 0.7);
 
     /* Borders */
     --color-border: var(--color-mystic-mint);
