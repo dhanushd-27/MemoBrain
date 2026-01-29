@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@source "../../../packages/ui";
 @import "@repo/tailwind-config/theme.css";
 @import "@repo/fonts";
 

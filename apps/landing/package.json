@@ -11,8 +11,9 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
-    "@repo/ui": "*",
     "@assets": "workspace:*",
+    "@repo/ui": "workspace:*",
+    "lucide-react": "^0.563.0",
     "motion": "^12.23.25",
     "next": "^15.5.0",
     "react": "^19.1.0",
