@@ -1,9 +1,5 @@
-"use client";
-
 import React from "react";
 import ThemeToggler from "../components/theme/theme-toggler";
-import { Button } from "@repo/ui";
-import { ArrowRight } from "lucide-react";
 
 export default function App() {
   return (
@@ -13,9 +9,6 @@ export default function App() {
         CoBrain is a platform for mental health and wellness.
       </p>
       <ThemeToggler />
-      <Button variant="cta" icon={ArrowRight}>
-        Get Started
-      </Button>
     </section>
   );
 }

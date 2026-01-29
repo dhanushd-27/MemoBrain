@@ -16,7 +16,6 @@ export const buttonVariants = cva(
           "border-[1.5px] border-[var(--button-outlined-border)] bg-transparent text-[var(--button-primary)] hover:bg-[var(--button-outlined-hover-bg)] hover:text-[var(--button-hover-text)] active:bg-[var(--button-outlined-pressed-bg)]",
         texted:
           "bg-transparent text-[var(--button-primary)] hover:bg-[var(--button-texted-hover-bg)] hover:text-[var(--button-hover-text)] active:bg-[var(--button-texted-pressed-bg)]",
-        cta: "bg-[var(--button-cta-bg)] text-[var(--button-cta-fg)] hover:bg-[var(--button-cta-bg)] active:scale-95",
       },
       size: {
         default: "h-12 px-[30px]",

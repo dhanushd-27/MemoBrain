@@ -11,10 +11,8 @@
      BRAND COLORS
      ======================================== */
   --color-arctic-powder: hsl(156 19% 95%);
-  --color-forsythia: hsl(47 100% 50%);
-  --color-nocturnal-expedition: hsl(192 68% 21%);
   --color-mystic-mint: hsl(156 26% 88%);
-  --color-deep-safron: hsl(30 100% 60%);
+  --color-nocturnal-expedition: hsl(192 68% 21%);
   --color-oceanic-noir: hsl(201 40% 15%);
 
   /* ========================================
@@ -37,10 +35,10 @@
      ======================================== */
   
   /* Primary & Secondary */
-  --color-primary: var(--color-forsythia);
-  --color-primary-foreground: var(--color-oceanic-noir);
-  --color-secondary: var(--color-deep-safron);
-  --color-secondary-foreground: var(--color-neutral-50);
+  --color-primary: var(--color-oceanic-noir);
+  --color-primary-foreground: var(--color-arctic-powder);
+  --color-secondary: var(--color-nocturnal-expedition);
+  --color-secondary-foreground: var(--color-arctic-powder);
 
   /* Background & Foreground */
   --color-background: var(--color-arctic-powder);
@@ -94,9 +92,7 @@
 
   --button-hover-text: var(--color-oceanic-noir); /* Ensure contrast on Mystic Mint */
 
-  --button-cta-bg: var(--color-deep-safron);
-  --button-cta-fg: var(--button-primary-fg);
-  --button-cta-hover-bg: var(--color-deep-safron) / 0.7;
+
 
   /* Status Colors */
   --color-danger: hsl(0 84% 66%);
@@ -119,8 +115,8 @@
   /* ========================================
      SHADOWS
      ======================================== */
-  --shadow-large: 0px 8px 20px 0px rgba(18, 16, 99, 0.05);
-  --shadow-small: 0px 2px 4px 0px rgba(11, 10, 55, 0.15);
+  --shadow-large: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-small: 0 1px 2px 0 rgb(0 0 0 / 0.05);
 }
 
 
@@ -363,24 +359,25 @@
        ======================================== */
     
     /* Primary & Secondary */
-    --color-primary: var(--color-forsythia);
+    --color-primary: var(--color-arctic-powder);
     --color-primary-foreground: var(--color-oceanic-noir);
-    --color-secondary: var(--color-deep-safron);
-    --color-secondary-foreground: var(--color-neutral-950);
+    --color-secondary: var(--color-mystic-mint);
+    --color-secondary-foreground: var(--color-oceanic-noir);
 
     /* Background & Foreground */
-    --color-background: var(--color-oceanic-noir);
+    --color-background: var(--color-nocturnal-expedition);
     --color-foreground: var(--color-arctic-powder);
     --color-foreground-muted: var(--color-mystic-mint);
-    --color-foreground-subtle: var(--color-nocturnal-expedition);
+    --color-foreground-subtle: var(--color-oceanic-noir);
 
     /* Surface (cards, panels, elevated elements) */
-    --color-surface: hsl(201 40% 18%);
-    --color-surface-elevated: hsl(201 40% 22%);
-    --color-surface-hover: hsl(201 40% 25%);
+    /* Surface (cards, panels, elevated elements) */
+    --color-surface: var(--color-oceanic-noir);
+    --color-surface-elevated: hsl(201 40% 18%);
+    --color-surface-hover: hsl(201 40% 21%);
 
     /* Borders */
-    --color-border: var(--color-nocturnal-expedition);
+    --color-border: var(--color-mystic-mint);
     --color-border-muted: var(--color-oceanic-noir);
     --color-border-strong: var(--color-mystic-mint);
 
@@ -430,8 +427,6 @@
 
     --button-hover-text: var(--color-oceanic-noir); /* Contrast on Mystic Mint */
 
-    --button-cta-bg: var(--color-deep-safron);
-    --button-cta-fg: var(--button-primary-fg);
-    --button-cta-hover-bg: var(--color-forsythia);
+
   }
 }
