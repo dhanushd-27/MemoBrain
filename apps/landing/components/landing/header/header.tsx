@@ -10,7 +10,6 @@ import ThemeToggler from "../../theme/theme-toggler";
 import { NavDesktop } from "./nav-desktop";
 import { NavMobile } from "./nav-mobile";
 import { cn } from "@repo/ui";
-import { logo } from "@assets";
 
 const navItems = [
   { name: "Home", href: "#home" },
@@ -40,7 +39,7 @@ export const Header = () => {
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
           <Image
-            src={logo}
+            src="/logo.png"
             alt="CoBrain Logo"
             width={32}
             height={32}
