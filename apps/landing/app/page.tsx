@@ -3,6 +3,7 @@ import ThemeToggler from "../components/theme/theme-toggler";
 
 import Link from "next/link";
 import { Button } from "@repo/ui";
+import Image from "next/image";
 
 export default function App() {
   return (
@@ -10,7 +11,7 @@ export default function App() {
       {/* Header */}
       <header className="flex items-center justify-between px-8 py-4 border-b border-border">
         <div className="flex items-center gap-2">
-          <img src="/logo.png" alt="CoBrain Logo" className="h-8 w-8" />
+          <Image src="/logo.png" alt="CoBrain Logo" width={24} height={24} />
           <span className="text-h4-bold text-foreground">CoBrain</span>
         </div>
         <div className="flex items-center gap-4">

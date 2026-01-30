@@ -23,7 +23,8 @@ export function AuthCard({
         {/* Left: 9:16 Image */}
         <div className="hidden w-2/5 lg:block">
           <div className="relative h-full w-full">
-            <img
+            <Image
+              fill
               src={imageSrc}
               alt="Auth Background"
               className="h-full w-full object-cover"
