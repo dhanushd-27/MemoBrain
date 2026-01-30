@@ -54,7 +54,9 @@
     "socials": [
       { "label": "X", "href": "https://x.com/orcatwt" },
       { "label": "LinkedIn", "href": "https://www.linkedin.com/in/dhanush27/" },
-      { "label": "Portfolio", "href": "http://dhanush.tech/" }
+      { "label": "Portfolio", "href": "http://dhanush.tech/" },
+      { "label": "GitHub", "href": "https://github.com/dhanushd-27" },
+      { "label": "Repository", "href": "https://github.com/dhanushd-27/CoBrain" }
     ],
     "copyright": "Made by Dhanush",
     "all_rights_reserved": "All Rights Reserved 2026"
