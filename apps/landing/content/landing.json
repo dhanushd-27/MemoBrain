@@ -50,12 +50,13 @@
     ]
   },
   "footer": {
-    "links": [
-      { "label": "Home", "href": "#home" },
-      { "label": "Twitter", "href": "https://twitter.com/your_handle" },
-      { "label": "LinkedIn", "href": "https://linkedin.com/in/your_profile" },
-      { "label": "Portfolio", "href": "https://your-portfolio.com" }
+    "description": "CoBrain is a smart knowledge management app that helps you capture, organize, and reuse everything you care about.",
+    "socials": [
+      { "label": "X", "href": "https://x.com/orcatwt" },
+      { "label": "LinkedIn", "href": "https://www.linkedin.com/in/dhanush27/" },
+      { "label": "Portfolio", "href": "http://dhanush.tech/" }
     ],
-    "copyright": "Built by Dhanush D."
+    "copyright": "Made by Dhanush",
+    "all_rights_reserved": "All Rights Reserved 2026"
   }
 }
