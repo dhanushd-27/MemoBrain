@@ -388,7 +388,7 @@
 
     /* Muted & Accent */
     --color-muted: var(--color-nocturnal-expedition);
-    --color-muted-foreground: var(--color-neutral-400);
+    --color-muted-foreground: var(--color-neutral-300);
     --color-accent: var(--color-mystic-mint);
     --color-accent-foreground: var(--color-oceanic-noir);
 
