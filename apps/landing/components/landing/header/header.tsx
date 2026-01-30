@@ -16,8 +16,6 @@ const navItems = [
   { name: "Home", href: "#home" },
   { name: "Features", href: "#features" },
   { name: "FAQ", href: "#faq" },
-  { name: "Sign Up", href: "/auth/signup" },
-  { name: "Sign In", href: "/auth/signin" },
 ];
 
 export const Header = () => {
@@ -26,11 +24,7 @@ export const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useMotionValueEvent(scrollY, "change", (latest) => {
-    if (latest > 10) {
-      setIsScrolled(true);
-    } else {
-      setIsScrolled(false);
-    }
+    setIsScrolled(latest > 0);
   });
 
   return (
@@ -38,11 +32,11 @@ export const Header = () => {
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
         isScrolled || isMobileMenuOpen
-          ? "bg-background/80 backdrop-blur-md shadow-md py-2"
-          : "bg-transparent py-4",
+          ? "bg-background shadow-md pt-2 md:pb-2" // Solid background when scrolled or open
+          : "bg-transparent pt-4 pb-0",
       )}
     >
-      <div className="container mx-auto px-4 flex items-center justify-between">
+      <div className="w-full px-6 md:container md:mx-auto md:px-8 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
           <Image
@@ -65,7 +59,7 @@ export const Header = () => {
         {/* Right Side (Desktop) */}
         <div className="hidden md:flex items-center gap-4">
           <ThemeToggler />
-          <Link href="/auth/signup">
+          <Link href="/signup">
             <Button variant="contained">Get Started</Button>
           </Link>
         </div>
