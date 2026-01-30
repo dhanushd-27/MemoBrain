@@ -1,7 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@repo/ui";
-import { logo } from "@assets";
 import content from "../../../content/landing.json";
 
 export const Footer = () => {
@@ -13,7 +12,7 @@ export const Footer = () => {
           <div className="lg:col-span-2 flex flex-col gap-3">
             <div className="flex items-center gap-2">
               <Image
-                src={logo}
+                src="/logo.png"
                 alt="CoBrain Logo"
                 width={32}
                 height={32}
