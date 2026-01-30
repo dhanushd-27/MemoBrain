@@ -31,7 +31,9 @@
     ]
   },
   "faq": {
-    "capsule_title": "FAQs",
+    "capsule_title": "Support",
+    "title": "Frequent Questions",
+    "description": "Everything you need to know about CoBrain. Can't find what you're looking for? Reach out to us.",
     "items": [
       {
         "question": "What is CoBrain?",
