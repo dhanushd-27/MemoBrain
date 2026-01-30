@@ -39,7 +39,11 @@ export const NavMobile = ({ navItems, isOpen, onClose }: NavMobileProps) => {
               </Link>
             ))}
             <div className="pt-2 border-t border-border mt-2">
-              <Link href="/signup" onClick={onClose} className="w-full block">
+              <Link
+                href="/coming-soon"
+                onClick={onClose}
+                className="w-full block"
+              >
                 <Button variant="contained" className="w-full">
                   Get Started
                 </Button>

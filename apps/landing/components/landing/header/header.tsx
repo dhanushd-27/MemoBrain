@@ -59,7 +59,7 @@ export const Header = () => {
         {/* Right Side (Desktop) */}
         <div className="hidden md:flex items-center gap-4">
           <ThemeToggler />
-          <Link href="/signup">
+          <Link href="/coming-soon">
             <Button variant="contained">Get Started</Button>
           </Link>
         </div>

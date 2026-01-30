@@ -36,12 +36,12 @@ export const Home = () => {
           {content.home.description}
         </p>
         <div className="mt-10 flex flex-col w-full sm:w-auto sm:flex-row items-center justify-center gap-4 sm:gap-x-6 px-4">
-          <Link href="/signup" className="w-full sm:w-auto">
+          <Link href="/coming-soon" className="w-full sm:w-auto">
             <Button variant="contained" className="w-full sm:w-auto">
               {content.home.buttons.primary}
             </Button>
           </Link>
-          <Link href="/signin" className="w-full sm:w-auto">
+          <Link href="/coming-soon" className="w-full sm:w-auto">
             <Button variant="texted" className="w-full sm:w-auto">
               {content.home.buttons.secondary} <span aria-hidden="true">→</span>
             </Button>

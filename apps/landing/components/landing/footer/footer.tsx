@@ -26,7 +26,7 @@ export const Footer = () => {
             <p className="text-muted-foreground text-base max-w-sm leading-relaxed">
               {content.footer.description}
             </p>
-            <Link href="/signup" className="inline-block">
+            <Link href="/coming-soon" className="inline-block">
               <Button variant="contained">Get Started</Button>
             </Link>
           </div>
