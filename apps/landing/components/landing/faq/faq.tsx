@@ -1,30 +1,14 @@
-const faqs = [
-  {
-    question: "What is CoBrain?",
-    answer:
-      "CoBrain is an AI-powered second brain that helps you capture, organize, and retrieve your thoughts and information effortlessly.",
-  },
-  {
-    question: "Is it free?",
-    answer:
-      "We offer a generous free tier for individuals. Power users can upgrade to Pro for more storage and advanced AI features.",
-  },
-  {
-    question: "Is my data secure?",
-    answer:
-      "Yes, security is our top priority. All your data is encrypted directly on your device before syncing.",
-  },
-];
+import content from "../../../content/landing.json";
 
 export const FAQ = () => {
   return (
     <section id="faq" className="py-24 px-6 sm:py-32 lg:px-8">
       <div className="mx-auto max-w-2xl divide-y divide-border">
         <h2 className="text-2xl font-bold leading-10 tracking-tight text-foreground">
-          Frequently asked questions
+          {content.faq.title}
         </h2>
         <dl className="mt-10 space-y-6 divide-y divide-border">
-          {faqs.map((faq) => (
+          {content.faq.items.map((faq) => (
             <div key={faq.question} className="pt-6">
               <dt>
                 <button className="flex w-full items-start justify-between text-left text-foreground">
