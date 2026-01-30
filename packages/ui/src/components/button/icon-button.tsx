@@ -43,7 +43,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
         )}
         size="icon" // passed to satisfy underlying requirements or effectively ignored due to className overrides
         icon={Icon}
-        iconClassName="h-6 w-6"
+        iconClassName="h-5 w-5"
         {...props}
       />
     );

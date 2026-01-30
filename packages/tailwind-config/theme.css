@@ -51,6 +51,8 @@
   --color-surface-elevated: var(--color-neutral-50);
   --color-surface-hover: var(--color-neutral-100);
 
+  --color-surface-muted: var(--color-arctic-powder);
+
   /* Borders */
   --color-border: var(--color-mystic-mint);
   --color-border-muted: var(--color-arctic-powder);
@@ -117,6 +119,11 @@
      ======================================== */
   --shadow-large: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --shadow-small: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+
+  --color-home-1: var(--color-oceanic-noir);
+  --color-home-2: var(--color-nocturnal-expedition);
+  --color-home-3: var(--color-mystic-mint);
+  --color-home-4: var(--color-arctic-powder);
 }
 
 
@@ -376,6 +383,8 @@
     --color-surface-elevated: hsl(201 40% 30%);
     --color-surface-hover: hsl(201 40% 35%);
 
+    --color-surface-muted: var(--color-oceanic-noir);
+
     /* Borders */
     --color-border: var(--color-mystic-mint);
     --color-border-muted: var(--color-oceanic-noir);
@@ -383,7 +392,7 @@
 
     /* Muted & Accent */
     --color-muted: var(--color-nocturnal-expedition);
-    --color-muted-foreground: var(--color-neutral-400);
+    --color-muted-foreground: var(--color-neutral-300);
     --color-accent: var(--color-mystic-mint);
     --color-accent-foreground: var(--color-oceanic-noir);
 
@@ -426,7 +435,9 @@
     --button-texted-pressed-bg: var(--color-mystic-mint);
 
     --button-hover-text: var(--color-oceanic-noir); /* Contrast on Mystic Mint */
-
-
+    --color-home-1: var(--color-arctic-powder);
+    --color-home-2: var(--color-mystic-mint);
+    --color-home-3: var(--color-nocturnal-expedition);
+    --color-home-4: var(--color-oceanic-noir);
   }
 }

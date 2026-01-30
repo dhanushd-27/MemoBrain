@@ -24,10 +24,12 @@ export function AuthCard({
         <div className="hidden w-2/5 lg:block">
           <div className="relative h-full w-full">
             <Image
-              fill
               src={imageSrc}
               alt="Auth Background"
-              className="h-full w-full object-cover"
+              width={1000}
+              height={1000}
+              className="h-full w-full object-contain"
+              priority
             />
             {imageOverlay && (
               <div className="absolute top-6 left-6 z-10">{imageOverlay}</div>
