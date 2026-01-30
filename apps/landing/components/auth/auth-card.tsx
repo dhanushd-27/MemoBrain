@@ -8,12 +8,14 @@ interface AuthCardProps {
   title: string;
   imageSrc?: string;
   children: ReactNode;
+  imageOverlay?: ReactNode;
 }
 
 export function AuthCard({
   title,
   imageSrc = "https://images.unsplash.com/photo-1519681393784-d120267933ba",
   children,
+  imageOverlay,
 }: AuthCardProps) {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
@@ -26,6 +28,9 @@ export function AuthCard({
               alt="Auth Background"
               className="h-full w-full object-cover"
             />
+            {imageOverlay && (
+              <div className="absolute top-6 left-6 z-10">{imageOverlay}</div>
+            )}
           </div>
         </div>
 

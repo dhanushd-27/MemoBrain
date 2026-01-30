@@ -2,12 +2,16 @@
 
 import React from "react";
 import { AuthCard } from "../../../components/auth/auth-card";
-import { Button, Input } from "@repo/ui";
+import { Button, Input, Capsule } from "@repo/ui";
 import { FcGoogle } from "react-icons/fc";
 
 export default function SignInPage() {
   return (
-    <AuthCard title="Sign In" imageSrc="/signin.png">
+    <AuthCard
+      title="Sign In"
+      imageSrc="/signin.png"
+      imageOverlay={<Capsule type="link" href="/" text="Back to Home" />}
+    >
       <form className="flex flex-col gap-4">
         <Input
           label="Email"
