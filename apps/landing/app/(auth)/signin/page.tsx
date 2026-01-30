@@ -3,7 +3,7 @@
 import React from "react";
 import { AuthCard } from "../../../components/auth/auth-card";
 import { Button, Input } from "@repo/ui";
-import { Chrome } from "lucide-react";
+import { FcGoogle } from "react-icons/fc";
 
 export default function SignInPage() {
   return (
@@ -37,7 +37,7 @@ export default function SignInPage() {
         </div>
       </div>
 
-      <Button variant="outlined" className="w-full" icon={Chrome}>
+      <Button variant="outlined" className="w-full" icon={FcGoogle}>
         Login with Google
       </Button>
 

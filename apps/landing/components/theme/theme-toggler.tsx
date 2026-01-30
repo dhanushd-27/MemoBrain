@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
-import { Moon, Sun } from "lucide-react";
+import { FiMoon, FiSun } from "react-icons/fi";
 import { IconButton } from "@repo/ui";
 
 export default function ThemeToggler() {
@@ -26,7 +26,7 @@ export default function ThemeToggler() {
     <IconButton
       variant="texted"
       onClick={toggleTheme}
-      icon={theme === "dark" ? Sun : Moon}
+      icon={theme === "dark" ? FiSun : FiMoon}
       aria-label="Toggle theme"
     />
   );
