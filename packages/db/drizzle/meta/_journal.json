@@ -8,6 +8,27 @@
       "when": 1760458602500,
       "tag": "0000_swift_quasimodo",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1769503693113,
+      "tag": "0001_milky_gorilla_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1769596259256,
+      "tag": "0002_slow_mattie_franklin",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1769610333223,
+      "tag": "0003_loud_dreaming_celestial",
+      "breakpoints": true
     }
   ]
 }

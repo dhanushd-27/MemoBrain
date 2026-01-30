@@ -1,0 +1,62 @@
+{
+  "home": {
+    "title": "Amplify your intelligence.",
+    "description": "CoBrain is a smart knowledge management app that helps you capture, organize, and reuse everything you care about — links, tweets, code, and thoughts — all structured into brains, slices, and memos you can access anytime.",
+    "buttons": {
+      "primary": "Get Started",
+      "secondary": "Access Brain"
+    }
+  },
+  "features": {
+    "section_title": "Build your second brain",
+    "main_title": "Organize knowledge, your way",
+    "description": "Store anything, structure it with slices and memos, and keep your knowledge private or share it effortlessly.",
+    "list": [
+      {
+        "name": "Store Anything",
+        "description": "Save text notes, important links, tweets, documents, code snippets, and todo lists in one place."
+      },
+      {
+        "name": "Slices & Memos",
+        "description": "Divide your brain into slices (categories) and use memos to neatly store and manage related information."
+      },
+      {
+        "name": "Share or Stay Private",
+        "description": "Keep your brain private or share specific slices with anyone using a simple link."
+      },
+      {
+        "name": "Edit Anytime",
+        "description": "Update, delete, or add new brains to a slice whenever your knowledge evolves."
+      }
+    ]
+  },
+  "faq": {
+    "capsule_title": "Support",
+    "title": "Frequent Questions",
+    "description": "Everything you need to know about CoBrain. Can't find what you're looking for? Reach out to us.",
+    "items": [
+      {
+        "question": "What is CoBrain?",
+        "answer": "CoBrain is a personal knowledge management app designed to act as your second brain."
+      },
+      {
+        "question": "What can I store?",
+        "answer": "Text, links, tweets, documents, videos, code snippets, and todo lists."
+      },
+      {
+        "question": "Can I share my brain?",
+        "answer": "Yes, you can share individual slices or keep everything private."
+      }
+    ]
+  },
+  "footer": {
+    "description": "CoBrain is a smart knowledge management app that helps you capture, organize, and reuse everything you care about.",
+    "socials": [
+      { "label": "X", "href": "https://x.com/orcatwt" },
+      { "label": "LinkedIn", "href": "https://www.linkedin.com/in/dhanush27/" },
+      { "label": "Portfolio", "href": "http://dhanush.tech/" }
+    ],
+    "copyright": "Made by Dhanush",
+    "all_rights_reserved": "All Rights Reserved 2026"
+  }
+}

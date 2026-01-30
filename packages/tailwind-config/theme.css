@@ -1,13 +1,443 @@
-@layer base {
-  :root {
-    --color-primary: #2563eb;
-    --color-secondary: #9333ea;
-    --color-background: #f9fafb;
-    --color-text: #1f2937;
-  }
+@theme {
+  --color-*: initial;
 
-  body {
-    background-color: var(--color-background);
-    color: var(--color-text);
+  /* ========================================
+     FONT FAMILIES
+     ======================================== */
+  --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-serif: "Instrument Serif", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+
+  /* ========================================
+     BRAND COLORS
+     ======================================== */
+  --color-arctic-powder: hsl(156 19% 95%);
+  --color-mystic-mint: hsl(156 26% 88%);
+  --color-nocturnal-expedition: hsl(192 68% 21%);
+  --color-oceanic-noir: hsl(201 40% 15%);
+
+  /* ========================================
+     NEUTRAL SCALE (Shark Palette)
+     ======================================== */
+  --color-neutral-50: #f6f6f6;
+  --color-neutral-100: #e7e7e7;
+  --color-neutral-200: #d1d1d1;
+  --color-neutral-300: #b0b0b0;
+  --color-neutral-400: #888888;
+  --color-neutral-500: #6d6d6d;
+  --color-neutral-600: #5d5d5d;
+  --color-neutral-700: #4f4f4f;
+  --color-neutral-800: #454545;
+  --color-neutral-900: #3d3d3d;
+  --color-neutral-950: #262626;
+
+  /* ========================================
+     SEMANTIC TOKENS - LIGHT MODE
+     ======================================== */
+  
+  /* Primary & Secondary */
+  --color-primary: var(--color-oceanic-noir);
+  --color-primary-foreground: var(--color-arctic-powder);
+  --color-secondary: var(--color-nocturnal-expedition);
+  --color-secondary-foreground: var(--color-arctic-powder);
+
+  /* Background & Foreground */
+  --color-background: var(--color-arctic-powder);
+  --color-foreground: var(--color-oceanic-noir);
+  --color-foreground-muted: var(--color-nocturnal-expedition);
+  --color-foreground-subtle: var(--color-mystic-mint);
+
+  /* Surface (cards, panels, elevated elements) */
+  --color-surface: hsl(0 0% 100%);
+  --color-surface-elevated: var(--color-neutral-50);
+  --color-surface-hover: var(--color-neutral-100);
+
+  --color-surface-muted: var(--color-arctic-powder);
+
+  /* Borders */
+  --color-border: var(--color-mystic-mint);
+  --color-border-muted: var(--color-arctic-powder);
+  --color-border-strong: var(--color-nocturnal-expedition);
+
+  /* Muted & Accent */
+  --color-muted: var(--color-mystic-mint);
+  --color-muted-foreground: var(--color-nocturnal-expedition);
+  --color-accent: var(--color-nocturnal-expedition);
+  --color-accent-foreground: var(--color-arctic-powder);
+
+  /* Interactive States */
+  --color-hover: var(--color-neutral-100);
+  --color-active: var(--color-neutral-200);
+  --color-disabled: var(--color-neutral-300);
+  --color-disabled-foreground: var(--color-neutral-400);
+
+  /* Input */
+  --color-input: var(--color-mystic-mint);
+  --color-input-foreground: var(--color-oceanic-noir);
+
+  /* ========================================
+     BUTTON TOKENS - LIGHT MODE
+     ======================================== */
+  --button-primary: var(--color-oceanic-noir);
+  --button-primary-fg: var(--color-arctic-powder);
+  --button-primary-hover: var(--color-nocturnal-expedition);
+  --button-primary-pressed: var(--color-oceanic-noir); /* Default to primary for now */
+  --button-primary-disabled: var(--color-neutral-200);
+  --button-primary-disabled-text: var(--color-neutral-400);
+
+  --button-outlined-border: var(--color-oceanic-noir);
+  --button-outlined-hover-bg: var(--color-mystic-mint);
+  --button-outlined-pressed-bg: var(--color-mystic-mint);
+  --button-outlined-disabled-border: var(--color-neutral-300);
+
+  --button-texted-hover-bg: var(--color-mystic-mint);
+  --button-texted-pressed-bg: var(--color-mystic-mint);
+
+  --button-hover-text: var(--color-oceanic-noir); /* Ensure contrast on Mystic Mint */
+
+
+
+  /* Status Colors */
+  --color-danger: hsl(0 84% 66%);
+  --color-danger-foreground: hsl(0 0% 100%);
+  --color-message: hsl(217 91% 68%);
+  --color-message-foreground: hsl(0 0% 100%);
+  --color-success: hsl(123 43% 54%);
+  --color-success-foreground: hsl(0 0% 100%);
+  --color-warning: hsl(38 92% 50%);
+  --color-warning-foreground: hsl(0 0% 100%);
+
+  /* ========================================
+     BREAKPOINTS
+     ======================================== */
+  --breakpoint-mobile: 375px;
+  --breakpoint-tablet: 960px;
+  --breakpoint-desktop: 1248px;
+
+
+  /* ========================================
+     SHADOWS
+     ======================================== */
+  --shadow-large: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-small: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+
+  --color-home-1: var(--color-oceanic-noir);
+  --color-home-2: var(--color-nocturnal-expedition);
+  --color-home-3: var(--color-mystic-mint);
+  --color-home-4: var(--color-arctic-powder);
+}
+
+
+
+/* ========================================
+   LAYOUT TOKENS (Responsive)
+   ======================================== */
+:root {
+  --layout-gap: 0px;
+  --layout-cols: 1;
+  --layout-margin: 16px;
+}
+
+@media (width >= 960px) {
+  :root {
+    --layout-gap: 32px;
+    --layout-cols: 12;
+    --layout-margin: 32px;
+  }
+}
+
+@media (width >= 1248px) {
+  :root {
+    --layout-margin: 64px;
+  }
+}
+
+/* ========================================
+   TYPOGRAPHY TOKENS (Responsive)
+   ======================================== */
+:root {
+  /* Body */
+  --text-body-size: 12px;
+  --text-body-lh: 18px;
+
+  /* Headings */
+  --text-h1-size: 48px;
+  --text-h1-lh: 57.6px;
+  --text-h1-tracking: -0.02em;
+
+  --text-h2-size: 40px;
+  --text-h2-lh: 48px;
+  --text-h2-tracking: -0.02em;
+
+  --text-h3-size: 32px;
+  --text-h3-lh: 44.8px;
+  --text-h3-tracking: -0.02em;
+
+  --text-h4-size: 24px;
+  --text-h4-lh: 33.6px;
+
+  /* Pre-title */
+  --text-pre-title-size: 12px;
+  --text-pre-title-lh: 18px;
+
+  /* Small */
+  --text-small-size: 10px;
+  --text-small-lh: 15px;
+
+  /* Subtitle */
+  --text-subtitle-size: 20px;
+  --text-subtitle-lh: 20px;
+}
+
+@media (width >= 960px) {
+  :root {
+  --text-h1-size: 64px;
+  --text-h1-lh: 76.8px;
+  --text-h2-size: 56px;
+  --text-h2-lh: 67.2px;
+  --text-h3-size: 40px;
+  --text-h3-lh: 56px;
+  --text-h4-size: 28px;
+  --text-h4-lh: 39.2px;
+  --text-pre-title-size: 14px;
+  --text-pre-title-lh: 21px;
+  --text-small-size: 11px;
+  --text-small-lh: 16.5px;
+  --text-subtitle-size: 24px;
+  --text-subtitle-lh: 24px;
+  }
+}
+
+@media (width >= 1248px) {
+  :root {
+  --text-h1-size: 72px;
+  --text-h1-lh: 86.4px;
+  --text-h2-size: 64px;
+  --text-h2-lh: 76.8px;
+  --text-h3-size: 48px;
+  --text-h3-lh: 67.2px;
+  --text-h4-size: 32px;
+  --text-h4-lh: 44.8px;
+  }
+}
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+
+@utility layout-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--layout-cols), minmax(0, 1fr));
+  gap: var(--layout-gap);
+}
+
+@utility layout-container {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--layout-margin);
+  padding-right: var(--layout-margin);
+}
+
+/* Body Utilities */
+@utility text-body-regular {
+  font-family: var(--font-sans);
+  font-size: var(--text-body-size);
+  line-height: var(--text-body-lh);
+  font-weight: 400;
+}
+@utility text-body-medium {
+  font-family: var(--font-sans);
+  font-size: var(--text-body-size);
+  line-height: var(--text-body-lh);
+  font-weight: 500;
+}
+@utility text-body-bold {
+  font-family: var(--font-sans);
+  font-size: var(--text-body-size);
+  line-height: var(--text-body-lh);
+  font-weight: 700;
+}
+
+/* Heading Utilities */
+@utility text-h1 {
+  font-family: var(--font-serif);
+  font-size: var(--text-h1-size);
+  line-height: var(--text-h1-lh);
+  letter-spacing: var(--text-h1-tracking);
+  font-weight: 700;
+}
+@utility text-h2 {
+  font-family: var(--font-serif);
+  font-size: var(--text-h2-size);
+  line-height: var(--text-h2-lh);
+  letter-spacing: var(--text-h2-tracking);
+  font-weight: 700;
+}
+@utility text-h3 {
+  font-family: var(--font-serif);
+  font-size: var(--text-h3-size);
+  line-height: var(--text-h3-lh);
+  letter-spacing: var(--text-h3-tracking);
+  font-weight: 700;
+}
+@utility text-h4-bold {
+  font-family: var(--font-serif);
+  font-size: var(--text-h4-size);
+  line-height: var(--text-h4-lh);
+  font-weight: 700;
+}
+@utility text-h4-medium {
+  font-family: var(--font-serif);
+  font-size: var(--text-h4-size);
+  line-height: var(--text-h4-lh);
+  font-weight: 500;
+}
+
+/* Pre-title Utilities */
+@utility text-pre-title-regular {
+  font-family: var(--font-serif);
+  font-size: var(--text-pre-title-size);
+  line-height: var(--text-pre-title-lh);
+  font-weight: 400;
+}
+@utility text-pre-title-medium {
+  font-family: var(--font-serif);
+  font-size: var(--text-pre-title-size);
+  line-height: var(--text-pre-title-lh);
+  font-weight: 500;
+}
+@utility text-pre-title-bold {
+  font-family: var(--font-serif);
+  font-size: var(--text-pre-title-size);
+  line-height: var(--text-pre-title-lh);
+  font-weight: 700;
+}
+@utility text-pre-title-light {
+  font-family: var(--font-serif);
+  font-size: var(--text-pre-title-size);
+  line-height: var(--text-pre-title-lh);
+  font-weight: 300;
+}
+
+/* Small Utilities */
+@utility text-small-regular {
+  font-family: var(--font-serif);
+  font-size: var(--text-small-size);
+  line-height: var(--text-small-lh);
+  font-weight: 400;
+}
+@utility text-small-medium {
+  font-family: var(--font-serif);
+  font-size: var(--text-small-size);
+  line-height: var(--text-small-lh);
+  font-weight: 500;
+}
+@utility text-small-bold {
+  font-family: var(--font-serif);
+  font-size: var(--text-small-size);
+  line-height: var(--text-small-lh);
+  font-weight: 700;
+}
+
+/* Subtitle Utilities */
+@utility text-subtitle-regular {
+  font-family: var(--font-sans);
+  font-size: var(--text-subtitle-size);
+  line-height: var(--text-subtitle-lh);
+  font-weight: 400;
+}
+@utility text-subtitle-medium {
+  font-family: var(--font-sans);
+  font-size: var(--text-subtitle-size);
+  line-height: var(--text-subtitle-lh);
+  font-weight: 500;
+}
+@utility text-subtitle-bold {
+  font-family: var(--font-sans);
+  font-size: var(--text-subtitle-size);
+  line-height: var(--text-subtitle-lh);
+  font-weight: 700;
+}
+
+@layer base {
+  .dark {
+    /* ========================================
+       SEMANTIC TOKENS - DARK MODE
+       ======================================== */
+    
+    /* Primary & Secondary */
+    --color-primary: var(--color-arctic-powder);
+    --color-primary-foreground: var(--color-oceanic-noir);
+    --color-secondary: var(--color-mystic-mint);
+    --color-secondary-foreground: var(--color-oceanic-noir);
+
+    /* Background & Foreground */
+    --color-background: var(--color-oceanic-noir);
+    --color-foreground: var(--color-arctic-powder);
+    --color-foreground-muted: var(--color-mystic-mint);
+    --color-foreground-subtle: var(--color-nocturnal-expedition);
+
+    /* Surface (cards, panels, elevated elements) */
+    /* Surface (cards, panels, elevated elements) */
+    --color-surface: hsl(201 40% 25%);
+    --color-surface-elevated: hsl(201 40% 30%);
+    --color-surface-hover: hsl(201 40% 35%);
+
+    --color-surface-muted: var(--color-oceanic-noir);
+
+    /* Borders */
+    --color-border: var(--color-mystic-mint);
+    --color-border-muted: var(--color-oceanic-noir);
+    --color-border-strong: var(--color-mystic-mint);
+
+    /* Muted & Accent */
+    --color-muted: var(--color-nocturnal-expedition);
+    --color-muted-foreground: var(--color-neutral-300);
+    --color-accent: var(--color-mystic-mint);
+    --color-accent-foreground: var(--color-oceanic-noir);
+
+    /* Interactive States */
+    --color-hover: hsl(201 40% 20%);
+    --color-active: hsl(201 40% 25%);
+    --color-disabled: var(--color-neutral-800);
+    --color-disabled-foreground: var(--color-neutral-600);
+
+    /* Input */
+    --color-input: var(--color-neutral-300);
+    --color-input-foreground: var(--color-arctic-powder);
+
+    /* Status Colors (same in dark mode) */
+    --color-danger: hsl(0 84% 66%);
+    --color-danger-foreground: hsl(0 0% 100%);
+    --color-message: hsl(217 91% 68%);
+    --color-message-foreground: hsl(0 0% 100%);
+    --color-success: hsl(123 43% 54%);
+    --color-success-foreground: hsl(0 0% 100%);
+    --color-warning: hsl(38 92% 50%);
+    --color-warning-foreground: hsl(0 0% 100%);
+
+    /* ========================================
+       BUTTON TOKENS - DARK MODE
+       ======================================== */
+    --button-primary: var(--color-arctic-powder);
+    --button-primary-fg: var(--color-oceanic-noir);
+    --button-primary-hover: var(--color-mystic-mint);
+    --button-primary-pressed: var(--color-arctic-powder);
+    --button-primary-disabled: var(--color-neutral-800);
+    --button-primary-disabled-text: var(--color-neutral-600);
+
+    --button-outlined-border: var(--color-arctic-powder);
+    --button-outlined-hover-bg: var(--color-mystic-mint);
+    --button-outlined-pressed-bg: var(--color-mystic-mint);
+    --button-outlined-disabled-border: var(--color-neutral-700);
+
+    --button-texted-hover-bg: var(--color-mystic-mint);
+    --button-texted-pressed-bg: var(--color-mystic-mint);
+
+    --button-hover-text: var(--color-oceanic-noir); /* Contrast on Mystic Mint */
+    --color-home-1: var(--color-arctic-powder);
+    --color-home-2: var(--color-mystic-mint);
+    --color-home-3: var(--color-nocturnal-expedition);
+    --color-home-4: var(--color-oceanic-noir);
   }
 }
