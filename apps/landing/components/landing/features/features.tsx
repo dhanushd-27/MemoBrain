@@ -1,4 +1,5 @@
 import { Capsule } from "@repo/ui";
+import { cn } from "@repo/ui";
 import content from "../../../content/landing.json";
 
 export const Features = () => {
@@ -16,22 +17,33 @@ export const Features = () => {
             {content.features.description}
           </p>
         </div>
-        <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl">
-          <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-10 lg:max-w-none lg:grid-cols-3 lg:gap-y-16">
-            {content.features.list.map((feature) => (
+        <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-none">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:grid-rows-2">
+            {content.features.list.map((feature, idx) => (
               <div
                 key={feature.name}
-                className="flex flex-col border border-border rounded-2xl p-6 hover:border-border-strong transition-colors"
+                className={cn(
+                  "flex flex-col justify-between border border-border-muted rounded-2xl p-6 hover:border-border-strong transition-colors bg-surface-muted",
+                  idx === 0
+                    ? "lg:col-span-2"
+                    : idx === 1
+                      ? "lg:col-span-1"
+                      : idx === 2
+                        ? "lg:col-span-1"
+                        : "lg:col-span-2",
+                )}
               >
-                <dt className="text-xl font-semibold leading-7 text-foreground font-serif">
-                  {feature.name}
-                </dt>
-                <dd className="mt-2 text-sm leading-7 text-muted-foreground">
-                  {feature.description}
-                </dd>
+                <div>
+                  <dt className="text-xl font-semibold leading-7 text-foreground font-serif">
+                    {feature.name}
+                  </dt>
+                  <dd className="mt-2 text-sm leading-7 text-muted-foreground">
+                    {feature.description}
+                  </dd>
+                </div>
               </div>
             ))}
-          </dl>
+          </div>
         </div>
       </div>
     </section>

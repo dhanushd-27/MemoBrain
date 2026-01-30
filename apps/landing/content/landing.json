@@ -31,7 +31,7 @@
     ]
   },
   "faq": {
-    "title": "FAQs",
+    "capsule_title": "FAQs",
     "items": [
       {
         "question": "What is CoBrain?",

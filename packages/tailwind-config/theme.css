@@ -51,6 +51,8 @@
   --color-surface-elevated: var(--color-neutral-50);
   --color-surface-hover: var(--color-neutral-100);
 
+  --color-surface-muted: var(--color-arctic-powder);
+
   /* Borders */
   --color-border: var(--color-mystic-mint);
   --color-border-muted: var(--color-arctic-powder);
@@ -380,6 +382,8 @@
     --color-surface: hsl(201 40% 25%);
     --color-surface-elevated: hsl(201 40% 30%);
     --color-surface-hover: hsl(201 40% 35%);
+
+    --color-surface-muted: var(--color-oceanic-noir);
 
     /* Borders */
     --color-border: var(--color-mystic-mint);
