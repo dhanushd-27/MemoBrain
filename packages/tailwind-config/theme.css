@@ -372,9 +372,9 @@
 
     /* Surface (cards, panels, elevated elements) */
     /* Surface (cards, panels, elevated elements) */
-    --color-surface: hsl(201 40% 25% / 0.7);
-    --color-surface-elevated: hsl(201 40% 30% / 0.7);
-    --color-surface-hover: hsl(201 40% 35% / 0.7);
+    --color-surface: hsl(201 40% 25%);
+    --color-surface-elevated: hsl(201 40% 30%);
+    --color-surface-hover: hsl(201 40% 35%);
 
     /* Borders */
     --color-border: var(--color-mystic-mint);
@@ -394,7 +394,7 @@
     --color-disabled-foreground: var(--color-neutral-600);
 
     /* Input */
-    --color-input: var(--color-nocturnal-expedition);
+    --color-input: var(--color-neutral-300);
     --color-input-foreground: var(--color-arctic-powder);
 
     /* Status Colors (same in dark mode) */

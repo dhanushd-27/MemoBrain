@@ -1,7 +1,6 @@
 "use client";
 
-import { forwardRef } from "react";
-import { LucideIcon } from "lucide-react";
+import { forwardRef, ElementType } from "react";
 import { Button, ButtonProps } from "./button";
 import { cn } from "../../lib/utils";
 
@@ -9,7 +8,7 @@ export interface IconButtonProps extends Omit<
   ButtonProps,
   "children" | "leadingIcon" | "icon" | "size"
 > {
-  icon: LucideIcon;
+  icon: ElementType;
   size?: "default" | "sm" | "lg";
 }
 

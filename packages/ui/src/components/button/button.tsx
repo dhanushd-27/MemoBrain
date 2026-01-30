@@ -1,8 +1,12 @@
 "use client";
 
-import { ReactNode, ButtonHTMLAttributes, forwardRef } from "react";
+import {
+  ReactNode,
+  ButtonHTMLAttributes,
+  forwardRef,
+  ElementType,
+} from "react";
 import { cva, type VariantProps } from "class-variance-authority";
-import { LucideIcon } from "lucide-react";
 import { cn } from "../../lib/utils";
 
 export const buttonVariants = cva(
@@ -36,7 +40,7 @@ export interface ButtonProps
   children?: ReactNode;
   isLoading?: boolean;
   leadingIcon?: ReactNode;
-  icon?: LucideIcon;
+  icon?: ElementType;
   iconClassName?: string;
 }
 
@@ -92,4 +96,5 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     );
   },
 );
+Button.displayName = "Button";
 Button.displayName = "Button";
