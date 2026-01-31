@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@repo/ui": "workspace:*",
+    "axios": "^1.13.4",
     "lucide-react": "^0.563.0",
     "motion": "^12.23.25",
     "next": "^15.5.7",
@@ -21,13 +22,15 @@
   },
   "devDependencies": {
     "@repo/eslint-config": "*",
-    "@repo/typescript-config": "*",
+    "@repo/types": "workspace:*",
+    "@repo/fonts": "workspace:*",
     "@repo/tailwind-config": "workspace:*",
+    "@repo/typescript-config": "*",
+    "@types/axios": "^0.14.4",
     "@types/node": "^22.15.3",
     "@types/react": "19.1.0",
     "@types/react-dom": "19.1.1",
     "eslint": "^9.34.0",
-    "typescript": "5.9.2",
-    "@repo/fonts": "workspace:*"
+    "typescript": "5.9.2"
   }
 }

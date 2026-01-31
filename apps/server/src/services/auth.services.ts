@@ -300,15 +300,8 @@ export const handleGoogleCallback = (
           maxAge: 7 * 24 * 60 * 60 * 1000,
         });
 
-        res.json({
-          user: {
-            id: user.id,
-            name: user.name,
-            email: user.email,
-          },
-          accessToken,
-          refreshToken,
-        });
+        // Redirect to client dashboard
+        res.redirect(`${config.client.appUrl}/dashboard`);
       } catch (error) {
         next(error);
       }
