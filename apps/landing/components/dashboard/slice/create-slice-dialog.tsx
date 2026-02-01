@@ -67,7 +67,7 @@ export function CreateSliceDialog({
             exit={{ opacity: 0, scale: 0.95, y: -20 }}
             className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none"
           >
-            <div className="bg-card w-full max-w-md p-6 rounded-xl shadow-xl pointer-events-auto border">
+            <div className="bg-card w-full max-w-md p-6 rounded-xl shadow-xl pointer-events-auto border bg-surface">
               <h2 className="text-xl font-bold mb-4 font-serif">
                 Create New Slice
               </h2>

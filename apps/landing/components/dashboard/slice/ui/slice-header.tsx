@@ -33,7 +33,7 @@ export const SliceHeader = ({
 
   return (
     <header className="flex items-start gap-4 mb-8">
-      <div className="md:hidden mt-1">
+      <div className="mt-1 mr-2">
         <SidebarTrigger />
       </div>
       <div className="flex-1">

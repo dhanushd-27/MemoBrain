@@ -1,7 +1,14 @@
 "use client";
 
 import React, { useState } from "react";
-import { TbBrain, TbDotsVertical, TbPencil, TbTrash } from "react-icons/tb";
+import {
+  TbBrain,
+  TbDotsVertical,
+  TbPencil,
+  TbTrash,
+  TbCopy,
+  TbCheck,
+} from "react-icons/tb";
 import { motion, AnimatePresence } from "motion/react";
 import type { Memo } from "@repo/types";
 
@@ -21,6 +28,13 @@ export const BrainCard = ({
   onMenuToggle,
 }: BrainCardProps) => {
   const isMenuOpen = activeMenuId === brain.id;
+  const [isCopied, setIsCopied] = useState(false);
+
+  const handleCopy = (text: string) => {
+    navigator.clipboard.writeText(text);
+    setIsCopied(true);
+    setTimeout(() => setIsCopied(false), 2000);
+  };
 
   return (
     <div
@@ -86,13 +100,31 @@ export const BrainCard = ({
       {/* Preview Content */}
       <div
         className="text-muted-foreground text-sm line-clamp-4 flex-1 mb-4 cursor-pointer"
-        onClick={() => onEdit(brain)}
+        onClick={(e) => {
+          // Prevent editing when clicking the copy button or iframe
+          if (
+            (e.target as HTMLElement).closest("button") ||
+            (e.target as HTMLElement).closest("iframe")
+          ) {
+            e.stopPropagation();
+            return;
+          }
+          onEdit(brain);
+        }}
       >
         {brain.type === "TEXT" && (brain.content as any).text}
         {brain.type === "LINK" && (
-          <span className="text-primary underline">
-            {(brain.content as any).url}
-          </span>
+          <div className="flex flex-col justify-center h-full">
+            <a
+              href={(brain.content as any).url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline font-medium break-all flex items-center gap-2"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {(brain.content as any).url}
+            </a>
+          </div>
         )}
         {brain.type === "TODO" && (
           <ul className="list-disc pl-4 space-y-1">
@@ -113,9 +145,26 @@ export const BrainCard = ({
           </div>
         )}
         {brain.type === "CODE" && (
-          <pre className="bg-muted p-2 rounded text-xs font-mono overflow-hidden">
-            {(brain.content as any).code}
-          </pre>
+          <div className="relative group">
+            <pre className="bg-muted p-2 rounded text-xs font-mono overflow-hidden whitespace-pre-wrap break-all">
+              {(brain.content as any).code}
+            </pre>
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleCopy((brain.content as any).code);
+              }}
+              className="absolute top-2 right-2 p-1.5 bg-background/80 hover:bg-background rounded-md shadow-sm border opacity-0 group-hover:opacity-100 transition-opacity"
+              title="Copy code"
+            >
+              {isCopied ? (
+                <TbCheck className="text-green-500" />
+              ) : (
+                <TbCopy className="text-muted-foreground" />
+              )}
+            </button>
+          </div>
         )}
       </div>
 
