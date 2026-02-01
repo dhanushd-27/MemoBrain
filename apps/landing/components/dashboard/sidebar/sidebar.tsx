@@ -34,7 +34,7 @@ export function Sidebar({
         }}
       >
         <div className="flex-1 overflow-y-auto py-4">{children}</div>
-        {footer && <div className="border-t p-2">{footer}</div>}
+        {footer && <div className="p-2">{footer}</div>}
       </motion.aside>
 
       {/* Mobile Sidebar Overlay */}
@@ -70,7 +70,7 @@ export function Sidebar({
                 </button>
               </div>
               <div className="flex-1 overflow-y-auto px-2 py-4">{children}</div>
-              {footer && <div className="border-t p-4">{footer}</div>}
+              {footer && <div className="pb-2">{footer}</div>}
             </motion.aside>
           </>
         )}

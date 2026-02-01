@@ -7,6 +7,8 @@ import { MdLogout } from "react-icons/md";
 export function SidebarFooter() {
   const handleLogout = async () => {
     await signout();
+    window.location.href = "/";
+
   };
 
   return (
