@@ -73,8 +73,16 @@ export const handleSignUp = async (
     }
 
     // Generate tokens
-    const accessToken = createToken(newUser, config.jwt.accessSecret);
-    const refreshToken = createToken(newUser, config.jwt.refreshSecret);
+    const accessToken = createToken(
+      newUser,
+      config.jwt.accessSecret,
+      config.cookies.accessTokenExpire,
+    );
+    const refreshToken = createToken(
+      newUser,
+      config.jwt.refreshSecret,
+      config.cookies.refreshTokenExpire,
+    );
 
     // Store refresh token
     const tokenHash = crypto
@@ -155,8 +163,16 @@ export const handleSignIn = async (
     }
 
     // Generate tokens
-    const accessToken = createToken(user, config.jwt.accessSecret);
-    const refreshToken = createToken(user, config.jwt.refreshSecret);
+    const accessToken = createToken(
+      user,
+      config.jwt.accessSecret,
+      config.cookies.accessTokenExpire,
+    );
+    const refreshToken = createToken(
+      user,
+      config.jwt.refreshSecret,
+      config.cookies.refreshTokenExpire,
+    );
 
     // Store refresh token
     const tokenHash = crypto
@@ -271,8 +287,16 @@ export const handleGoogleCallback = (
         }
 
         // Generate tokens
-        const accessToken = createToken(user, config.jwt.accessSecret);
-        const refreshToken = createToken(user, config.jwt.refreshSecret);
+        const accessToken = createToken(
+          user,
+          config.jwt.accessSecret,
+          config.cookies.accessTokenExpire,
+        );
+        const refreshToken = createToken(
+          user,
+          config.jwt.refreshSecret,
+          config.cookies.refreshTokenExpire,
+        );
 
         // Store refresh token
         const tokenHash = crypto
@@ -377,8 +401,16 @@ export const handleRefresh = async (
       .where(eq(refreshTokens.id, storedToken.id));
 
     // Generate new tokens
-    const newAccessToken = createToken(user, config.jwt.accessSecret);
-    const newRefreshToken = createToken(user, config.jwt.refreshSecret);
+    const newAccessToken = createToken(
+      user,
+      config.jwt.accessSecret,
+      config.cookies.accessTokenExpire,
+    );
+    const newRefreshToken = createToken(
+      user,
+      config.jwt.refreshSecret,
+      config.cookies.refreshTokenExpire,
+    );
 
     // Store new refresh token
     const newTokenHash = crypto

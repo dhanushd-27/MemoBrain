@@ -9,6 +9,7 @@ import {
   SidebarSearchSlice,
   // SidebarOptions,
 } from "../../components/dashboard/sidebar";
+import { RefreshProvider } from "../../components/dashboard/refresh-context";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const sidebar = (
@@ -19,5 +20,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     </Sidebar>
   );
 
-  return <DashboardLayout sidebar={sidebar}>{children}</DashboardLayout>;
+  return (
+    <RefreshProvider>
+      <DashboardLayout sidebar={sidebar}>{children}</DashboardLayout>
+    </RefreshProvider>
+  );
 }

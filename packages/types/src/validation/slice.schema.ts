@@ -3,7 +3,7 @@ import { z } from "zod";
 // Create Slice
 export const createSliceSchema = z.object({
   name: z.string().min(1, "Name is required").max(255),
-  description: z.string().min(1, "Description is required").max(1000),
+  description: z.string().max(1000).optional(),
 });
 
 export type CreateSliceInput = z.infer<typeof createSliceSchema>;

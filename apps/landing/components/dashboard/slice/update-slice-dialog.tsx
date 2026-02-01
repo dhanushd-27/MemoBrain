@@ -1,52 +1,57 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Input, cn } from "@repo/ui";
-import { createSlice } from "../../../services/slice.service";
-import { TbPlus, TbLoader } from "react-icons/tb";
+import { updateSlice } from "../../../services/slice.service";
+import { TbLoader } from "react-icons/tb";
 import { motion, AnimatePresence } from "motion/react";
+import type { Slice } from "@repo/types";
 
-// Inline Dialog for simplicity if @repo/ui doesn't have it, or reusing what we can
-// Given I don't see Dialog in @repo/ui export, I'll build a simple overlay modal
-// or check if I missed it.
-// I will build a simple custom modal for now to avoid dependency hell if not present.
-
-interface CreateSliceDialogProps {
+interface UpdateSliceDialogProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
+  slice: Slice | null;
 }
 
-export function CreateSliceDialog({
+export function UpdateSliceDialog({
   isOpen,
   onClose,
   onSuccess,
-}: CreateSliceDialogProps) {
+  slice,
+}: UpdateSliceDialogProps) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  useEffect(() => {
+    if (slice) {
+      setName(slice.name);
+      setDescription(slice.description || "");
+    }
+  }, [slice]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!slice) return;
+
     setLoading(true);
     setError(null);
 
     try {
-      await createSlice({ name, description });
-      setName("");
-      setDescription("");
+      await updateSlice(slice.id, { name, description });
       onSuccess();
       onClose();
     } catch (err) {
-      console.error("Failed to create slice", err);
-      setError("Failed to create slice. Please try again.");
+      console.error("Failed to update slice", err);
+      setError("Failed to update slice. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
-  if (!isOpen) return null;
+  if (!isOpen || !slice) return null;
 
   return (
     <AnimatePresence>
@@ -67,10 +72,8 @@ export function CreateSliceDialog({
             exit={{ opacity: 0, scale: 0.95, y: -20 }}
             className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none"
           >
-            <div className="bg-card w-full max-w-md p-6 rounded-xl shadow-xl pointer-events-auto border">
-              <h2 className="text-xl font-bold mb-4 font-serif">
-                Create New Slice
-              </h2>
+            <div className="bg-card/80 bg-surface  w-full max-w-md p-6 rounded-xl shadow-xl pointer-events-auto border">
+              <h2 className="text-xl font-bold mb-4 font-serif">Edit Slice</h2>
               <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                 <Input
                   label="Slice Name"
@@ -88,7 +91,7 @@ export function CreateSliceDialog({
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     placeholder="Optional description..."
-                    className="flex min-h-20 w-full rounded-2xl border-[1.5px] border-input bg-transparent px-4 py-2 text-body-medium shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                    className="flex min-h-20 w-full rounded-2xl border-[1.5px] border-input bg-background px-4 py-2 text-body-medium shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                   />
                 </div>
 
@@ -109,7 +112,7 @@ export function CreateSliceDialog({
                     disabled={loading}
                     className="min-w-25"
                   >
-                    {loading ? <TbLoader className="animate-spin" /> : "Create"}
+                    {loading ? <TbLoader className="animate-spin" /> : "Save"}
                   </Button>
                 </div>
               </form>

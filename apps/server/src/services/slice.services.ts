@@ -46,7 +46,7 @@ export const handleCreateSlice = async (
       .insert(slices)
       .values({
         name,
-        description,
+        description: description || "",
         ownerId: userId,
       })
       .returning();

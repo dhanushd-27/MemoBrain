@@ -1,54 +1,28 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { jwtVerify } from "jose";
 
-// Define protected routes
-// Define protected routes
-// Removed manual check array since matcher handles it by default
-
-export async function middleware(req: NextRequest) {
-  const { pathname } = req.nextUrl;
-
-  // With the matcher set to /dashboard/:path*, this middleware ONLY runs on protected routes
-  // So we don't need to manually check if route is protected
-
+export function middleware(req: NextRequest) {
+  // 1. Check for access token OR refresh token
   const cookieName = process.env.ACCESS_TOKEN_COOKIE_NAME || "access_token";
-  const accessToken = req.cookies.get(cookieName)?.value;
+  const refreshCookieName =
+    process.env.REFRESH_TOKEN_COOKIE_NAME || "refresh_token";
 
-  if (!accessToken) {
-    // Check for refresh token
-    const refreshCookieName =
-      process.env.REFRESH_TOKEN_COOKIE_NAME || "refresh_token";
-    const refreshToken = req.cookies.get(refreshCookieName)?.value;
+  const hasAccessToken = req.cookies.has(cookieName);
+  const hasRefreshToken = req.cookies.has(refreshCookieName);
 
-    if (refreshToken) {
-      // Access expired but refresh exists -> Attempt silent refresh
-      const from = encodeURIComponent(pathname);
-      return NextResponse.redirect(
-        new URL(`/token-refresh?from=${from}`, req.url),
-      );
-    }
-
-    // No tokens, redirect to login
-    return NextResponse.redirect(new URL("/signin", req.url));
+  // 2. If neither exists, redirect to sign-in
+  if (!hasAccessToken && !hasRefreshToken) {
+    const url = req.nextUrl.clone();
+    url.pathname = "/signin"; // Matches existing route: `apps/landing/app/(auth)/signin`
+    return NextResponse.redirect(url);
   }
 
-  try {
-    const secret = new TextEncoder().encode(
-      process.env.ACCESS_JWT_SECRET || "default_access_secret",
-    );
-
-    // Verify the token
-    await jwtVerify(accessToken, secret);
-
-    // Token is valid, allow request
-    return NextResponse.next();
-  } catch (error) {
-    // Token invalid or expired, redirect to login
-    return NextResponse.redirect(new URL("/signin", req.url));
-  }
+  // 3. If either exists, allow the request
+  // (We do NOT validate JWTs here - that is for the backend / API layers)
+  return NextResponse.next();
 }
 
+// 4. Protect specific routes
 export const config = {
   matcher: ["/dashboard/:path*"],
 };
