@@ -5,5 +5,4 @@ export * from "./dashboard-layout";
 export * from "./sidebar-trigger";
 export * from "./sidebar-header";
 export * from "./sidebar-footer";
-export * from "./sidebar-options";
 export * from "./sidebar-search-slice";

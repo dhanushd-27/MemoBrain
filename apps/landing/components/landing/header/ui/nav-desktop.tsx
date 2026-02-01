@@ -14,20 +14,13 @@ interface NavDesktopProps {
 }
 
 export const NavDesktop = ({ navItems }: NavDesktopProps) => {
-  const pathname = usePathname();
-
   return (
-    <nav className="hidden md:flex items-center gap-6">
+    <nav className="flex items-center gap-8">
       {navItems.map((item) => (
         <Link
-          key={item.name}
+          key={item.href}
           href={item.href}
-          className={cn(
-            "text-sm font-medium transition-colors hover:text-primary",
-            pathname === item.href
-              ? "text-foreground"
-              : "text-muted-foreground",
-          )}
+          className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
         >
           {item.name}
         </Link>

@@ -5,6 +5,7 @@ import { useSidebar } from "./sidebar-context";
 import { useRefresh } from "../refresh-context";
 import { Input, Button, cn } from "@repo/ui";
 import { ShareSliceDialog } from "../slice/share-slice-dialog";
+
 import {
   TbSearch,
   TbPlus,
@@ -21,6 +22,7 @@ import type { Slice } from "@repo/types";
 import { CreateSliceDialog } from "../slice/create-slice-dialog";
 import { UpdateSliceDialog } from "../slice/update-slice-dialog";
 import { DeleteSliceDialog } from "../slice/delete-slice-dialog";
+
 import { useParams, useRouter } from "next/navigation";
 
 export function SidebarSearchSlice() {
@@ -36,6 +38,7 @@ export function SidebarSearchSlice() {
   const [sliceToDelete, setSliceToDelete] = useState<Slice | null>(null);
   const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+
   const params = useParams();
   const router = useRouter();
 
@@ -230,10 +233,8 @@ export function SidebarSearchSlice() {
                   {/* Action Menu Trigger */}
                   <div
                     className={cn(
-                      "absolute right-2 p-1 rounded-md hover:bg-background/80 transition-opacity opacity-0 group-hover:opacity-100",
-                      activeMenuId === slice.id
-                        ? "opacity-100 bg-background/80"
-                        : "",
+                      "absolute right-2 p-1 rounded-md hover:bg-background/80 transition-opacity",
+                      activeMenuId === slice.id ? "bg-background/80" : "",
                     )}
                     onClick={(e) => toggleMenu(slice.id, e)}
                   >
