@@ -1,11 +1,11 @@
 import type { Request, Response, NextFunction } from "express";
-import { verifyToken } from "../utils/auth.helper";
-import config from "../config";
+import { verifyToken } from "../utils/auth.helper.js";
+import config from "../config/index.js";
 
 export const authMiddleware = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     // Get token from cookie

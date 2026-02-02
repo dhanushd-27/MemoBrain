@@ -4,7 +4,7 @@ import type {
   UpdateMemoRequest,
   MemoResponse,
   DeleteMemoResponse,
-} from "../types/memo.types";
+} from "../types/memo.types.js";
 import { db, memos, slices } from "@repo/db";
 import { eq, and } from "drizzle-orm";
 import {
