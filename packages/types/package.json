@@ -13,7 +13,7 @@
     "./ui": "./src/ui/index.ts"
   },
   "scripts": {
-    "typecheck": "tsc --noEmit"
+    "check-types": "tsc --noEmit"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
