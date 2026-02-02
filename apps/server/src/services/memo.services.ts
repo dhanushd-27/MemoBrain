@@ -69,7 +69,7 @@ export const handleCreateMemo = async (
     }
 
     res.status(HttpStatus.CREATED).json({
-      memo: newMemo,
+      memo: newMemo as unknown as import("@repo/types").Memo,
     });
   } catch (error) {
     console.error("Create memo error:", error);
@@ -126,7 +126,7 @@ export const handleGetMemo = async (
     }
 
     res.json({
-      memo,
+      memo: memo as unknown as import("@repo/types").Memo,
     });
   } catch (error) {
     console.error("Get memo error:", error);
@@ -220,7 +220,7 @@ export const handleUpdateMemo = async (
     }
 
     res.json({
-      memo: updatedMemo,
+      memo: updatedMemo as unknown as import("@repo/types").Memo,
     });
   } catch (error) {
     console.error("Update memo error:", error);

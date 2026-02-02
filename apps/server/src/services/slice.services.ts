@@ -46,7 +46,7 @@ export const handleCreateSlice = async (
       .insert(slices)
       .values({
         name,
-        description,
+        description: description || "",
         ownerId: userId,
       })
       .returning();
@@ -286,6 +286,14 @@ export const handleDeleteSlice = async (
       } as any);
     }
 
+    // Delete all memos in this slice first
+    await db.delete(memos).where(eq(memos.sliceId, sliceId));
+
+    // Delete all access grants for this slice
+    const { sliceAccess } = await import("@repo/db");
+    await db.delete(sliceAccess).where(eq(sliceAccess.sliceId, sliceId));
+
+    // Finally delete the slice
     await db.delete(slices).where(eq(slices.id, sliceId));
 
     res.json({
@@ -340,7 +348,7 @@ export const handleGetSliceBrains = async (
 
     res.json({
       sliceId,
-      brains: sliceMemos,
+      brains: sliceMemos as unknown as import("@repo/types").Memo[],
     });
   } catch (error) {
     res
