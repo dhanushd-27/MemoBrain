@@ -1,5 +1,20 @@
-import type { InferSelectModel, InferInsertModel } from "drizzle-orm";
-import { users, slices, sliceAccess, memos, refreshTokens } from "@repo/db";
+import {
+  users,
+  slices,
+  sliceAccess,
+  memos,
+  refreshTokens,
+  type User,
+  type NewUser,
+  type Slice,
+  type NewSlice,
+  type SliceAccess,
+  type NewSliceAccess,
+  type DbMemo,
+  type NewMemo,
+  type RefreshToken,
+  type NewRefreshToken,
+} from "@repo/db";
 import type {
   TextContent,
   TodoContent,
@@ -9,20 +24,20 @@ import type {
 } from "../common/content";
 
 // User types
-export type User = InferSelectModel<typeof users>;
-export type NewUser = InferInsertModel<typeof users>;
+export type { User };
+export type { NewUser };
 
 // Slice types
-export type Slice = InferSelectModel<typeof slices>;
-export type NewSlice = InferInsertModel<typeof slices>;
+export type { Slice };
+export type { NewSlice };
 
 // SliceAccess types
-export type SliceAccess = InferSelectModel<typeof sliceAccess>;
-export type NewSliceAccess = InferInsertModel<typeof sliceAccess>;
+export type { SliceAccess };
+export type { NewSliceAccess };
 
 // Memo types
-export type DbMemo = InferSelectModel<typeof memos>;
-export type NewMemo = InferInsertModel<typeof memos>;
+export type { DbMemo };
+export type { NewMemo };
 
 export type Memo =
   | (Omit<DbMemo, "type" | "content"> & {
@@ -44,8 +59,8 @@ export type Memo =
     });
 
 // RefreshToken types
-export type RefreshToken = InferSelectModel<typeof refreshTokens>;
-export type NewRefreshToken = InferInsertModel<typeof refreshTokens>;
+export type { RefreshToken };
+export type { NewRefreshToken };
 
 // Memo type enum
 export type MemoType = "TEXT" | "TODO" | "LINK" | "QA" | "CODE";
