@@ -11,8 +11,8 @@ import {
   handleRevokeSliceAccess,
   handleGetSliceAccessList,
   handleUpdateSliceAccessRole,
-} from "../services/slice.services";
-import { authMiddleware } from "../middlewares/auth.middleware";
+} from "../services/slice.services.js";
+import { authMiddleware } from "../middlewares/auth.middleware.js";
 
 export const sliceRouter = Router();
 

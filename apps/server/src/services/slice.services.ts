@@ -6,7 +6,7 @@ import type {
   SlicesResponse,
   SliceBrainsResponse,
   DeleteSliceResponse,
-} from "../types/slice.types";
+} from "../types/slice.types.js";
 import { db, slices, memos } from "@repo/db";
 import { eq, and, like } from "drizzle-orm";
 import {

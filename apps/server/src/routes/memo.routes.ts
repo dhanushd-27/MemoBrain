@@ -4,8 +4,8 @@ import {
   handleGetMemo,
   handleUpdateMemo,
   handleDeleteMemo,
-} from "../services/memo.services";
-import { authMiddleware } from "../middlewares/auth.middleware";
+} from "../services/memo.services.js";
+import { authMiddleware } from "../middlewares/auth.middleware.js";
 
 export const memoRouter = Router();
 

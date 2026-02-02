@@ -3,7 +3,7 @@ import type { VerifyCallback } from "passport-google-oauth2";
 import passport from "passport";
 import { db, users } from "@repo/db";
 import { eq } from "drizzle-orm";
-import config from "../config";
+import config from "../config/index.js";
 
 // Configure Google OAuth2 Strategy
 passport.use(
@@ -19,7 +19,7 @@ passport.use(
       accessToken: string,
       refreshToken: string,
       profile: any,
-      done: VerifyCallback
+      done: VerifyCallback,
     ) => {
       try {
         // Check if user exists with this Google ID
@@ -63,8 +63,8 @@ passport.use(
       } catch (error) {
         return done(error as Error, undefined);
       }
-    }
-  )
+    },
+  ),
 );
 
 // Serialize user for session (if using sessions)

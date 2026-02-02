@@ -5,15 +5,15 @@ import type {
   SignOutRequest,
   RefreshTokenRequest,
   AuthResponse,
-} from "../types/auth.types";
-import passport from "../utils/passport";
+} from "../types/auth.types.js";
+import passport from "../utils/passport.js";
 import {
   createToken,
   hashString,
   verifyString,
   verifyToken,
-} from "../utils/auth.helper";
-import config from "../config";
+} from "../utils/auth.helper.js";
+import config from "../config/index.js";
 import type { User } from "@repo/types";
 import { db, users, refreshTokens } from "@repo/db";
 import { eq, and } from "drizzle-orm";
