@@ -6,9 +6,9 @@ import {
   primaryKey,
 } from "drizzle-orm/pg-core";
 import { relations, sql } from "drizzle-orm";
-import { users } from "./user";
-import { memos } from "./memo";
-import { sliceAccess } from "./sliceAccess";
+import { users } from "./user.js";
+import { memos } from "./memo.js";
+import { sliceAccess } from "./sliceAccess.js";
 
 export const slices = pgTable("slices", {
   id: uuid("id")
