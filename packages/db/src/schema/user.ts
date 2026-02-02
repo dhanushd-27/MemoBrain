@@ -1,6 +1,6 @@
 import { pgTable, varchar, uuid, timestamp, index } from "drizzle-orm/pg-core";
 import { relations, sql } from "drizzle-orm";
-import { slices } from "./slice";
+import { slices } from "./slice.js";
 
 export const users = pgTable("users", {
   id: uuid("id")
