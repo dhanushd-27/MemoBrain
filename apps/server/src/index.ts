@@ -34,8 +34,10 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Hello World");
 });
 
-app.listen(config.server.port, () => {
-  console.log(`Server is running on port ${config.server.port}`);
-});
+if (!process.env.VERCEL) {
+  app.listen(config.server.port, () => {
+    console.log(`Server is running on port ${config.server.port}`);
+  });
+}
 
 export default app;
