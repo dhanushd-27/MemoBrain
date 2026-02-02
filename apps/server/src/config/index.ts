@@ -1,4 +1,4 @@
-import type { StringValue } from 'ms';
+import type { StringValue } from "ms";
 
 interface Config {
   // Google OAuth
@@ -76,7 +76,10 @@ export const config: Config = {
   },
 
   client: {
-    appUrl: getEnvVar("CLIENT_APP_URL", "http://localhost:5173"),
+    appUrl: getEnvVar("CLIENT_APP_URL", "http://localhost:3000").replace(
+      /\/$/,
+      "",
+    ),
   },
 
   server: {
