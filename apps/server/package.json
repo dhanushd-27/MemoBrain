@@ -16,7 +16,7 @@
   },
   "scripts": {
     "build": "tsc -d",
-    "start": "bun run src/api/index.ts",
+    "start": "bun run src/index.ts",
     "dev": "npm run build && npm run start",
     "lint": "eslint .",
     "check-types": "tsc --noEmit"

@@ -10,7 +10,7 @@ import {
 import { relations, sql } from "drizzle-orm";
 import { slices } from "./slice";
 import { users } from "./user";
-import type { MemoContent } from "@repo/types";
+import type { MemoContent } from "../types";
 
 // Define the memo type enum
 export const memoTypeEnum = pgEnum("memo_type", [
