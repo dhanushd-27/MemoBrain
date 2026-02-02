@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import type { UserProfileResponse } from "../types/user.types";
+import type { UserProfileResponse } from "../types/user.types.js";
 import { db, users } from "@repo/db";
 import { eq } from "drizzle-orm";
 import { HttpStatus } from "@repo/types";

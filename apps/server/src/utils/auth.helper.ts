@@ -1,7 +1,7 @@
 import jwt, { type SignOptions } from "jsonwebtoken";
 import argon2 from "argon2";
 import type { User } from "@repo/types";
-import config from "../config";
+import config from "../config/index.js";
 
 // Create JWT token
 export const createToken = (
