@@ -3,14 +3,14 @@ import type { Request, Response } from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import "dotenv/config";
-import passport from "./utils/passport.js";
+import passport from "../utils/passport.js";
 
-import { authRouter } from "./routes/auth.routes.js";
-import { userRouter } from "./routes/user.routes.js";
-import { sliceRouter } from "./routes/slice.routes.js";
-import { memoRouter } from "./routes/memo.routes.js";
-import config from "./config/index.js";
-import { loggerMiddleware } from "./middlewares/logger.middleware.js";
+import { authRouter } from "../routes/auth.routes.js";
+import { userRouter } from "../routes/user.routes.js";
+import { sliceRouter } from "../routes/slice.routes.js";
+import { memoRouter } from "../routes/memo.routes.js";
+import config from "../config/index.js";
+import { loggerMiddleware } from "../middlewares/logger.middleware.js";
 
 const app = express();
 
