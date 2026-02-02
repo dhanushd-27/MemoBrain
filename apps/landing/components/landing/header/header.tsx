@@ -2,13 +2,13 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { useScroll, useMotionValueEvent, motion } from "motion/react";
 import { Button } from "@repo/ui";
 import { Menu, X } from "lucide-react";
 import ThemeToggler from "../../theme/theme-toggler";
-import { NavDesktop } from "./nav-desktop";
-import { NavMobile } from "./nav-mobile";
+import { NavDesktop } from "./ui/nav-desktop";
+import { NavMobile } from "./ui/nav-mobile";
+import { Logo } from "./ui/logo";
 import { cn } from "@repo/ui";
 
 const navItems = [
@@ -37,18 +37,7 @@ export const Header = () => {
     >
       <div className="w-full px-6 md:container md:mx-auto md:px-8 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2">
-          <Image
-            src="/logo.png"
-            alt="CoBrain Logo"
-            width={32}
-            height={32}
-            className="w-8 h-8 rounded-full"
-          />
-          <span className="text-2xl font-serif font-bold text-foreground">
-            CoBrain
-          </span>
-        </Link>
+        <Logo />
 
         {/* Desktop Nav */}
         <div className="hidden md:block">
@@ -58,7 +47,7 @@ export const Header = () => {
         {/* Right Side (Desktop) */}
         <div className="hidden md:flex items-center gap-4">
           <ThemeToggler />
-          <Link href="/coming-soon">
+          <Link href="/signup">
             <Button variant="contained">Get Started</Button>
           </Link>
         </div>

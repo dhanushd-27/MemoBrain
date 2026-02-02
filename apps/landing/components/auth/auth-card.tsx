@@ -28,7 +28,7 @@ export function AuthCard({
               alt="Auth Background"
               width={1000}
               height={1000}
-              className="h-full w-full object-contain"
+              className="h-full w-full object-cover"
               priority
             />
             {imageOverlay && (

@@ -1,135 +1,102 @@
-# Turborepo starter
+# CoBrain
 
-This Turborepo starter is maintained by the Turborepo core team.
+> **CoBrain is your second brain for the internet. Save anything, organize it into slices, and recall it when you need it. Simple, flexible, and built for how you think.**
 
-## Using this example
+CoBrain is a modern full-stack web application designed to help users capture and organize information efficiently. It features a responsive dashboard, intuitive brain/memo management, and "slices" for categorizing thoughts.
 
-Run the following command:
+## 🏗 Repository Structure
 
-```sh
-npx create-turbo@latest
+This is a monorepo managed by [Turborepo](https://turbo.build/repo), containing the following workspaces:
+
+### Apps
+
+- **`apps/landing`**: The frontend application built with [Next.js 15](https://nextjs.org/) (App Router), Tailwind CSS, and Framer Motion. Handles the landing page, authentication UI, and the user dashboard.
+- **`apps/server`**: The backend API server built with [Express.js](https://expressjs.com/). handles business logic, authentication (Google OAuth + JWT), and database communication.
+
+### Packages
+
+- **`packages/db`**: Database schema and ORM configuration using [Drizzle ORM](https://orm.drizzle.team/) and PostgreSQL.
+- **`@repo/ui`**: Shared UI component library.
+- **`@repo/types`**: Shared TypeScript type definitions (DTOs, interfaces).
+- **`@repo/eslint-config`**, **`@repo/typescript-config`**, **`@repo/tailwind-config`**: Shared configuration files.
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- **[Bun](https://bun.sh/)** (v1.1+): This project uses Bun as the package manager and runtime for scripts.
+- **Node.js** (v18+): Required for some Turbo/Next.js operations.
+- **Docker**: (Optional but recommended) For running the PostgreSQL database locally.
+
+### Installation
+
+1.  **Clone the repository:**
+
+    ```bash
+    git clone https://github.com/your-username/cobrain.git
+    cd cobrain
+    ```
+
+2.  **Install dependencies:**
+    ```bash
+    bun install
+    ```
+
+### Environment Setup
+
+You need to configure environment variables for the apps and database. Check the `README.md` in `apps/landing`, `apps/server`, and `packages/db` for specific details.
+
+Broadly, you will need to set up `.env` files in:
+
+- `apps/landing/.env`
+- `apps/server/.env`
+- `packages/db/.env`
+
+### Database Setup
+
+1.  **Start PostgreSQL:**
+    Navigate to `packages/db` and start the database container:
+
+    ```bash
+    cd packages/db
+    docker-compose up -d
+    ```
+
+2.  **Push Schema:**
+    Apply the database schema:
+    ```bash
+    bun run drizzle:push
+    ```
+
+### Running the Project
+
+To start both the frontend and backend in development mode:
+
+```bash
+bun run dev
 ```
 
-## What's inside?
+This uses Turborepo to run `dev` scripts in all apps simultaneously.
 
-This Turborepo includes the following packages/apps:
+- **Frontend**: http://localhost:3000
+- **Backend**: http://localhost:3001 (or configured port)
 
-### Apps and Packages
+## 🛠 Commands
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+Run these commands from the root directory:
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+| Command | Description |
+|Str |---|
+| `bun run dev` | Start development server for all apps |
+| `bun run build` | Build all apps and packages |
+| `bun run lint` | shared linting check |
+| `bun run format` | Format code with Prettier |
+| `bun run check-types` | Run TypeScript type checking |
 
-### Utilities
+## 🤝 Contribution
 
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
-```
-
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
-
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
-
-### Develop
-
-To develop all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
-```
-
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
-
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
-
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+1.  Fork the repo
+2.  Create your feature branch (`git checkout -b feature/amazing-feature`)
+3.  Commit your changes (`git commit -m 'Add some amazing feature'`)
+4.  Push to the branch (`git push origin feature/amazing-feature`)
+5.  Open a Pull Request
