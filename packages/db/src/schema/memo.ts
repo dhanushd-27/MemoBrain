@@ -8,9 +8,9 @@ import {
   pgEnum,
 } from "drizzle-orm/pg-core";
 import { relations, sql } from "drizzle-orm";
-import { slices } from "./slice";
-import { users } from "./user";
-import type { MemoContent } from "../types";
+import { slices } from "./slice.js";
+import { users } from "./user.js";
+import type { MemoContent } from "../types.js";
 
 // Define the memo type enum
 export const memoTypeEnum = pgEnum("memo_type", [
