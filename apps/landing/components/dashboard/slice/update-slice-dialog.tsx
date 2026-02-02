@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Button, Input, cn } from "@repo/ui";
+import { Button, Input } from "@repo/ui";
 import { updateSlice } from "../../../services/slice.service";
 import { TbLoader } from "react-icons/tb";
 import { motion, AnimatePresence } from "motion/react";

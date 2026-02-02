@@ -9,7 +9,7 @@ const apiClient = axios.create({
 });
 
 let isRefreshing = false;
-let refreshPromise: Promise<any> | null = null;
+let refreshPromise: Promise<unknown> | null = null;
 
 apiClient.interceptors.response.use(
   (response) => response,

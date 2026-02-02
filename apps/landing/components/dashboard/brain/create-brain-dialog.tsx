@@ -279,6 +279,24 @@ export function CreateBrainDialog({
     { id: string; text: string; completed: boolean }[]
   >([{ id: crypto.randomUUID(), text: "", completed: false }]);
 
+  const resetForm = React.useCallback(() => {
+    if (!initialData) {
+      setType("TEXT");
+      setTitle("");
+      setPinned(false);
+      setTextContent("");
+      setLinkUrl("");
+      setLinkNote("");
+      setQaQuestion("");
+      setQaAnswer("");
+      setCodeLanguage("typescript");
+      setCodeSnippet("");
+      setCodeNote("");
+      setTodoItems([{ id: crypto.randomUUID(), text: "", completed: false }]);
+    }
+    setError(null);
+  }, [initialData]);
+
   useEffect(() => {
     if (initialData && isOpen) {
       setType(initialData.type);
@@ -296,6 +314,7 @@ export function CreateBrainDialog({
       setCodeNote("");
       setTodoItems([{ id: crypto.randomUUID(), text: "", completed: false }]);
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const content = initialData.content as any;
       switch (initialData.type) {
         case "TEXT":
@@ -325,25 +344,7 @@ export function CreateBrainDialog({
     } else if (!isOpen) {
       resetForm();
     }
-  }, [initialData, isOpen]);
-
-  const resetForm = () => {
-    if (!initialData) {
-      setType("TEXT");
-      setTitle("");
-      setPinned(false);
-      setTextContent("");
-      setLinkUrl("");
-      setLinkNote("");
-      setQaQuestion("");
-      setQaAnswer("");
-      setCodeLanguage("typescript");
-      setCodeSnippet("");
-      setCodeNote("");
-      setTodoItems([{ id: crypto.randomUUID(), text: "", completed: false }]);
-    }
-    setError(null);
-  };
+  }, [initialData, isOpen, resetForm]);
 
   const handleClose = () => {
     resetForm();
@@ -356,6 +357,7 @@ export function CreateBrainDialog({
     setError(null);
 
     try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let content: any = {};
 
       switch (type) {
@@ -399,15 +401,15 @@ export function CreateBrainDialog({
       } else {
         await createMemo(payload);
       }
-
       onSuccess();
       handleClose();
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Failed to save brain", err);
-      setError(
-        err.message ||
-          `Failed to ${initialData ? "update" : "create"} brain. Please try again.`,
-      );
+      const errorMessage =
+        err instanceof Error
+          ? err.message
+          : `Failed to ${initialData ? "update" : "create"} brain. Please try again.`;
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

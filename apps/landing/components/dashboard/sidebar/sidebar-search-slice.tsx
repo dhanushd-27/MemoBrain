@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSidebar } from "./sidebar-context";
 import { useRefresh } from "../refresh-context";
-import { Input, Button, cn } from "@repo/ui";
+import { Button, cn } from "@repo/ui";
 import { ShareSliceDialog } from "../slice/share-slice-dialog";
 
 import {
@@ -27,7 +27,7 @@ import { SearchSliceDialog } from "../slice/search-slice-dialog";
 import { useParams, useRouter } from "next/navigation";
 
 export function SidebarSearchSlice() {
-  const { isCollapsed, toggleSidebar } = useSidebar();
+  const { isCollapsed } = useSidebar();
   const { refreshKey, triggerRefresh } = useRefresh();
   const [slices, setSlices] = useState<Slice[]>([]);
   const [loading, setLoading] = useState(true);

@@ -29,9 +29,9 @@ export function DashboardView() {
             Welcome to CoBrain
           </h1>
           <p className="text-lg text-muted-foreground leading-relaxed">
-            Organize your thoughts, projects, and ideas into focused "Slices".
-            Each slice focuses on a specific context, allowing you to manage
-            related notes, links, and tasks efficiently.
+            Organize your thoughts, projects, and ideas into focused
+            &quot;Slices&quot;. Each slice focuses on a specific context,
+            allowing you to manage related notes, links, and tasks efficiently.
           </p>
         </div>
 

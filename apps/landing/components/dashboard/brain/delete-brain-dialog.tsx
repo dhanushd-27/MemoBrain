@@ -33,9 +33,13 @@ export function DeleteBrainDialog({
       await deleteMemo(memo.id);
       onSuccess();
       onClose();
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Failed to delete memo", err);
-      setError(err.message || "Failed to delete memo. Please try again.");
+      const errorMessage =
+        err instanceof Error
+          ? err.message
+          : "Failed to delete memo. Please try again.";
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -69,12 +73,14 @@ export function DeleteBrainDialog({
                     <TbAlertTriangle className="text-2xl text-danger" />
                   </div>
 
-                  <h2 className="text-xl font-bold font-serif">Delete Brain?</h2>
+                  <h2 className="text-xl font-bold font-serif">
+                    Delete Brain?
+                  </h2>
                 </div>
                 <p className="text-muted-foreground text-sm">
                   Are you sure you want to delete{" "}
                   <span className="font-semibold text-foreground">
-                    "{memo.title || "this brain"}"
+                    &quot;{memo.title || "this brain"}&quot;
                   </span>
                   ? This action cannot be undone.
                 </p>

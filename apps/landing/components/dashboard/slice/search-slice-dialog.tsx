@@ -1,14 +1,13 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Input, cn } from "@repo/ui";
+import { cn } from "@repo/ui";
 import { getSlices } from "../../../services/slice.service";
-import { TbLoader, TbSearch } from "react-icons/tb";
+import { TbSearch } from "react-icons/tb";
 import { motion, AnimatePresence } from "motion/react";
 import { useDebounce } from "../../../hooks/use-debounce";
 import type { Slice } from "@repo/types";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 interface SearchSliceDialogProps {
   isOpen: boolean;
@@ -20,7 +19,6 @@ export function SearchSliceDialog({ isOpen, onClose }: SearchSliceDialogProps) {
   const debouncedQuery = useDebounce(searchQuery, 300);
   const [slices, setSlices] = useState<Slice[]>([]);
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   const fetchSlices = async (query?: string) => {
     setLoading(true);

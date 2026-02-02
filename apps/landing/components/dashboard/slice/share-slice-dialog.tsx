@@ -264,6 +264,7 @@ export function ShareSliceDialog({
                             <div className="flex items-center gap-3">
                               <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
                                 {access.user.avatarUrl ? (
+                                  // eslint-disable-next-line @next/next/no-img-element
                                   <img
                                     src={access.user.avatarUrl}
                                     alt={access.user.fullName}

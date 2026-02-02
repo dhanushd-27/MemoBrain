@@ -31,8 +31,10 @@ export function SignUpView() {
     try {
       await signup(formData);
       router.push("/dashboard");
-    } catch (err: any) {
-      setError(err?.response?.data?.error || "Failed to sign up");
+    } catch (err: unknown) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const msg = (err as any)?.response?.data?.error || "Failed to sign up";
+      setError(msg);
     } finally {
       setLoading(false);
     }

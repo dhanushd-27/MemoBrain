@@ -15,7 +15,7 @@ function TokenRefreshContent() {
         await refresh();
         // Refresh successful, retry the original navigation
         router.replace(from);
-      } catch (error) {
+      } catch {
         // Refresh failed, user must sign in again
         router.replace("/signin");
       }

@@ -30,8 +30,10 @@ export function SignInView() {
     try {
       await signin(formData);
       router.push("/dashboard");
-    } catch (err: any) {
-      setError(err?.response?.data?.error || "Invalid credentials");
+    } catch (err: unknown) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const msg = (err as any)?.response?.data?.error || "Invalid credentials";
+      setError(msg);
     } finally {
       setLoading(false);
     }
