@@ -7,7 +7,6 @@ import {
   handleSignOut,
   handleSignUp,
 } from "../services/auth.services.js";
-import { authMiddleware } from "../middlewares/auth.middleware.js";
 
 export const authRouter = Router();
 
