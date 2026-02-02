@@ -36,8 +36,10 @@ export const SliceHeader = ({
       <div className="mt-1 mr-2">
         <SidebarTrigger />
       </div>
-      <div className="flex-1">
-        <h1 className="text-4xl font-serif font-bold mb-2">{slice.name}</h1>
+      <div className="flex-1 pt-3 md:pt-0">
+        <h1 className="text-2xl md:text-3xl lg:text-4xl font-serif font-bold mb-2">
+          {slice.name}
+        </h1>
         <p className="text-muted-foreground max-w-2xl">
           {slice.description || "No description provided."}
         </p>

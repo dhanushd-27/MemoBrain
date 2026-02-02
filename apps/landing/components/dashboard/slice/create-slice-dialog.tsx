@@ -65,12 +65,10 @@ export function CreateSliceDialog({
             initial={{ opacity: 0, scale: 0.95, y: -20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -20 }}
-            className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none"
+            className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none p-4"
           >
             <div className="bg-card w-full max-w-md p-6 rounded-xl shadow-xl pointer-events-auto border bg-surface">
-              <h2 className="text-xl font-bold mb-4 font-serif">
-                Create New Slice
-              </h2>
+              <h2 className="text-h4-bold mb-4">Create New Slice</h2>
               <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                 <Input
                   label="Slice Name"

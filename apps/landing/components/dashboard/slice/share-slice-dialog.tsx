@@ -162,11 +162,11 @@ export function ShareSliceDialog({
             initial={{ opacity: 0, scale: 0.95, y: -20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -20 }}
-            className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none"
+            className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none p-4"
           >
             <div className="bg-card/80 bg-surface w-full max-w-lg p-6 rounded-xl shadow-xl pointer-events-auto border flex flex-col gap-6 max-h-[90vh] overflow-y-auto">
               <div>
-                <h2 className="text-xl font-bold font-serif mb-1">
+                <h2 className="text-h4-bold mb-1">
                   Share &quot;{slice.name}&quot;
                 </h2>
                 <p className="text-sm text-muted-foreground">

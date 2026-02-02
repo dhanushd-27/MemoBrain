@@ -437,7 +437,7 @@ export function CreateBrainDialog({
             <div className="bg-card w-full max-w-2xl max-h-[90vh] flex flex-col rounded-xl shadow-2xl pointer-events-auto border overflow-hidden bg-background">
               {/* Header */}
               <div className="flex items-center justify-between p-6 border-b">
-                <h2 className="text-xl font-bold font-serif">
+                <h2 className="text-h4-bold">
                   {initialData ? "Edit Brain" : "Create New Brain"}
                 </h2>
                 <button

@@ -22,6 +22,7 @@ import type { Slice } from "@repo/types";
 import { CreateSliceDialog } from "../slice/create-slice-dialog";
 import { UpdateSliceDialog } from "../slice/update-slice-dialog";
 import { DeleteSliceDialog } from "../slice/delete-slice-dialog";
+import { SearchSliceDialog } from "../slice/search-slice-dialog";
 
 import { useParams, useRouter } from "next/navigation";
 
@@ -33,6 +34,7 @@ export function SidebarSearchSlice() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false);
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
+  const [isSearchDialogOpen, setIsSearchDialogOpen] = useState(false);
   const [selectedSlice, setSelectedSlice] = useState<Slice | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [sliceToDelete, setSliceToDelete] = useState<Slice | null>(null);
@@ -55,6 +57,7 @@ export function SidebarSearchSlice() {
     : null;
 
   const fetchSlices = async () => {
+    setLoading(true);
     try {
       const response = await getSlices();
       setSlices(response.slices);
@@ -162,27 +165,28 @@ export function SidebarSearchSlice() {
         slice={sliceToDelete}
       />
 
-      {/* Search Bar - Only visible when expanded */}
+      <SearchSliceDialog
+        isOpen={isSearchDialogOpen}
+        onClose={() => setIsSearchDialogOpen(false)}
+      />
+
+      {/* Search Button */}
       {!isCollapsed && (
-        <motion.div
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: "auto" }}
-          exit={{ opacity: 0, height: 0 }}
+        <Button
+          variant="outlined"
+          className="w-full justify-start text-muted-foreground hover:text-foreground h-10 rounded-xl px-3 border-input bg-background/50"
+          onClick={() => setIsSearchDialogOpen(true)}
         >
-          <Input
-            label=""
-            placeholder="Search slices..."
-            containerClassName="gap-0"
-            className="h-10 rounded-xl"
-          />
-        </motion.div>
+          <TbSearch className="mr-2 text-lg" />
+          <span className="text-sm">Search slices</span>
+        </Button>
       )}
 
       {/* Search Icon for collapsed state - expands sidebar when clicked */}
       {isCollapsed && (
         <div
           className="p-2 text-muted-foreground hover:text-foreground cursor-pointer"
-          onClick={toggleSidebar}
+          onClick={() => setIsSearchDialogOpen(true)}
         >
           <TbSearch className="text-xl" />
         </div>

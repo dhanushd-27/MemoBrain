@@ -67,12 +67,12 @@ export function DeleteSliceDialog({
             initial={{ opacity: 0, scale: 0.95, y: -20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -20 }}
-            className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none"
+            className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none p-4"
           >
             <div className="bg-card/80 bg-surface w-full max-w-md p-6 rounded-xl shadow-xl pointer-events-auto border border-danger/20">
               <div className="flex items-center gap-2 mb-4 text-danger">
                 <TbAlertTriangle className="text-xl" />
-                <h2 className="text-xl font-bold font-serif">Delete Slice</h2>
+                <h2 className="text-h4-bold">Delete Slice</h2>
               </div>
 
               <p className="text-sm text-muted-foreground mb-4">

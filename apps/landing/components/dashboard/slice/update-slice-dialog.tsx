@@ -70,10 +70,10 @@ export function UpdateSliceDialog({
             initial={{ opacity: 0, scale: 0.95, y: -20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -20 }}
-            className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none"
+            className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none p-4"
           >
             <div className="bg-card/80 bg-surface  w-full max-w-md p-6 rounded-xl shadow-xl pointer-events-auto border">
-              <h2 className="text-xl font-bold mb-4 font-serif">Edit Slice</h2>
+              <h2 className="text-h4-bold mb-4">Edit Slice</h2>
               <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                 <Input
                   label="Slice Name"

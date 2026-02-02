@@ -14,8 +14,36 @@ export type SliceAccess = InferSelectModel<typeof sliceAccess>;
 export type NewSliceAccess = InferInsertModel<typeof sliceAccess>;
 
 // Memo types
-export type Memo = InferSelectModel<typeof memos>;
+import type {
+  TextContent,
+  TodoContent,
+  LinkContent,
+  QAContent,
+  CodeContent,
+} from "./memo.type";
+
+// Memo types
+export type DbMemo = InferSelectModel<typeof memos>;
 export type NewMemo = InferInsertModel<typeof memos>;
+
+export type Memo =
+  | (Omit<DbMemo, "type" | "content"> & {
+      type: "TEXT";
+      content: TextContent;
+    })
+  | (Omit<DbMemo, "type" | "content"> & {
+      type: "TODO";
+      content: TodoContent;
+    })
+  | (Omit<DbMemo, "type" | "content"> & {
+      type: "LINK";
+      content: LinkContent;
+    })
+  | (Omit<DbMemo, "type" | "content"> & { type: "QA"; content: QAContent })
+  | (Omit<DbMemo, "type" | "content"> & {
+      type: "CODE";
+      content: CodeContent;
+    });
 
 // RefreshToken types
 export type RefreshToken = InferSelectModel<typeof refreshTokens>;

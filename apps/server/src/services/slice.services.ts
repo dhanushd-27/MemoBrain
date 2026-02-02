@@ -348,7 +348,7 @@ export const handleGetSliceBrains = async (
 
     res.json({
       sliceId,
-      brains: sliceMemos,
+      brains: sliceMemos as unknown as import("@repo/types").Memo[],
     });
   } catch (error) {
     res

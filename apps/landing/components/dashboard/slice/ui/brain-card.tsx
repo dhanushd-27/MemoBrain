@@ -11,6 +11,7 @@ import {
 } from "react-icons/tb";
 import { motion, AnimatePresence } from "motion/react";
 import type { Memo } from "@repo/types";
+import Link from "next/link";
 
 interface BrainCardProps {
   brain: Memo;
@@ -112,23 +113,26 @@ export const BrainCard = ({
           onEdit(brain);
         }}
       >
-        {brain.type === "TEXT" && (brain.content as any).text}
+        {brain.type === "TEXT" && brain.content.text}
         {brain.type === "LINK" && (
           <div className="flex flex-col justify-center h-full">
-            <a
-              href={(brain.content as any).url}
+            <h5>
+              Note: <span className="text-primary">{brain.content.note}</span>
+            </h5>
+            <Link
+              href={brain.content.url}
               target="_blank"
               rel="noopener noreferrer"
               className="text-primary hover:underline font-medium break-all flex items-center gap-2"
               onClick={(e) => e.stopPropagation()}
             >
-              {(brain.content as any).url}
-            </a>
+              {brain.content.url}
+            </Link>
           </div>
         )}
         {brain.type === "TODO" && (
           <ul className="list-disc pl-4 space-y-1">
-            {(brain.content as any).items.slice(0, 3).map((item: any) => (
+            {brain.content.items.slice(0, 3).map((item) => (
               <li
                 key={item.id}
                 className={item.completed ? "line-through opacity-50" : ""}
@@ -136,24 +140,24 @@ export const BrainCard = ({
                 {item.text}
               </li>
             ))}
-            {(brain.content as any).items.length > 3 && <li>...</li>}
+            {brain.content.items.length > 3 && <li>...</li>}
           </ul>
         )}
         {brain.type === "QA" && (
           <div>
-            <strong>Q:</strong> {(brain.content as any).question}
+            <strong>Q:</strong> {brain.content.question}
           </div>
         )}
         {brain.type === "CODE" && (
           <div className="relative group">
             <pre className="bg-muted p-2 rounded text-xs font-mono overflow-hidden whitespace-pre-wrap break-all">
-              {(brain.content as any).code}
+              {brain.content.code}
             </pre>
             <button
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                handleCopy((brain.content as any).code);
+                handleCopy(brain.content.code);
               }}
               className="absolute top-2 right-2 p-1.5 bg-background/80 hover:bg-background rounded-md shadow-sm border opacity-0 group-hover:opacity-100 transition-opacity"
               title="Copy code"
