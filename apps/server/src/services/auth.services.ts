@@ -100,6 +100,7 @@ export const handleSignUp = async (
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
+      domain: config.cookies.domain,
       maxAge: 15 * 60 * 1000,
     });
 
@@ -107,6 +108,7 @@ export const handleSignUp = async (
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
+      domain: config.cookies.domain,
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
@@ -190,6 +192,7 @@ export const handleSignIn = async (
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
+      domain: config.cookies.domain,
       maxAge: 15 * 60 * 1000,
     });
 
@@ -197,6 +200,7 @@ export const handleSignIn = async (
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
+      domain: config.cookies.domain,
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
@@ -239,8 +243,12 @@ export const handleSignOut = async (
     }
 
     // Clear cookies
-    res.clearCookie(config.cookies.accessTokenName);
-    res.clearCookie(config.cookies.refreshTokenName);
+    res.clearCookie(config.cookies.accessTokenName, {
+      domain: config.cookies.domain,
+    });
+    res.clearCookie(config.cookies.refreshTokenName, {
+      domain: config.cookies.domain,
+    });
 
     res.json({ message: "Signed out successfully" });
   } catch (error) {
@@ -314,6 +322,7 @@ export const handleGoogleCallback = (
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
           sameSite: "lax",
+          domain: config.cookies.domain,
           maxAge: 15 * 60 * 1000,
         });
 
@@ -321,6 +330,7 @@ export const handleGoogleCallback = (
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
           sameSite: "lax",
+          domain: config.cookies.domain,
           maxAge: 7 * 24 * 60 * 60 * 1000,
         });
 
@@ -428,6 +438,7 @@ export const handleRefresh = async (
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
+      domain: config.cookies.domain,
       maxAge: 15 * 60 * 1000,
     });
 
@@ -435,6 +446,7 @@ export const handleRefresh = async (
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
+      domain: config.cookies.domain,
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
