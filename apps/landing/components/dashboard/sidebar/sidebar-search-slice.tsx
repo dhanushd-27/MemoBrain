@@ -1,22 +1,13 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useSidebar } from "./sidebar-context";
 import { useRefresh } from "../refresh-context";
 import { Button, cn } from "@repo/ui";
 import { ShareSliceDialog } from "../slice/share-slice-dialog";
 
-import {
-  TbSearch,
-  TbPlus,
-  TbLoader,
-  TbDotsVertical,
-  TbTrash,
-  TbPencil,
-  TbShare,
-} from "react-icons/tb";
-import { motion, AnimatePresence } from "motion/react";
-import Link from "next/link";
+import { TbSearch, TbPlus, TbLoader } from "react-icons/tb";
+import { motion } from "motion/react";
 import { getSlices } from "../../../services/slice.service";
 import type { Slice } from "@repo/types";
 import { CreateSliceDialog } from "../slice/create-slice-dialog";
@@ -25,6 +16,7 @@ import { DeleteSliceDialog } from "../slice/delete-slice-dialog";
 import { SearchSliceDialog } from "../slice/search-slice-dialog";
 
 import { useParams, useRouter } from "next/navigation";
+import { SliceItem } from "./slice-item";
 
 export function SidebarSearchSlice() {
   const { isCollapsed } = useSidebar();
@@ -39,7 +31,7 @@ export function SidebarSearchSlice() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [sliceToDelete, setSliceToDelete] = useState<Slice | null>(null);
   const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
-  const menuRef = useRef<HTMLDivElement>(null);
+  // menuRef moved to SliceItem
 
   const params = useParams();
   const router = useRouter();
@@ -72,19 +64,7 @@ export function SidebarSearchSlice() {
     fetchSlices();
   }, [refreshKey]);
 
-  // Close menu when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setActiveMenuId(null);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+  // Click outside logic moved to SliceItem
 
   const handleDeleteClick = (slice: Slice, event: React.MouseEvent) => {
     event.preventDefault(); // Prevent navigation
@@ -222,62 +202,17 @@ export function SidebarSearchSlice() {
             </div>
           ) : (
             slices.map((slice) => (
-              <div key={slice.id} className="relative group">
-                <Link
-                  href={`/dashboard/${btoa(slice.id)}`}
-                  className={cn(
-                    "flex items-center justify-between p-2 rounded-md hover:bg-muted text-sm transition-colors group",
-                    currentSliceId === slice.id
-                      ? "bg-muted text-foreground font-medium"
-                      : "text-muted-foreground",
-                  )}
-                >
-                  <span className="truncate pr-8">{slice.name}</span>
-
-                  {/* Action Menu Trigger */}
-                  <div
-                    className={cn(
-                      "absolute right-2 p-1 rounded-md hover:bg-background/80 transition-opacity",
-                      activeMenuId === slice.id ? "bg-background/80" : "",
-                    )}
-                    onClick={(e) => toggleMenu(slice.id, e)}
-                  >
-                    <TbDotsVertical className="text-muted-foreground hover:text-foreground" />
-                  </div>
-                </Link>
-
-                {/* Dropdown Menu */}
-                <AnimatePresence>
-                  {activeMenuId === slice.id && (
-                    <motion.div
-                      ref={menuRef}
-                      initial={{ opacity: 0, scale: 0.95, y: -5 }}
-                      animate={{ opacity: 1, scale: 1, y: 0 }}
-                      exit={{ opacity: 0, scale: 0.95, y: -5 }}
-                      className="absolute right-0 top-full mt-1 w-32 bg-card border rounded-lg shadow-lg z-50 overflow-hidden flex flex-col"
-                    >
-                      <button
-                        onClick={(e) => handleEdit(slice, e)}
-                        className="flex items-center gap-2 w-full px-3 py-2 text-xs hover:bg-muted text-left"
-                      >
-                        <TbPencil className="text-sm" /> Edit
-                      </button>
-                      <button
-                        onClick={(e) => handleShare(slice, e)}
-                        className="flex items-center gap-2 w-full px-3 py-2 text-xs hover:bg-muted text-left"
-                      >
-                        <TbShare className="text-sm" /> Share
-                      </button>
-                      <button
-                        onClick={(e) => handleDeleteClick(slice, e)}
-                        className="flex items-center gap-2 w-full px-3 py-2 text-xs hover:bg-muted text-left text-danger"
-                      >
-                        <TbTrash className="text-sm" /> Delete
-                      </button>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
+              <SliceItem
+                key={slice.id}
+                slice={slice}
+                isActive={currentSliceId === slice.id}
+                isMenuOpen={activeMenuId === slice.id}
+                onToggleMenu={toggleMenu}
+                onEdit={handleEdit}
+                onShare={handleShare}
+                onDelete={handleDeleteClick}
+                closeMenu={() => setActiveMenuId(null)}
+              />
             ))
           )}
         </motion.div>
