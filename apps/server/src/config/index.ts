@@ -20,6 +20,7 @@ interface Config {
     refreshTokenName: string;
     accessTokenExpire: StringValue;
     refreshTokenExpire: StringValue;
+    domain?: string;
   };
 
   // Client
@@ -73,6 +74,7 @@ export const config: Config = {
     refreshTokenName: getEnvVar("REFRESH_TOKEN_COOKIE_NAME", "refresh_token"),
     accessTokenExpire: getEnvVar("ACCESS_TOKEN_EXPIRE", "15m") as StringValue,
     refreshTokenExpire: getEnvVar("REFRESH_TOKEN_EXPIRE", "7d") as StringValue,
+    domain: process.env.COOKIE_DOMAIN,
   },
 
   client: {
