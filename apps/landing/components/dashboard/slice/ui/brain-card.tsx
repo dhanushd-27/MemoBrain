@@ -115,15 +115,15 @@ export const BrainCard = ({
       >
         {brain.type === "TEXT" && brain.content.text}
         {brain.type === "LINK" && (
-          <div className="flex flex-col justify-center h-full">
-            <h5>
-              Note: <span className="text-primary">{brain.content.note}</span>
-            </h5>
+          <div className="flex flex-col justify-start text-start h-full gap-2">
+            <p className="line-clamp-1 font-bold bg-muted px-2 py-1 rounded-lg text-wrap">
+              Note: <span className="text-primary tracking-wide font-normal">{brain.content.note}</span>
+            </p>
             <Link
               href={brain.content.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-primary hover:underline font-medium break-all flex items-center gap-2"
+              className="text-primary hover:underline font-medium break-all flex items-center gap-2 text-xs px-2 py-1"
               onClick={(e) => e.stopPropagation()}
             >
               {brain.content.url}
@@ -144,8 +144,13 @@ export const BrainCard = ({
           </ul>
         )}
         {brain.type === "QA" && (
-          <div>
-            <strong>Q:</strong> {brain.content.question}
+          <div className="flex flex-col gap-2 overflow-auto">
+            <p className="line-clamp-2">
+              <strong>Q:</strong> {brain.content.question}
+            </p>
+            <p className="line-clamp-2">
+              <strong>A:</strong> {brain.content.answer}
+            </p>
           </div>
         )}
         {brain.type === "CODE" && (
@@ -159,7 +164,7 @@ export const BrainCard = ({
                 e.stopPropagation();
                 handleCopy(brain.content.code);
               }}
-              className="absolute top-2 right-2 p-1.5 bg-background/80 hover:bg-background rounded-md shadow-sm border opacity-0 group-hover:opacity-100 transition-opacity"
+              className="absolute top-1 right-2 p-1 bg-background/80 hover:bg-background rounded-md shadow-sm border transition-opacity"
               title="Copy code"
             >
               {isCopied ? (
