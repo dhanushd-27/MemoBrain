@@ -70,59 +70,61 @@ export default function SliceDashboardPage() {
   }
 
   return (
-    <div className="p-4 md:p-8 max-w-7xl mx-auto w-full">
-      <SliceHeader
-        slice={slice}
-        onNewBrain={handleNewBrain}
-        onEditSlice={() => setIsUpdateDialogOpen(true)}
-        onShareSlice={() => setIsShareDialogOpen(true)}
-        onDeleteSlice={() => setIsDeleteDialogOpen(true)}
-      />
+    <div className="h-full overflow-y-auto w-full p-4 md:p-8">
+      <div className="max-w-7xl mx-auto w-full">
+        <SliceHeader
+          slice={slice}
+          onNewBrain={handleNewBrain}
+          onEditSlice={() => setIsUpdateDialogOpen(true)}
+          onShareSlice={() => setIsShareDialogOpen(true)}
+          onDeleteSlice={() => setIsDeleteDialogOpen(true)}
+        />
 
-      <div className="h-px bg-border w-full mb-8" />
+        <div className="h-px bg-border w-full mb-8" />
 
-      <BrainGrid
-        brains={brains}
-        onNewBrain={handleNewBrain}
-        onEditBrain={handleEditBrain}
-        onDeleteBrain={handleDeleteBrain}
-      />
+        <BrainGrid
+          brains={brains}
+          onNewBrain={handleNewBrain}
+          onEditBrain={handleEditBrain}
+          onDeleteBrain={handleDeleteBrain}
+        />
 
-      {/* Dialogs */}
-      <UpdateSliceDialog
-        isOpen={isUpdateDialogOpen}
-        onClose={() => setIsUpdateDialogOpen(false)}
-        onSuccess={refresh}
-        slice={slice}
-      />
+        {/* Dialogs */}
+        <UpdateSliceDialog
+          isOpen={isUpdateDialogOpen}
+          onClose={() => setIsUpdateDialogOpen(false)}
+          onSuccess={refresh}
+          slice={slice}
+        />
 
-      <ShareSliceDialog
-        isOpen={isShareDialogOpen}
-        onClose={() => setIsShareDialogOpen(false)}
-        slice={slice}
-      />
+        <ShareSliceDialog
+          isOpen={isShareDialogOpen}
+          onClose={() => setIsShareDialogOpen(false)}
+          slice={slice}
+        />
 
-      <DeleteSliceDialog
-        isOpen={isDeleteDialogOpen}
-        onClose={() => setIsDeleteDialogOpen(false)}
-        onSuccess={() => router.push("/dashboard")}
-        slice={slice}
-      />
+        <DeleteSliceDialog
+          isOpen={isDeleteDialogOpen}
+          onClose={() => setIsDeleteDialogOpen(false)}
+          onSuccess={() => router.push("/dashboard")}
+          slice={slice}
+        />
 
-      <CreateBrainDialog
-        isOpen={isCreateBrainDialogOpen}
-        onClose={handleCloseCreateDialog}
-        onSuccess={refresh}
-        sliceId={slice.id}
-        initialData={selectedBrain}
-      />
+        <CreateBrainDialog
+          isOpen={isCreateBrainDialogOpen}
+          onClose={handleCloseCreateDialog}
+          onSuccess={refresh}
+          sliceId={slice.id}
+          initialData={selectedBrain}
+        />
 
-      <DeleteBrainDialog
-        isOpen={isDeleteBrainDialogOpen}
-        onClose={() => setIsDeleteBrainDialogOpen(false)}
-        onSuccess={refresh}
-        memo={selectedBrain}
-      />
+        <DeleteBrainDialog
+          isOpen={isDeleteBrainDialogOpen}
+          onClose={() => setIsDeleteBrainDialogOpen(false)}
+          onSuccess={refresh}
+          memo={selectedBrain}
+        />
+      </div>
     </div>
   );
 }
