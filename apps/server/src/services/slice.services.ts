@@ -147,7 +147,7 @@ export const handleGetSlice = async (
     const { sliceId } = paramValidation.data;
 
     // Check if user can access this slice
-    const { canAccessSlice } = await import("../helpers/slice.helpers");
+    const { canAccessSlice } = await import("../helpers/slice.helpers.js");
     if (!(await canAccessSlice(userId, sliceId))) {
       return res.status(HttpStatus.FORBIDDEN).json({
         error: "You don't have permission to access this slice",
@@ -201,7 +201,7 @@ export const handleUpdateSlice = async (
     const { sliceId } = paramValidation.data;
 
     // Check if user can manage this slice (owner only)
-    const { canManageSlice } = await import("../helpers/slice.helpers");
+    const { canManageSlice } = await import("../helpers/slice.helpers.js");
     if (!(await canManageSlice(userId, sliceId))) {
       return res.status(HttpStatus.FORBIDDEN).json({
         error: "You don't have permission to update this slice",
@@ -279,7 +279,7 @@ export const handleDeleteSlice = async (
     const { sliceId } = paramValidation.data;
 
     // Check if user can manage this slice (owner only)
-    const { canManageSlice } = await import("../helpers/slice.helpers");
+    const { canManageSlice } = await import("../helpers/slice.helpers.js");
     if (!(await canManageSlice(userId, sliceId))) {
       return res.status(HttpStatus.FORBIDDEN).json({
         error: "You don't have permission to delete this slice",
@@ -333,7 +333,7 @@ export const handleGetSliceBrains = async (
     const { sliceId } = paramValidation.data;
 
     // Check if user can access this slice
-    const { canAccessSlice } = await import("../helpers/slice.helpers");
+    const { canAccessSlice } = await import("../helpers/slice.helpers.js");
     if (!(await canAccessSlice(userId, sliceId))) {
       return res.status(HttpStatus.FORBIDDEN).json({
         error: "You don't have permission to access this slice",
@@ -362,9 +362,9 @@ export const handleUpdateSliceAccessStatus = async (
   req: Request<
     { sliceId: string },
     any,
-    import("../types/slice.types").UpdateSliceAccessStatusRequest
+    import("../types/slice.types.js").UpdateSliceAccessStatusRequest
   >,
-  res: Response<import("../types/slice.types").SliceAccessResponse>,
+  res: Response<import("../types/slice.types.js").SliceAccessResponse>,
 ) => {
   try {
     const userId = (req as any).user?.id;
@@ -376,7 +376,7 @@ export const handleUpdateSliceAccessStatus = async (
     }
 
     const { sliceId } = req.params;
-    const { canManageSlice } = await import("../helpers/slice.helpers");
+    const { canManageSlice } = await import("../helpers/slice.helpers.js");
 
     // Check if user can manage this slice (owner only)
     if (!(await canManageSlice(userId, sliceId))) {
@@ -416,9 +416,9 @@ export const handleGrantSliceAccess = async (
   req: Request<
     { sliceId: string },
     any,
-    import("../types/slice.types").GrantSliceAccessRequest
+    import("../types/slice.types.js").GrantSliceAccessRequest
   >,
-  res: Response<import("../types/slice.types").SliceAccessResponse>,
+  res: Response<import("../types/slice.types.js").SliceAccessResponse>,
 ) => {
   try {
     const userId = (req as any).user?.id;
@@ -430,7 +430,7 @@ export const handleGrantSliceAccess = async (
     }
 
     const { sliceId } = req.params;
-    const { canManageSlice } = await import("../helpers/slice.helpers");
+    const { canManageSlice } = await import("../helpers/slice.helpers.js");
 
     // Check if user can manage this slice (owner only)
     if (!(await canManageSlice(userId, sliceId))) {
@@ -518,7 +518,7 @@ export const handleGrantSliceAccess = async (
 // DELETE /slices/:sliceId/access/users/:userId - Revoke access from a user
 export const handleRevokeSliceAccess = async (
   req: Request<{ sliceId: string; userId: string }>,
-  res: Response<import("../types/slice.types").SliceAccessResponse>,
+  res: Response<import("../types/slice.types.js").SliceAccessResponse>,
 ) => {
   try {
     const userId = (req as any).user?.id;
@@ -530,7 +530,7 @@ export const handleRevokeSliceAccess = async (
     }
 
     const { sliceId, userId: targetUserId } = req.params;
-    const { canManageSlice } = await import("../helpers/slice.helpers");
+    const { canManageSlice } = await import("../helpers/slice.helpers.js");
 
     // Check if user can manage this slice (owner only)
     if (!(await canManageSlice(userId, sliceId))) {
@@ -574,7 +574,7 @@ export const handleRevokeSliceAccess = async (
 // GET /slices/:sliceId/access/users - List all users with access
 export const handleGetSliceAccessList = async (
   req: Request<{ sliceId: string }>,
-  res: Response<import("../types/slice.types").SliceAccessListResponse>,
+  res: Response<import("../types/slice.types.js").SliceAccessListResponse>,
 ) => {
   try {
     const userId = (req as any).user?.id;
@@ -586,7 +586,7 @@ export const handleGetSliceAccessList = async (
     }
 
     const { sliceId } = req.params;
-    const { canManageSlice } = await import("../helpers/slice.helpers");
+    const { canManageSlice } = await import("../helpers/slice.helpers.js");
 
     // Check if user can manage this slice (owner only)
     if (!(await canManageSlice(userId, sliceId))) {
@@ -640,9 +640,9 @@ export const handleUpdateSliceAccessRole = async (
   req: Request<
     { sliceId: string; userId: string },
     any,
-    import("../types/slice.types").UpdateSliceAccessRoleRequest
+    import("../types/slice.types.js").UpdateSliceAccessRoleRequest
   >,
-  res: Response<import("../types/slice.types").SliceAccessResponse>,
+  res: Response<import("../types/slice.types.js").SliceAccessResponse>,
 ) => {
   try {
     const userId = (req as any).user?.id;
@@ -654,7 +654,7 @@ export const handleUpdateSliceAccessRole = async (
     }
 
     const { sliceId, userId: targetUserId } = req.params;
-    const { canManageSlice } = await import("../helpers/slice.helpers");
+    const { canManageSlice } = await import("../helpers/slice.helpers.js");
 
     // Check if user can manage this slice (owner only)
     if (!(await canManageSlice(userId, sliceId))) {
