@@ -1,4 +1,4 @@
-# 🚀 𝗜𝗻𝘁𝗿𝗼𝗱𝘂𝗰𝗶𝗻𝗴 𝘾𝙤𝘽𝙧𝙖�𝗻
+# 🚀 𝗜𝗻𝘁𝗿𝗼𝗱𝘂𝗰𝗶𝗻𝗴 𝘾𝙤𝘽𝙧𝙖𝙞𝙣
 
 ![CoBrain Landing Screenshot](apps/landing/public/cobrain-landing.png)
 
