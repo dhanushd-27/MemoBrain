@@ -1,24 +1,36 @@
-# CoBrain
+# 🚀 𝗜𝗻𝘁𝗿𝗼𝗱𝘂𝗰𝗶𝗻𝗴 𝘾𝙤𝘽𝙧𝙖�𝗻
 
-> **CoBrain is your second brain for the internet. Save anything, organize it into slices, and recall it when you need it. Simple, flexible, and built for how you think.**
+```markdown
+![CoBrain Landing Screenshot](apps/landing/public/cobrain-landing.png)
+```
 
-CoBrain is a modern full-stack web application designed to help users capture and organize information efficiently. It features a responsive dashboard, intuitive brain/memo management, and "slices" for categorizing thoughts.
+
+CoBrain is your **𝘀𝗲𝗰𝗼𝗻𝗱 𝗯𝗿𝗮𝗶𝗻** - designed to help you save notes and links, organise it into meaningful slices, and recall information exactly when you need it. It’s simple, flexible, and built to adapt to how _you_ think.
 
 ## 🏗 Repository Structure
 
 This is a monorepo managed by [Turborepo](https://turbo.build/repo), containing the following workspaces:
 
-### Apps
+### 📱 Apps
 
-- **`apps/landing`**: The frontend application built with [Next.js 15](https://nextjs.org/) (App Router), Tailwind CSS, and Framer Motion. Handles the landing page, authentication UI, and the user dashboard.
-- **`apps/server`**: The backend API server built with [Express.js](https://expressjs.com/). handles business logic, authentication (Google OAuth + JWT), and database communication.
+- **`apps/landing`**: Next.js 15 (App Router) frontend with Tailwind CSS and Framer Motion.
+- **`apps/server`**: Express.js backend with Bun runtime, Google OAuth, and JWT authentication.
 
-### Packages
+### 📦 Packages
 
-- **`packages/db`**: Database schema and ORM configuration using [Drizzle ORM](https://orm.drizzle.team/) and PostgreSQL.
-- **`@repo/ui`**: Shared UI component library.
-- **`@repo/types`**: Shared TypeScript type definitions (DTOs, interfaces).
-- **`@repo/eslint-config`**, **`@repo/typescript-config`**, **`@repo/tailwind-config`**: Shared configuration files.
+- **`@repo/db`**: PostgreSQL database management with Drizzle ORM.
+- **`@repo/ui`**: Shared React component library.
+- **`@repo/types`**: Shared TypeScript definitions.
+- **`@repo/fonts`**: Shared typography assets.
+- **`@repo/eslint-config`**, **`@repo/typescript-config`**, **`@repo/tailwind-config`**: Shared configurations.
+
+## 🛠 Tech Stack
+
+- **Runtime**: [Bun](https://bun.sh/)
+- **Frontend**: Next.js 15, React 19, Tailwind CSS, Framer Motion
+- **Backend**: Express.js, Passport.js (Google OAuth), Argon2
+- **Database**: PostgreSQL, Drizzle ORM
+- **Monorepo**: Turborepo
 
 ## 🚀 Getting Started
 
