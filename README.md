@@ -1,8 +1,6 @@
 # 🚀 𝗜𝗻𝘁𝗿𝗼𝗱𝘂𝗰𝗶𝗻𝗴 𝘾𝙤𝘽𝙧𝙖�𝗻
 
-```markdown
 ![CoBrain Landing Screenshot](apps/landing/public/cobrain-landing.png)
-```
 
 
 CoBrain is your **𝘀𝗲𝗰𝗼𝗻𝗱 𝗯𝗿𝗮𝗶𝗻** - designed to help you save notes and links, organise it into meaningful slices, and recall information exactly when you need it. It’s simple, flexible, and built to adapt to how _you_ think.
