@@ -11,8 +11,11 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
+    "@langchain/core": "^1.1.19",
+    "@langchain/google-genai": "^2.1.15",
     "@repo/ui": "workspace:*",
     "axios": "^1.13.4",
+    "langchain": "^1.2.18",
     "lucide-react": "^0.563.0",
     "motion": "^12.23.25",
     "next": "^15.5.7",

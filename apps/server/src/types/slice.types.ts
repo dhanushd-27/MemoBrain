@@ -60,3 +60,7 @@ export interface SliceAccessListResponse {
 export interface SliceAccessResponse {
   message: string;
 }
+
+export interface GenerateSliceDescriptionResponse {
+  description: string;
+}

@@ -78,6 +78,7 @@ export default function SliceDashboardPage() {
           onEditSlice={() => setIsUpdateDialogOpen(true)}
           onShareSlice={() => setIsShareDialogOpen(true)}
           onDeleteSlice={() => setIsDeleteDialogOpen(true)}
+          onDescriptionGenerated={refresh}
         />
 
         <div className="h-px bg-border w-full mb-8" />
