@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import { Button, Input } from "@repo/ui";
-import { updateSlice } from "../../../services/slice.service";
-import { TbLoader } from "react-icons/tb";
+import { updateSlice, generateSliceDescription } from "../../../services/slice.service";
+import { TbLoader, TbSparkles } from "react-icons/tb";
 import { motion, AnimatePresence } from "motion/react";
 import type { Slice } from "@repo/types";
 
@@ -23,6 +23,7 @@ export function UpdateSliceDialog({
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
+  const [generating, setGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -31,6 +32,30 @@ export function UpdateSliceDialog({
       setDescription(slice.description || "");
     }
   }, [slice]);
+
+  const handleAutoGenerate = async () => {
+    if (!slice) {
+      setError("Slice not available");
+      return;
+    }
+
+    setGenerating(true);
+    setError(null);
+
+    try {
+      const response = await generateSliceDescription(slice.id);
+      setDescription(response.description);
+    } catch (err) {
+      console.error("Failed to generate description:", err);
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Failed to generate description. Please try again."
+      );
+    } finally {
+      setGenerating(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -84,9 +109,30 @@ export function UpdateSliceDialog({
                   className="bg-background"
                 />
                 <div className="flex flex-col gap-1">
-                  <label className="text-body-medium text-foreground ml-1">
-                    Description
-                  </label>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-body-medium text-foreground ml-1">
+                      Description
+                    </label>
+                    <Button
+                      type="button"
+                      variant="outlined"
+                      onClick={handleAutoGenerate}
+                      disabled={generating || loading}
+                      className="h-7 text-xs px-2"
+                    >
+                      {generating ? (
+                        <>
+                          <TbLoader className="animate-spin mr-1" />
+                          Generating...
+                        </>
+                      ) : (
+                        <>
+                          <TbSparkles className="mr-1" />
+                          Auto-generate
+                        </>
+                      )}
+                    </Button>
+                  </div>
                   <textarea
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
@@ -95,21 +141,25 @@ export function UpdateSliceDialog({
                   />
                 </div>
 
-                {error && <div className="text-red-500 text-sm">{error}</div>}
+                {error && (
+                  <div className="text-red-500 text-sm bg-red-50 dark:bg-red-950/20 p-2 rounded">
+                    {error}
+                  </div>
+                )}
 
                 <div className="flex justify-end gap-2 mt-2">
                   <Button
                     type="button"
                     variant="outlined"
                     onClick={onClose}
-                    disabled={loading}
+                    disabled={loading || generating}
                   >
                     Cancel
                   </Button>
                   <Button
                     type="submit"
                     variant="contained"
-                    disabled={loading}
+                    disabled={loading || generating}
                     className="min-w-25"
                   >
                     {loading ? <TbLoader className="animate-spin" /> : "Save"}

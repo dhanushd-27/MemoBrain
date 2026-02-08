@@ -6,7 +6,8 @@
     "REFRESH_JWT_SECRET",
     "ACCESS_TOKEN_COOKIE_NAME",
     "REFRESH_TOKEN_COOKIE_NAME",
-    "DATABASE_URL"
+    "DATABASE_URL",
+    "GOOGLE_API_KEY"
   ],
   "tasks": {
     "build": {

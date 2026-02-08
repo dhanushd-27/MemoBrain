@@ -136,3 +136,17 @@ export const updateSliceAccessRole = async (
 ): Promise<void> => {
   await apiClient.patch(`/slice/${sliceId}/access/users/${userId}`, data);
 };
+
+// Generate slice description
+export interface GenerateSliceDescriptionResponse {
+  description: string;
+}
+
+export const generateSliceDescription = async (
+  sliceId: string,
+): Promise<GenerateSliceDescriptionResponse> => {
+  const response = await apiClient.post<GenerateSliceDescriptionResponse>(
+    `/slice/${sliceId}/generate-description`,
+  );
+  return response.data;
+};

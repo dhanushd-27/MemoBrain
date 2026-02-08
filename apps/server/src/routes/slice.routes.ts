@@ -6,6 +6,7 @@ import {
   handleUpdateSlice,
   handleDeleteSlice,
   handleGetSliceBrains,
+  handleGenerateSliceDescription,
   handleUpdateSliceAccessStatus,
   handleGrantSliceAccess,
   handleRevokeSliceAccess,
@@ -25,6 +26,7 @@ sliceRouter.get("/:sliceId", handleGetSlice);
 sliceRouter.patch("/:sliceId", handleUpdateSlice);
 sliceRouter.delete("/:sliceId", handleDeleteSlice);
 sliceRouter.get("/:sliceId/brains", handleGetSliceBrains);
+sliceRouter.post("/:sliceId/generate-description", handleGenerateSliceDescription);
 
 // Slice access management routes
 sliceRouter.patch("/:sliceId/access/status", handleUpdateSliceAccessStatus);

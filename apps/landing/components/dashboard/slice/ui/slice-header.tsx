@@ -13,6 +13,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { SidebarTrigger } from "../../sidebar/sidebar-trigger";
 import type { Slice } from "@repo/types";
 import ThemeToggler from "../../../theme/theme-toggler";
+import { GenerateSliceDescriptionButton } from "../generate-slice-description-button";
 
 interface SliceHeaderProps {
   slice: Slice;
@@ -20,6 +21,7 @@ interface SliceHeaderProps {
   onEditSlice: () => void;
   onShareSlice: () => void;
   onDeleteSlice: () => void;
+  onDescriptionGenerated: () => void;
 }
 
 export const SliceHeader = ({
@@ -28,6 +30,7 @@ export const SliceHeader = ({
   onEditSlice,
   onShareSlice,
   onDeleteSlice,
+  onDescriptionGenerated,
 }: SliceHeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -46,6 +49,11 @@ export const SliceHeader = ({
       </div>
       <div className="flex items-center gap-2">
         <ThemeToggler />
+        <GenerateSliceDescriptionButton
+          slice={slice}
+          onSuccess={onDescriptionGenerated}
+          variant="button"
+        />
         <Button
           variant="contained"
           onClick={onNewBrain}
@@ -79,6 +87,14 @@ export const SliceHeader = ({
                 >
                   <TbPlus className="text-lg" /> New Brain
                 </button>
+                <div className="flex md:hidden">
+                  <GenerateSliceDescriptionButton
+                    slice={slice}
+                    onSuccess={onDescriptionGenerated}
+                    variant="menu-item"
+                    onMenuClose={() => setIsMenuOpen(false)}
+                  />
+                </div>
                 <button
                   onClick={() => {
                     onEditSlice();
